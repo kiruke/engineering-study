@@ -1,0 +1,20 @@
+version: 1
+as_of: "2026-10-17"
+source_attempts:
+  - attempts/2026-10-17.yml
+items:
+  - topic: stack_lifo_vs_queue_fifo
+    category: fundamental_it
+    priority: high
+    reason: 初回誤答。スタックとキューの違いを別形式で確認
+    next_review_date: null
+  - topic: nested_loop_tracing
+    category: algorithm_ruby
+    priority: high
+    reason: 二重ループの実行回数を誤答。手動トレースを再確認
+    next_review_date: null
+  - topic: ruby_accumulator_and_scope
+    category: algorithm_ruby
+    priority: high
+    reason: 偶数合計を初回実装できず、ヒント後に修正
+    next_review_date: null
