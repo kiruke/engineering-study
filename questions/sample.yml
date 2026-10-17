@@ -1,0 +1,40 @@
+version: 1
+
+questions:
+  - id: RAILS-SAMPLE-001
+    category: web_rails
+    topics:
+      - active_record
+      - association
+      - n_plus_one
+    difficulty: beginner_3
+    type: multiple_choice
+
+    question: |
+      Userモデルは複数のPostを持っています。
+
+      users = User.all
+
+      users.each do |user|
+        puts user.posts.count
+      end
+
+      この処理で発生する可能性がある問題は？
+
+    options:
+      A: Userのレコードが削除される
+      B: UserごとにSQLが発行される可能性がある
+      C: Postのレコードが自動的に作成される
+      D: 必ず例外が発生する
+
+    correct_answer: B
+
+    explanations:
+      A: 読み取り処理なので削除されない
+      B: 各Userに対して件数取得のSQLが発行される可能性がある
+      C: countはレコードを作成しない
+      D: 関連が正しく定義されていれば必ず例外になるわけではない
+
+    learning_objective: |
+      ActiveRecordの関連を使った処理で
+      SQLの発行回数を意識できるようになる

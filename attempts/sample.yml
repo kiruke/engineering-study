@@ -1,0 +1,27 @@
+version: 1
+
+attempts:
+  - question_id: RAILS-SAMPLE-001
+    date: 2026-10-17
+
+    responses:
+      - attempt_number: 1
+        answer: A
+        correct: false
+        hints_used: 0
+
+      - attempt_number: 2
+        answer: B
+        correct: true
+        hints_used: 1
+
+    result:
+      first_attempt_correct: false
+      solved: true
+      solved_without_hints: false
+
+    analysis:
+      mistake_reason: SQLの発行回数を意識できていなかった
+      review_topics:
+        - n_plus_one
+        - active_record_association
