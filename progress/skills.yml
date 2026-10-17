@@ -1,0 +1,20 @@
+version: 1
+as_of: "2026-10-17"
+source_attempts:
+  - attempts/2026-10-17.yml
+sample_data_excluded: true
+note: >
+  1日分の結果のみ。習熟度の確定評価ではなく次回の出題調整用の暫定データ。
+first_attempt:
+  total: 10
+  correct: 7
+  accuracy_percent: 70
+after_hints:
+  correct: 8
+  accuracy_percent: 80
+categories:
+  web_rails: {answered: 2, first_correct: 2}
+  database_sql: {answered: 2, first_correct: 2}
+  security: {answered: 2, first_correct: 2}
+  fundamental_it: {answered: 2, first_correct: 1}
+  algorithm_ruby: {answered: 2, first_correct: 0, after_hints_correct: 1}
