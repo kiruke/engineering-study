@@ -1,0 +1,62 @@
+version: 1
+date: "2026-10-18"
+session: morning_daily_10
+questions_file: questions/2026-10-18.yml
+record_type: active_quiz
+status: completed
+note: "出題済みでも未回答は未回答。ユーザーの実回答を確認できた場合のみ記録・採点する。"
+summary:
+  total_questions: 10
+  answered: 10
+  first_correct: 8
+  first_accuracy_percent: 80
+  after_hints_correct: 9
+attempts:
+  - {question_id: "20261018-01", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
+  - {question_id: "20261018-02", status: answered_correct, responses: [{attempt: 1, answer: A, correct: true}]}
+  - {question_id: "20261018-03", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
+  - {question_id: "20261018-04", status: answered_correct, responses: [{attempt: 1, answer: C, correct: true}]}
+  - {question_id: "20261018-05", status: answered_correct, responses: [{attempt: 1, answer: A, correct: true}]}
+  - {question_id: "20261018-06", status: answered_correct, responses: [{attempt: 1, answer: C, correct: true}]}
+  - {question_id: "20261018-07", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
+  - {question_id: "20261018-08", status: answered_correct, responses: [{attempt: 1, answer: A, correct: true}]}
+  - {question_id: "20261018-09", status: answered_incorrect, responses: [{attempt: 1, answer: A, correct: false}]}
+  - question_id: "20261018-10"
+    status: answered_correct_after_hints
+    responses:
+      - attempt: 1
+        correct: false
+        answer_code: |
+          sum = 0
+          def count_long_words(words, min_length)
+             words.each do |word|
+                 num = word.count
+                 if num >= min_length
+                   sum +=1
+                 end
+             end
+
+            条件を満たす単語の個数を返す
+            if words min_length
+
+
+          end
+        feedback: "Syntax errors; accumulator outside method; String#count without argument; invalid expressions and unclosed block."
+      - attempt: 2
+        correct: true
+        answer_code: |
+          def count_long_words(words, min_length)
+             sum = 0
+             words.each do |word|
+                 num = word.length
+                 if num >= min_length
+                   sum +=1
+                 end
+             end
+             sum
+          end
+        feedback: "Meets all requirements including empty arrays, return value, and non-mutation."
+    hints_given:
+      - "Initialize accumulator inside method."
+      - "Use String#length or #size for character count."
+      - "Ruby returns last evaluated expression; close each block."
