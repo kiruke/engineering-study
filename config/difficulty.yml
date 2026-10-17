@@ -1,0 +1,26 @@
+version: 1
+
+levels:
+  beginner_1:
+    description: 基本用語と単純な処理を理解できる
+
+  beginner_2:
+    description: 短いコードを読み、実行結果を判断できる
+
+  beginner_3:
+    description: 複数の概念を組み合わせて動作を判断できる
+
+  intermediate_1:
+    description: 実装上の問題点を発見し、改善方法を判断できる
+
+defaults:
+  web_rails: beginner_3
+  database_sql: beginner_2
+  security: beginner_2
+  fundamental_it: beginner_2
+  algorithm_ruby: beginner_2
+
+difficulty_policy:
+  increase_after_consecutive_correct: 3
+  decrease_after_consecutive_incorrect: 2
+  count_hinted_answers_as_independent_correct: false
