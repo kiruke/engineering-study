@@ -1,0 +1,102 @@
+version: 1
+date: "2026-10-17"
+record_type: historical_summary
+source: prior_chat_summary
+completeness: partial
+note: >
+  過去の会話から確認できる結果のみ記録。問題文・全選択肢・全解説・全回答原文は未収録。
+  questions/ の完全な問題データがないため、個別問題の再採点には使用しない。
+  questions/sample.yml と attempts/sample.yml は架空のテストデータであり成績に含めない。
+summary:
+  total_questions: 10
+  first_attempt_correct: 7
+  first_attempt_accuracy_percent: 70
+  after_hints_correct: 8
+  after_hints_accuracy_percent: 80
+categories:
+  web_rails:
+    total: 2
+    first_attempt_correct: 2
+  database_sql:
+    total: 2
+    first_attempt_correct: 2
+  security:
+    total: 2
+    first_attempt_correct: 2
+  fundamental_it:
+    total: 2
+    first_attempt_correct: 1
+  algorithm_ruby:
+    total: 2
+    first_attempt_correct: 0
+    after_hints_correct: 1
+known_questions:
+  - number: 1
+    category: web_rails
+    topic: http_get_search
+    first_attempt_correct: true
+  - number: 2
+    category: web_rails
+    topic: rails_routing
+    first_attempt_correct: true
+  - number: 3
+    category: database_sql
+    topic: acid_atomicity
+    first_attempt_correct: true
+  - number: 4
+    category: database_sql
+    topic: inner_join
+    first_attempt_correct: true
+  - number: 5
+    category: security
+    topic: authentication_vs_authorization
+    first_attempt_correct: true
+  - number: 6
+    category: security
+    topic: csrf
+    first_attempt_correct: true
+  - number: 7
+    category: fundamental_it
+    topic: virtual_memory
+    first_attempt_correct: true
+  - number: 8
+    category: fundamental_it
+    topic: stack_lifo
+    first_attempt_correct: false
+    observed_answer: A
+    observed_correct_choice: C
+    review_topics:
+      - stack_lifo
+      - queue_fifo
+  - number: 9
+    category: algorithm_ruby
+    topic: nested_loops
+    first_attempt_correct: false
+    observed_answer: 1
+    observed_correct_answer: 2
+    review_topics:
+      - loop_tracing
+      - nested_loops
+  - number: 10
+    category: algorithm_ruby
+    topic: sum_even_ruby
+    first_attempt_correct: false
+    after_hints_correct: true
+    review_topics:
+      - each
+      - conditional
+      - accumulator
+      - local_variable_scope
+    known_working_solution: |
+      def sum_even(numbers)
+        sum = 0
+        numbers.each do |num|
+          if num.even?
+            sum += num
+          end
+        end
+        sum
+      end
+    note: >
+      最終提出コードにはメソッド外の余分なsum初期化もあった。
+      回答途中のコード全文とヒントの逐語記録は未確認。
