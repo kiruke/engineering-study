@@ -1,0 +1,24 @@
+version: 1
+date: "2026-10-18"
+session: morning_daily_10
+questions_file: questions/2026-10-18.yml
+record_type: active_quiz
+status: awaiting_user_response
+note: "出題済みでも未回答は未回答。ユーザーの実回答を確認できた場合のみ記録・採点する。"
+summary:
+  total_questions: 10
+  answered: 0
+  first_correct: null
+  first_accuracy_percent: null
+  after_hints_correct: null
+attempts:
+  - {question_id: "20261018-01", status: presented_awaiting_answer, responses: []}
+  - {question_id: "20261018-02", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-03", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-04", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-05", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-06", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-07", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-08", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-09", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-10", status: not_yet_presented, responses: []}
