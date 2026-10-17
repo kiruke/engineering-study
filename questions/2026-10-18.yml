@@ -1,0 +1,226 @@
+version: 1
+date: "2026-10-18"
+session: morning_daily_10
+source: generated_from_confirmed_history
+history_sources:
+  - attempts/2026-10-17.yml
+  - progress/review_queue.yml
+note: "過去の実回答は確認済みの範囲だけを参照。回答前の正解・解説は出題時に公開しない。"
+questions:
+  - id: "20261018-01"
+    category: web_rails
+    topics: [view, partial, render, locals]
+    difficulty: beginner_3
+    type: multiple_choice
+    question: |
+      Railsのビューで次のようにpartialを描画します。
+      <%= render partial: "reviews/review", collection: @reviews, as: :item %>
+      このとき app/views/reviews/_review.html.erb で、
+      1件分のレビューのbodyを表示する正しいコードはどれですか？
+    options:
+      A: "<%= review.body %>"
+      B: "<%= item.body %>"
+      C: "<%= @reviews.body %>"
+      D: "<%= reviews.body %>"
+    correct_answer: B
+    explanations:
+      A: "as: :itemが指定されているので、デフォルトのreviewというローカル変数名では参照できない。asの指定がなければreviewになる。"
+      B: "collectionの各要素がas: :itemによりitemというローカル変数に渡される。"
+      C: "@reviewsは通常コレクションであり、1件のレビューのbodyを直接参照する変数ではない。"
+      D: "reviewsというローカル変数はこのrenderからは自動的に渡されない。"
+    learning_objective: "render collectionとasによるpartial内ローカル変数の対応を説明できる。"
+  - id: "20261018-02"
+    category: web_rails
+    topics: [active_record, association, n_plus_one, includes]
+    difficulty: beginner_3
+    type: multiple_choice
+    question: |
+      Book has_many :reviews が定義されています。
+      @books = Book.limit(10)
+      @books.each do |book|
+        book.reviews.each { |review| puts review.body }
+      end
+      N+1問題を軽減する最も適切な変更はどれですか？
+    options:
+      A: "@books = Book.includes(:reviews).limit(10)"
+      B: "@books = Book.order(:id).limit(10)"
+      C: "@books = Book.distinct.limit(10)"
+      D: "@books = Book.limit(10).reload"
+    correct_answer: A
+    explanations:
+      A: "関連reviewsを事前読み込みし、各bookの関連取得による追加クエリを減らせる。"
+      B: "並び順を指定するだけで関連の事前読み込みにはならない。"
+      C: "重複排除は関連レコードの事前読み込みと別の問題。"
+      D: "reloadはクエリキャッシュ等を再読込する処理で、関連の事前読み込みを解決しない。"
+    learning_objective: "関連の繰り返し参照とincludesの役割を区別できる。"
+  - id: "20261018-03"
+    category: database_sql
+    topics: [sql, left_join, null]
+    difficulty: beginner_2
+    type: multiple_choice
+    question: |
+      books(id)とreviews(id, book_id)があります。
+      次のSQLが取得するのはどの本ですか？
+      SELECT books.id
+      FROM books
+      LEFT JOIN reviews ON reviews.book_id = books.id
+      WHERE reviews.id IS NULL;
+    options:
+      A: "レビューが1件以上ある本"
+      B: "レビューが0件の本"
+      C: "すべての本"
+      D: "レビュー数が最大の本"
+    correct_answer: B
+    explanations:
+      A: "レビューが存在する場合は結合先のreviews.idがNULLにならず除外される。"
+      B: "LEFT JOINで一致するレビューがない本はreviews側がNULLになり条件に合致する。"
+      C: "WHERE句で結合先がNULLの行に絞っているため全件ではない。"
+      D: "レビュー件数の集計や降順並び替えは行っていない。"
+    learning_objective: "LEFT JOINとNULL判定で関連データがない行を抽出できる。"
+  - id: "20261018-04"
+    category: database_sql
+    topics: [sql, aggregate, null, count]
+    difficulty: beginner_2
+    type: multiple_choice
+    question: |
+      reviewsテーブルのratingが順に5、NULL、3の3行あります。
+      SELECT COUNT(*) AS total, COUNT(rating) AS rated FROM reviews;
+      結果はどれですか？
+    options:
+      A: "total=3, rated=3"
+      B: "total=2, rated=2"
+      C: "total=3, rated=2"
+      D: "total=2, rated=3"
+    correct_answer: C
+    explanations:
+      A: "COUNT(rating)はNULLを数えないため3にはならない。"
+      B: "COUNT(*)はNULLを含む行も数えるのでtotalは3。"
+      C: "COUNT(*)は3行すべて、COUNT(rating)はNULL以外の2行を数える。"
+      D: "COUNT(*)よりCOUNT(rating)が多くなることはない。"
+    learning_objective: "COUNT(*)とCOUNT(列)のNULLの扱いを区別できる。"
+  - id: "20261018-05"
+    category: security
+    topics: [xss, rails_view, escaping]
+    difficulty: beginner_2
+    type: multiple_choice
+    question: |
+      RailsのERBビューでユーザー入力params[:q]を表示します。
+      XSS対策の観点で、最も適切な説明はどれですか？
+    options:
+      A: "<%= params[:q] %> は通常HTMLエスケープされる"
+      B: "<%== params[:q] %> の方が常に安全である"
+      C: "GETパラメータならXSSは起こりえない"
+      D: "HTMLエスケープはSQLインジェクション対策だけに使う"
+    correct_answer: A
+    explanations:
+      A: "Railsの通常のERB出力は危険なHTML文字をエスケープする。"
+      B: "<%== %>は生のHTMLとして出力するため、信頼できない入力には危険。"
+      C: "GETでも表示内容にスクリプトを混入させる攻撃は成立しうる。"
+      D: "HTMLエスケープは主にHTML表示時のXSS対策。SQLの値はバインド等で対策する。"
+    learning_objective: "Railsビューの自動エスケープとXSSの関係を説明できる。"
+  - id: "20261018-06"
+    category: security
+    topics: [password_hashing, authentication, salt]
+    difficulty: beginner_2
+    type: multiple_choice
+    question: |
+      Webアプリでパスワードを保存する方法として、最も適切なのはどれですか？
+    options:
+      A: "パスワードを平文のまま保存する"
+      B: "共通鍵で暗号化して鍵も同じテーブルに保存する"
+      C: "パスワード専用のソルト付きハッシュ方式を使い検証する"
+      D: "Base64エンコードして保存する"
+    correct_answer: C
+    explanations:
+      A: "漏えい時にパスワードが直接知られてしまう。"
+      B: "復号可能で鍵の管理も必要。パスワード検証の標準的な保存方式ではない。"
+      C: "bcryptやArgon2などのパスワード向け方式で、ソルトと計算コストを用いて検証する。"
+      D: "Base64は可逆な文字列表現であり暗号化・ハッシュ化ではない。"
+    learning_objective: "パスワード保存で暗号化・エンコード・専用ハッシュの違いを理解する。"
+  - id: "20261018-07"
+    category: fundamental_it
+    topics: [data_structure, stack, queue, lifo, fifo]
+    difficulty: beginner_2
+    type: multiple_choice
+    question: |
+      空のスタックSと空のキューQがあります。
+      Sにはpush(A), push(B), push(C)を実行します。
+      Qにはenqueue(A), enqueue(B), enqueue(C)を実行します。
+      続けてSでpop()、Qでdequeue()を1回ずつ実行すると、取り出す値の組は？
+    options:
+      A: "S=A、Q=C"
+      B: "S=C、Q=A"
+      C: "S=B、Q=B"
+      D: "S=C、Q=C"
+    correct_answer: B
+    explanations:
+      A: "スタックとキューの取り出し順を逆にしている。"
+      B: "スタックは後入れ先出しでC、キューは先入れ先出しでA。"
+      C: "Bはどちらも中央の要素で、最初に取り出す値ではない。"
+      D: "スタックはCだが、キューは先頭のAを取り出す。"
+    learning_objective: "スタックとキューの操作を具体的に追跡できる。"
+  - id: "20261018-08"
+    category: fundamental_it
+    topics: [network, tcp, udp]
+    difficulty: beginner_2
+    type: multiple_choice
+    question: |
+      TCPとUDPの違いについて正しい説明はどれですか？
+    options:
+      A: "TCPは到達確認や再送制御を備え、UDPは基本的に備えない"
+      B: "UDPは常にTCPより通信の信頼性が高い"
+      C: "TCPはIPアドレスを使わずに通信する"
+      D: "UDPは必ず接続確立の3ウェイハンドシェイクを行う"
+    correct_answer: A
+    explanations:
+      A: "TCPは順序・到達確認・再送等を提供するがUDPは基本的に提供しない。"
+      B: "UDPは標準では到達保証を行わず、信頼性が常に高いわけではない。"
+      C: "TCPはIPの上位で動作するトランスポート層のプロトコル。"
+      D: "3ウェイハンドシェイクはTCPの接続確立で使われる。"
+    learning_objective: "TCPとUDPの信頼性と接続方式を区別できる。"
+  - id: "20261018-09"
+    category: algorithm_ruby
+    topics: [ruby, nested_loop, trace, accumulator]
+    difficulty: beginner_2
+    type: multiple_choice
+    question: |
+      次のRubyコードの出力はどれですか？
+      sum = 0
+      (1..3).each do |i|
+        (1..i).each do |j|
+          sum += j
+        end
+      end
+      puts sum
+    options:
+      A: "6"
+      B: "9"
+      C: "10"
+      D: "12"
+    correct_answer: C
+    explanations:
+      A: "i=3の内側ループだけを足すと6だが、i=1と2の分も加算される。"
+      B: "ループの回数や加算値を混同している。"
+      C: "i=1で1、i=2で1+2、i=3で1+2+3。合計10。"
+      D: "各ループで3まで加算しているわけではない。"
+    learning_objective: "内側の範囲が外側の変数に依存する二重ループをトレースできる。"
+  - id: "20261018-10"
+    category: algorithm_ruby
+    topics: [ruby, method, array, each, conditional, accumulator, scope]
+    difficulty: beginner_2
+    type: implementation
+    question: |
+      Rubyでcount_long_words(words, min_length)メソッドを実装してください。
+      wordsは文字列の配列、min_lengthは正の整数です。
+      長さがmin_length以上の文字列の個数を整数で返してください。
+      入力例: count_long_words(["cat", "ruby", "rails", "api"], 4)
+      期待値: 2
+      入力例: count_long_words([], 3)
+      期待値: 0
+      条件: eachと条件分岐を使い、元の配列は変更しない。
+    options: {}
+    correct_answer: "implementation_review"
+    explanations:
+      approach: "メソッド内でカウンタを初期化し、eachで各単語のlengthを判定して増加させ、最後にカウンタを返す。"
+      pitfalls: "カウンタのスコープ、条件の向き、戻り値、空配列の扱いを確認する。"
+    learning_objective: "メソッド内で配列を走査し、条件に合う要素数を集計して返せる。"
