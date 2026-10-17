@@ -1,0 +1,5 @@
+version: 1
+kind: connection_test
+created_by: chatgpt
+sample_only: true
+include_in_study_statistics: false
