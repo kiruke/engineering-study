@@ -7,15 +7,15 @@ status: in_progress
 note: "出題済みでも未回答は未回答。ユーザーの実回答を確認できた場合のみ記録・採点する。"
 summary:
   total_questions: 10
-  answered: 2
-  first_correct: 2
+  answered: 3
+  first_correct: 3
   first_accuracy_percent: 100
   after_hints_correct: null
 attempts:
   - {question_id: "20261018-01", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
   - {question_id: "20261018-02", status: answered_correct, responses: [{attempt: 1, answer: A, correct: true}]}
-  - {question_id: "20261018-03", status: presented_awaiting_answer, responses: []}
-  - {question_id: "20261018-04", status: not_yet_presented, responses: []}
+  - {question_id: "20261018-03", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
+  - {question_id: "20261018-04", status: presented_awaiting_answer, responses: []}
   - {question_id: "20261018-05", status: not_yet_presented, responses: []}
   - {question_id: "20261018-06", status: not_yet_presented, responses: []}
   - {question_id: "20261018-07", status: not_yet_presented, responses: []}
