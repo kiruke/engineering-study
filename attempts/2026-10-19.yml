@@ -1,0 +1,61 @@
+version: 1
+date: "2026-10-19"
+session: morning_daily_10
+questions_file: questions/2026-10-19.yml
+record_type: active_quiz
+status: completed
+note: "当日の会話から実回答を再構成。Q7とQ8では初回の採点表示に誤りがあり、その後の訂正後の判定を採用。Q10はヒント後の再提出でも戻り値が未完成。"
+summary:
+  total_questions: 10
+  answered: 10
+  first_correct: 7
+  first_accuracy_percent: 70
+  after_hints_correct: 7
+  incomplete_after_hints: 1
+attempts:
+  - {question_id: "20261019-01", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
+  - {question_id: "20261019-02", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
+  - {question_id: "20261019-03", status: answered_correct, responses: [{attempt: 1, answer: A, correct: true}]}
+  - {question_id: "20261019-04", status: answered_incorrect, responses: [{attempt: 1, answer: A, correct: false}], correct_answer: B}
+  - {question_id: "20261019-05", status: answered_correct, responses: [{attempt: 1, answer: C, correct: true}]}
+  - {question_id: "20261019-06", status: answered_correct, responses: [{attempt: 1, answer: D, correct: true}]}
+  - question_id: "20261019-07"
+    status: answered_correct
+    responses: [{attempt: 1, answer: A, correct: true}]
+    grading_note: "最初に誤って不正解/Cと表示後、同じ解説中で正解Aに訂正。"
+  - question_id: "20261019-08"
+    status: answered_incorrect
+    responses: [{attempt: 1, answer: B, correct: false}]
+    correct_answer: C
+    grading_note: "最初に誤って正解Bと表示後、同じ解説中で正解Cに訂正。"
+  - {question_id: "20261019-09", status: answered_correct, responses: [{attempt: 1, answer: B, correct: true}]}
+  - question_id: "20261019-10"
+    status: incomplete_after_hints
+    responses:
+      - attempt: 1
+        correct: false
+        answer_code: |
+          def sum_even_numbers(numbers)
+            numbers.each do |num|
+              if num % 2 == 0
+                 num +=num
+              end
+          end
+        feedback: "sumの初期化・累積・返却がなく、endも不足。"
+      - attempt: 2
+        correct: false
+        answer_code: |
+          def sum_even_numbers(numbers)
+             sum = 0
+            numbers.each do |num|
+              if num % 2 == 0
+                sum += num
+              end
+            end
+          end
+        feedback: "偶数の判定と累積は正しいが、each後にsumを評価して返していない。現状はeachの戻り値である配列を返す。"
+    hints_given:
+      - "eachの前で合計用変数を0に初期化する。"
+      - "numではなく合計用変数を更新する。"
+      - "each後に合計用変数を返す。"
+    learning_note: "累積処理はヒント後に修正できた。Rubyの暗黙の戻り値が復習対象。"
