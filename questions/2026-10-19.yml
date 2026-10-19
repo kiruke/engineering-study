@@ -1,0 +1,165 @@
+version: 1
+date: "2026-10-19"
+session: morning_daily_10
+source: reconstructed_from_conversation
+note: "当日出題時の保存に失敗。Q1-Q3の選択肢全文は現会話から確認できないため捏造せず、確認できる問題要旨と正解のみ記録。"
+questions:
+  - id: "20261019-01"
+    category: web_rails
+    topics: [params, query_string, form, post]
+    type: multiple_choice
+    question: "GET /reviews/new?book_id=28 のbook_idが後続のPOST /reviewsに自動では渡らない理由を問う問題。"
+    options: {}
+    correct_answer: B
+    explanations: {B: "GETのクエリパラメータは別のPOSTに自動では引き継がれない。フォームにbook_idを含める等の対応が必要。"}
+  - id: "20261019-02"
+    category: web_rails
+    topics: [n_plus_one, includes]
+    type: multiple_choice
+    question: "Book.limit(10)で取得した本のbook.reviews.size参照によるN+1問題の対処を問う問題。"
+    options: {}
+    correct_answer: B
+    explanations: {B: "Book.includes(:reviews).limit(10)で関連を事前読み込みする。"}
+  - id: "20261019-03"
+    category: database_sql
+    topics: [group_by, having, count, avg, null]
+    type: multiple_choice
+    question: |
+      reviews(book_id,rating)=(10,5),(10,3),(20,4),(20,NULL),(30,2)。
+      GROUP BY book_id HAVING COUNT(rating)>=2 の結果を問う問題。
+    options: {}
+    correct_answer: A
+    explanations: {A: "book_id=10のみ、COUNT(rating)=2、AVG(rating)=4。COUNT(列)はNULLを除外する。"}
+  - id: "20261019-04"
+    category: database_sql
+    topics: [left_join, count, null]
+    type: multiple_choice
+    question: |
+      books: (1,Ruby入門),(2,Rails入門),(3,SQL入門)
+      reviews: (1,book_id=1,rating=5),(2,book_id=1,rating=3),(3,book_id=2,rating=4)
+      SELECT books.title, COUNT(reviews.id) AS review_count
+      FROM books LEFT JOIN reviews ON books.id = reviews.book_id
+      GROUP BY books.id, books.title ORDER BY books.id;
+    options:
+      A: "Ruby入門=2、Rails入門=1（SQL入門は表示されない）"
+      B: "Ruby入門=2、Rails入門=1、SQL入門=0"
+      C: "Ruby入門=2、Rails入門=1、SQL入門=1"
+      D: "Ruby入門=1、Rails入門=1、SQL入門=0"
+    correct_answer: B
+    explanations:
+      A: "LEFT JOINではレビューがないSQL入門も残る。"
+      B: "左表の全行を残し、COUNT(reviews.id)はNULLを数えない。"
+      C: "レビューがない本のreviews.idはNULLであり0件。"
+      D: "Ruby入門には2件のレビューがある。"
+  - id: "20261019-05"
+    category: security
+    topics: [authentication, authorization, ownership]
+    type: multiple_choice
+    question: |
+      before_action :require_login があるReviewsControllerのeditで
+      @review = Review.find(params[:id]) としている場合の問題点は？
+    options:
+      A: "require_loginはログイン状態を確認できないため認証が機能しない"
+      B: "Review.findはログインユーザーのレビューだけを自動検索する"
+      C: "ログイン済みなら他人のレビューも編集できる可能性があり所有者の確認（認可）が必要"
+      D: "params[:id]はGETリクエストでは使用できない"
+    correct_answer: C
+    explanations:
+      A: "require_loginは認証に利用できる。"
+      B: "Review.findは所有者を自動確認しない。"
+      C: "認証とは別に所有者の認可が必要。current_user.reviews.find(params[:id])など。"
+      D: "GETでもparams[:id]は利用できる。"
+  - id: "20261019-06"
+    category: security
+    topics: [csrf, rails, token]
+    type: multiple_choice
+    question: "Railsのform_withによるプロフィール更新で、ログイン済みユーザーに対するCSRF攻撃を防ぐ仕組みは？"
+    options:
+      A: "CSRF対策はSQLインジェクションを防ぐための仕組み"
+      B: "CSRFトークンはパスワード暗号化に使う"
+      C: "ログイン済みならCSRF対策は不要"
+      D: "Railsは状態変更リクエストにCSRFトークンなどを検証する仕組みを備える"
+    correct_answer: D
+    explanations:
+      A: "SQLインジェクションは別の脆弱性。"
+      B: "パスワードの暗号化とは無関係。"
+      C: "ログイン状態を悪用する攻撃なので対策が必要。"
+      D: "通常のRails CSRF保護はトークンを検証する。"
+  - id: "20261019-07"
+    category: fundamental_it
+    topics: [stack, queue, lifo, fifo, tracing]
+    type: multiple_choice
+    question: |
+      空のスタックS: push(10),push(20),push(30),pop(),push(40),pop()
+      空のキューQ: enqueue(10),enqueue(20),enqueue(30),dequeue(),enqueue(40),dequeue()
+      最後のSの上とQの先頭は？
+    options:
+      A: "S=20、Q=30"
+      B: "S=30、Q=30"
+      C: "S=20、Q=20"
+      D: "S=10、Q=40"
+    correct_answer: A
+    explanations:
+      A: "Sは[10,20]、Qは[30,40]になる。"
+      B: "スタックの30は最初のpopで除かれる。"
+      C: "キューの20は2回目のdequeueで除かれる。"
+      D: "先頭・最上段を取り違えている。"
+  - id: "20261019-08"
+    category: fundamental_it
+    topics: [binary_search, tracing]
+    type: multiple_choice
+    question: |
+      data=[2,5,8,12,16,21,27], target=16
+      left=0; right=data.length-1; count=0
+      while left<=right
+        mid=(left+right)/2
+        count+=1
+        if data[mid]==target
+          break
+        elsif data[mid]<target
+          left=mid+1
+        else
+          right=mid-1
+        end
+      end
+      puts count
+    options: {A: "1", B: "2", C: "3", D: "4"}
+    correct_answer: C
+    explanations:
+      A: "初回mid=3で12。"
+      B: "2回目mid=5で21、まだ一致しない。"
+      C: "3回目mid=4で16に一致。"
+      D: "3回目でbreakする。"
+  - id: "20261019-09"
+    category: algorithm_ruby
+    topics: [nested_loop, conditional, tracing]
+    type: multiple_choice
+    question: |
+      count=0
+      (1..3).each do |i|
+        (1..i).each do |j|
+          if j<i
+            count+=1
+          end
+        end
+      end
+      puts count
+    options: {A: "2", B: "3", C: "4", D: "6"}
+    correct_answer: B
+    explanations:
+      A: "i=3で条件が2回成立することを見落とす。"
+      B: "成立回数はi=1で0、i=2で1、i=3で2、合計3。"
+      C: "成立しない組み合わせを含めている。"
+      D: "6はループ総回数で、条件成立回数ではない。"
+  - id: "20261019-10"
+    category: algorithm_ruby
+    topics: [ruby, each, if, accumulator, return_value]
+    type: implementation
+    question: |
+      整数配列numbersの偶数だけを合計して返すsum_even_numbers(numbers)を実装する。
+      eachとifを使い、sum/select/filterは使わない。
+      [1,2,3,4,5,6]=>12、[1,3,5]=>0、[10,20,7]=>30。
+    correct_answer: implementation_review
+    explanations:
+      approach: "合計を0で初期化し、eachで偶数だけ加算し、eachの後に合計変数を最後の式として返す。"
+      idiomatic: "numbers.select(&:even?).sum（今回の実装条件外）。"
