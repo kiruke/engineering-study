@@ -1,0 +1,208 @@
+version: 1
+date: "2026-10-20"
+session: morning_daily_10
+source: adaptive_from_verified_attempts_2026-10-17_to_2026-10-19
+note: "正答が安定したRailsとセキュリティは応用問題。SQL、探索、Rubyの戻り値は復習。"
+questions:
+  - id: "20261020-01"
+    category: web_rails
+    difficulty: intermediate_1
+    reference_minutes: 3
+    topics: [nested_routes, association, build]
+    type: multiple_choice
+    question: |
+      Book has_many :reviews、Review belongs_to :bookです。
+      POST /books/12/reviews の処理で、review_paramsはbodyのみを許可します。
+      本ID=12に関連づく新規レビューを生成する適切なコードは？
+    options:
+      A: "@review = Review.new(review_params)"
+      B: "@review = Book.find(params[:book_id]).reviews.build(review_params)"
+      C: "@review = Book.reviews.build(review_params)"
+      D: "@review = Review.find(params[:book_id])"
+    correct_answer: B
+    explanations:
+      A: "bookとの関連を設定していない。"
+      B: "本の関連からbuildすることでbookが設定される。"
+      C: "reviewsはBookインスタンスの関連でありクラスにはない。"
+      D: "既存のReviewを検索しており新規作成ではない。"
+    learning_objective: "ネストしたルートと関連を使って子レコードを作る。"
+  - id: "20261020-02"
+    category: web_rails
+    difficulty: intermediate_1
+    reference_minutes: 3
+    topics: [validation, unique_index, concurrency]
+    type: multiple_choice
+    question: "Userのemailの重複を同時登録時にも防ぐ適切な方法は？"
+    options:
+      A: "validates :email, presence: true のみ"
+      B: "validates :email, uniqueness: true とDBのUNIQUE制約を併用"
+      C: "ブラウザ側のJavaScriptだけで重複を確認"
+      D: "before_saveでemailをdowncaseするのみ"
+    correct_answer: B
+    explanations:
+      A: "空欄対策であり重複は防げない。"
+      B: "通常の入力検証と競合時のDB保証を両立する。"
+      C: "サーバーやDB側で重複を防げない。"
+      D: "大文字小文字の統一は重複禁止とは異なる。"
+    learning_objective: "モデル検証とDB一意制約の違いを理解する。"
+  - id: "20261020-03"
+    category: database_sql
+    difficulty: beginner_3
+    reference_minutes: 4
+    topics: [left_join, group_by, having, count]
+    type: multiple_choice
+    question: |
+      booksにはid=1,2,3があり、reviewsにはbook_id=1が2件、
+      book_id=3が1件あります。次のSQLが返すbooks.idは？
+      SELECT books.id FROM books
+      LEFT JOIN reviews ON reviews.book_id=books.id
+      GROUP BY books.id HAVING COUNT(reviews.id)=0;
+    options: {A: "1", B: "2", C: "3", D: "結果なし"}
+    correct_answer: B
+    explanations:
+      A: "id=1にはレビューが2件ある。"
+      B: "id=2はレビューがなくCOUNT(reviews.id)=0。"
+      C: "id=3にはレビューが1件ある。"
+      D: "LEFT JOINでレビューなしの本も残る。"
+    learning_objective: "LEFT JOINとCOUNTのNULL処理を組み合わせる。"
+  - id: "20261020-04"
+    category: database_sql
+    difficulty: beginner_3
+    reference_minutes: 4
+    topics: [index, composite_index]
+    type: multiple_choice
+    question: |
+      大量のposts(id,user_id,created_at,body)から次を取得する。
+      SELECT id,created_at FROM posts WHERE user_id=42
+      ORDER BY created_at DESC LIMIT 10;
+      B-treeを前提に、最も有力なインデックスは？
+    options:
+      A: "body単独"
+      B: "created_at単独"
+      C: "(user_id,created_at)の複合"
+      D: "id単独"
+    correct_answer: C
+    explanations:
+      A: "条件やソートに使われない。"
+      B: "ソートには使えるがuser_idの絞り込みが弱い。"
+      C: "user_idで絞り、created_at順の取得に活用しやすい。"
+      D: "今回の絞り込みや並び替えに対応しない。"
+    learning_objective: "検索条件と並び替えから複合インデックスを選ぶ。"
+  - id: "20261020-05"
+    category: security
+    difficulty: intermediate_1
+    reference_minutes: 3
+    topics: [authorization, strong_parameters]
+    type: multiple_choice
+    question: |
+      Userにはnameとadminがある。一般ユーザーが自分のnameだけを
+      更新する機能で、最も適切なサーバー側の処理は？
+    options:
+      A: "params.require(:user).permit(:name,:admin)を更新に使う"
+      B: "admin欄を画面で隠し、permit(:name,:admin)を使う"
+      C: "permit(:name)のみで更新し、admin変更は別途権限を検証する"
+      D: "JavaScriptだけで管理者か確認する"
+    correct_answer: C
+    explanations:
+      A: "一般ユーザーの更新対象にadminを含めるべきでない。"
+      B: "画面上の非表示はサーバーの保護にならない。"
+      C: "更新可能な属性を限定し、権限変更を別途認可する。"
+      D: "クライアント側の判定だけでは不十分。"
+    learning_objective: "更新属性の制限と認可を理解する。"
+  - id: "20261020-06"
+    category: security
+    difficulty: intermediate_1
+    reference_minutes: 4
+    topics: [cookie, httponly, secure, samesite]
+    type: multiple_choice
+    question: "セッションCookieの属性について正しい説明は？"
+    options:
+      A: "HttpOnlyはHTTPS通信に限定する"
+      B: "SecureはJavaScriptのCookie読み取りを禁止する"
+      C: "SameSiteはパスワードをハッシュ化する"
+      D: "HttpOnlyはJavaScript読み取りを制限し、SecureはHTTPS送信に限定する"
+    correct_answer: D
+    explanations:
+      A: "HTTPSへの送信限定はSecure。"
+      B: "JavaScriptからの読み取り制限はHttpOnly。"
+      C: "SameSiteはクロスサイトでのCookie送信を制御する。"
+      D: "それぞれの属性の役割が正しい。"
+    learning_objective: "Cookieのセキュリティ属性を区別する。"
+  - id: "20261020-07"
+    category: fundamental_it
+    difficulty: intermediate_1
+    reference_minutes: 4
+    topics: [network, ipv4, cidr]
+    type: multiple_choice
+    question: "IPv4の192.168.10.0/27で通常利用可能なホストアドレス数は？"
+    options: {A: "14", B: "30", C: "32", D: "62"}
+    correct_answer: B
+    explanations:
+      A: "/28のホスト数。"
+      B: "ホスト部5ビットで32個、予約2個を除き30個。"
+      C: "ネットワークとブロードキャストを含む総数。"
+      D: "/26のホスト数。"
+    learning_objective: "CIDR表記からホストアドレス数を計算する。"
+  - id: "20261020-08"
+    category: fundamental_it
+    difficulty: beginner_3
+    reference_minutes: 6
+    topics: [binary_search, trace]
+    type: multiple_choice
+    question: |
+      data=[1,3,5,7,9,11,13,15,17,19,21,23,25,27,29]から
+      二分探索で18を探す。left=0、right=14、count=0として、
+      while left<=right のたびmid=(left+right)/2を計算し、
+      countを1増やして値を比較する。一致すれば終了、
+      小さければleft=mid+1、大きければright=mid-1とする。
+      最終的なcountは？
+    options: {A: "2", B: "3", C: "4", D: "5"}
+    correct_answer: C
+    explanations:
+      A: "2回目の比較後も探索範囲が残る。"
+      B: "3回目は値19で、まだ終了しない。"
+      C: "比較する値は15,23,19,17の4回。"
+      D: "4回目の後にleft>rightとなり終了する。"
+    learning_objective: "二分探索が未発見で終わるまでをトレースする。"
+  - id: "20261020-09"
+    category: algorithm_ruby
+    difficulty: beginner_3
+    reference_minutes: 8
+    topics: [nested_loop, conditional, trace]
+    type: multiple_choice
+    question: |
+      次のRubyコードの出力は？
+      count=0
+      (1..3).each do |i|
+        (1..4).each do |j|
+          if i<j && (i+j).even?
+            count+=1
+          end
+        end
+      end
+      puts count
+    options: {A: "1", B: "2", C: "3", D: "6"}
+    correct_answer: B
+    explanations:
+      A: "条件を満たす組を1つ見落としている。"
+      B: "(1,3)と(2,4)の2組だけが両条件を満たす。"
+      C: "i<jだけの条件と偶数条件を混同している。"
+      D: "i<jのみを満たす6組すべてを数えている。"
+    learning_objective: "二重ループの複合条件を表で追う。"
+  - id: "20261020-10"
+    category: algorithm_ruby
+    difficulty: beginner_2
+    reference_minutes: 12
+    topics: [ruby, each, if, accumulator, return_value]
+    type: implementation
+    question: |
+      整数配列numbersから「0より大きい偶数」の個数を返す
+      count_positive_evens(numbers)を実装してください。
+      [2,-4,0,5,8,10]=>3、[-2,0,3]=>0、[]=>0。
+      eachとifを使用し、count/select/filterは禁止。
+    correct_answer: implementation_review
+    explanations:
+      approach: "メソッド内で個数を0で初期化し、条件を満たすと1増やし、最後に個数を返す。"
+      pitfalls: "eachの戻り値は配列であり、個数を最後に評価する必要がある。"
+      idiomatic: "numbers.count { |n| n.positive? && n.even? }"
+    learning_objective: "複合条件と累積、メソッドの戻り値を正しく実装する。"
