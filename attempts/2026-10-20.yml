@@ -1,0 +1,102 @@
+version: 1
+date: "2026-10-20"
+session: morning_daily_10
+questions_file: questions/2026-10-20.yml
+status: completed
+summary:
+  total: 10
+  first_correct: 6
+  first_accuracy_percent: 60
+  corrected_after_feedback: 2
+  correct_after_feedback: 8
+  remaining_review: [20261020-07, 20261020-08]
+attempts:
+  - question_id: "20261020-01"
+    first_answer: B
+    correct_answer: B
+    first_correct: true
+  - question_id: "20261020-02"
+    first_answer: B
+    correct_answer: B
+    first_correct: true
+  - question_id: "20261020-03"
+    first_answer: A
+    correct_answer: B
+    first_correct: false
+    subsequent_answers: [B]
+    corrected_after_explanation: true
+  - question_id: "20261020-04"
+    first_answer: C
+    correct_answer: C
+    first_correct: true
+  - question_id: "20261020-05"
+    first_answer: C
+    correct_answer: C
+    first_correct: true
+  - question_id: "20261020-06"
+    first_answer: D
+    correct_answer: D
+    first_correct: true
+  - question_id: "20261020-07"
+    first_answer: C
+    correct_answer: B
+    first_correct: false
+  - question_id: "20261020-08"
+    first_answer: B
+    correct_answer: C
+    first_correct: false
+  - question_id: "20261020-09"
+    first_answer: B
+    correct_answer: B
+    first_correct: true
+  - question_id: "20261020-10"
+    type: implementation
+    first_correct: false
+    corrected_on_attempt: 4
+    first_submission: |
+      def count_positive_evens(numbers)
+        arr = []
+          number.each do |num|
+            if num > 0 && num % 2 == 0
+               arr << num
+            end
+          end
+        sum
+      end
+    second_submission: |
+      def count_positive_evens(numbers)
+        arr = []
+          number.each do |num|
+            if num > 0 && num % 2 == 0
+               arr << num
+            end
+          end
+        arr.count
+      end
+    third_submission: |
+      def count_positive_evens(numbers)
+        total = 0
+          number.each do |num|
+            if num > 0 && num % 2 == 0
+               total +=1
+            end
+          end
+        total
+      end
+    final_submission: |
+      def count_positive_evens(numbers)
+        total = 0
+
+        numbers.each do |num|
+          if num > 0 && num % 2 == 0
+            total += 1
+          end
+        end
+
+        total
+      end
+    hints:
+      - "Use numbers rather than undefined number."
+      - "Use an integer accumulator rather than collecting array elements."
+      - "Return the accumulator as the last expression."
+    learning_note: "Final submission correct; review variable naming, accumulators, implicit return."
