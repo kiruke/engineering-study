@@ -1,0 +1,425 @@
+{
+  "version": 1,
+  "date": "2026-10-22",
+  "session": "morning_daily_16",
+  "status": "prepared",
+  "source": "verified_attempts_2026-10-17_to_2026-10-21",
+  "note": "実回答のない項目を推測で補完しない。前日Rubyの累積変数・戻り値、SQL外部結合、CIDR、データ構造を復習。問題は1問ずつ提示し、解答後に全選択肢を説明する。",
+  "questions": [
+    {
+      "id": "20261022-01",
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "left_join",
+        "count",
+        "null",
+        "aggregation"
+      ],
+      "question": "usersにはid=1,2の2人がいます。ordersにはuser_id=1の注文が2件あり、user_id=2の注文はありません。\n次のSQLの結果で、users.id=2の行の(rows_count, orders_count)はどれですか？\n\nSELECT users.id, COUNT(*) AS rows_count,\n       COUNT(orders.id) AS orders_count\nFROM users\nLEFT JOIN orders ON orders.user_id = users.id\nGROUP BY users.id\nORDER BY users.id;",
+      "options": {
+        "A": "(0, 0)",
+        "B": "(0, 1)",
+        "C": "(1, 0)",
+        "D": "(1, 1)"
+      },
+      "correct_answer": "C",
+      "explanations": {
+        "A": "LEFT JOINは注文がなくてもusersの行を1行残すためCOUNT(*)は0にならない。",
+        "B": "COUNT(*)が0になることはなく、注文がないのでCOUNT(orders.id)も1にならない。",
+        "C": "注文がなくても結合結果の行が1行ありCOUNT(*)=1。一方orders.idはNULLなのでCOUNT(orders.id)=0。",
+        "D": "注文がないユーザーではorders.idがNULLなのでCOUNT(orders.id)=1にはならない。"
+      },
+      "learning_objective": "外部結合でNULLになった列とCOUNT(*)の差を説明できる。"
+    },
+    {
+      "id": "20261022-02",
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "controller",
+        "validation",
+        "render",
+        "http_status"
+      ],
+      "question": "PostsController#createで@post.saveがfalseでした。入力済みの値とバリデーションエラーを同じフォームに表示したい場合、最も適切な処理はどれですか？（Railsの通常のHTMLフォームを想定）",
+      "options": {
+        "A": "redirect_to new_post_path",
+        "B": "render :show, status: :ok",
+        "C": "head :ok",
+        "D": "render :new, status: :unprocessable_entity"
+      },
+      "correct_answer": "D",
+      "explanations": {
+        "A": "リダイレクトすると新しいリクエストになり、@postのエラー情報をそのまま引き継げない。",
+        "B": "通常、作成失敗時の入力フォームはnewであり、成功を表す200を返す理由もない。",
+        "C": "本文を返さないためフォームとエラーを表示できない。",
+        "D": "同じ@postを使ってnewを再描画でき、検証失敗を422として返せる。"
+      },
+      "learning_objective": "create失敗時のrenderとredirectの違いを理解する。"
+    },
+    {
+      "id": "20261022-03",
+      "category": "security",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "csrf",
+        "rails_form",
+        "authenticity_token"
+      ],
+      "question": "ログイン済みユーザーが商品購入フォームを送信します。第三者のサイトから勝手に購入POSTを送らせる攻撃を防ぐ仕組みとして、Railsで最も適切な説明はどれですか？",
+      "options": {
+        "A": "CookieにHttpOnlyを付ければ購入POSTはすべて拒否できる",
+        "B": "フォームのCSRFトークンをサーバーが検証し、正しくないリクエストを拒否する",
+        "C": "画面のボタンをJavaScriptで非表示にすれば防げる",
+        "D": "SQLのプレースホルダーだけで防げる"
+      },
+      "correct_answer": "B",
+      "explanations": {
+        "A": "HttpOnlyはJavaScriptからのCookie参照を制限する属性であり、CSRF対策の代わりではない。",
+        "B": "セッションと関連付く正当なトークンの検証がCSRF対策になる。",
+        "C": "ブラウザの表示を変えても外部からHTTPリクエストを送れる。",
+        "D": "プレースホルダーは主にSQLインジェクション対策である。"
+      },
+      "learning_objective": "CSRFの成立条件とフォーム送信時の防御を区別する。"
+    },
+    {
+      "id": "20261022-04",
+      "category": "fundamental_it",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "ipv4",
+        "cidr",
+        "network_address"
+      ],
+      "question": "IPアドレス192.168.50.70/26が属するネットワークアドレスはどれですか？",
+      "options": {
+        "A": "192.168.50.0",
+        "B": "192.168.50.32",
+        "C": "192.168.50.64",
+        "D": "192.168.50.128"
+      },
+      "correct_answer": "C",
+      "explanations": {
+        "A": "/26の最初の範囲は.0〜.63で、.70を含まない。",
+        "B": "/26の境界は64刻みなので.32はネットワーク境界ではない。",
+        "C": "/26は末尾オクテットが64刻みで、.70は.64〜.127の範囲に入る。",
+        "D": ".128〜.191の範囲で、.70を含まない。"
+      },
+      "learning_objective": "サブネットの範囲とネットワークアドレスを計算する。"
+    },
+    {
+      "id": "20261022-05",
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_2",
+      "type": "implementation",
+      "review_of": [
+        "20261021-05",
+        "20261019-10"
+      ],
+      "topics": [
+        "each",
+        "if",
+        "accumulator",
+        "return_value",
+        "spaced_retrieval"
+      ],
+      "question": "整数配列numbersに含まれる「0より大きい奇数」の合計を返すsum_positive_odds(numbers)を実装してください。\n\nsum_positive_odds([3, -1, 2, 5, 0, 7]) #=> 15\nsum_positive_odds([-3, 2, 4])         #=> 0\nsum_positive_odds([])                 #=> 0\n\neachとifを使ってください。sum、select、injectは使わず、ヒントなしで最初から最後まで書いてください。",
+      "correct_answer": "implementation_review",
+      "reference_solution": "def sum_positive_odds(numbers)\n  total = 0\n  numbers.each do |n|\n    total += n if n > 0 && n.odd?\n  end\n  total\nend",
+      "idiomatic_alternative": "def sum_positive_odds(numbers)\n  numbers.select { |n| n.positive? && n.odd? }.sum\nend",
+      "grading_points": [
+        "メソッド内で0を初期化する",
+        "正の奇数のみ加算する",
+        "最後に数値を返す",
+        "空配列でも0"
+      ],
+      "learning_objective": "累積変数と暗黙の戻り値を自力で再現する。"
+    },
+    {
+      "id": "20261022-06",
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "where",
+        "group_by",
+        "having",
+        "count"
+      ],
+      "question": "employees表には以下の行があります。\n(id, department_id, active)\n(1,10,true), (2,10,true), (3,10,false), (4,20,true), (5,30,true), (6,30,true)\n\n次のSQLで取得されるdepartment_idの組合せはどれですか？\n\nSELECT department_id FROM employees\nWHERE active = true\nGROUP BY department_id\nHAVING COUNT(*) >= 2\nORDER BY department_id;",
+      "options": {
+        "A": "10と30",
+        "B": "10と20",
+        "C": "10と20と30",
+        "D": "20のみ"
+      },
+      "correct_answer": "A",
+      "explanations": {
+        "A": "active=trueの件数は10が2件、20が1件、30が2件なので10と30が残る。",
+        "B": "20はactive=trueが1件しかなく、30を見落としている。",
+        "C": "20は2件以上という条件を満たさない。",
+        "D": "20は1件なので条件を満たさない。"
+      },
+      "learning_objective": "絞り込み後のグループ件数を判断する。"
+    },
+    {
+      "id": "20261022-07",
+      "category": "security",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "authorization",
+        "idor",
+        "active_record"
+      ],
+      "question": "ログイン中のユーザーだけが自分の注文履歴を閲覧できます。OrdersController#showで他人の注文を見せないため、次のうち最も適切なのはどれですか？（current_userは認証済みのユーザーを返し、User has_many :orders）",
+      "options": {
+        "A": "@order = Order.find(params[:id])",
+        "B": "@order = current_user.orders.find(params[:id])",
+        "C": "@order = Order.find_by(id: params[:id]) || Order.first",
+        "D": "@order = Order.find(params[:id]); @order.user_id = current_user.id"
+      },
+      "correct_answer": "B",
+      "explanations": {
+        "A": "IDを知れば他人の注文も取得できる。",
+        "B": "ログイン中のユーザーに関連する注文に検索範囲を限定できる。",
+        "C": "存在しない場合に別人の注文を返す危険がある。",
+        "D": "取得後に関連IDを書き換えるだけでは閲覧権限の確認にならない。"
+      },
+      "learning_objective": "認証とレコード単位の認可を区別する。"
+    },
+    {
+      "id": "20261022-08",
+      "category": "fundamental_it",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "stack",
+        "queue",
+        "data_structure"
+      ],
+      "question": "空のスタックSと空のキューQの両方に、順番に3、6、9を追加します。次にSから1つpopし、Qから1つdequeueします。取り出される値の組(S, Q)はどれですか？",
+      "options": {
+        "A": "(3, 3)",
+        "B": "(3, 9)",
+        "C": "(9, 9)",
+        "D": "(9, 3)"
+      },
+      "correct_answer": "D",
+      "explanations": {
+        "A": "スタックは最初に入れた3ではなく最後に入れた9を取り出す。",
+        "B": "スタックとキューの取り出し順がどちらも逆になっている。",
+        "C": "キューは最初に入れた3を取り出す。",
+        "D": "スタックは後入れ先出しで9、キューは先入れ先出しで3。"
+      },
+      "learning_objective": "LIFOとFIFOを操作の結果から判断する。"
+    },
+    {
+      "id": "20261022-09",
+      "category": "rails_url_design",
+      "difficulty": "beginner_3",
+      "type": "short_answer",
+      "topics": [
+        "nested_routes",
+        "path_helper",
+        "query_parameters"
+      ],
+      "question": "オンライン講座アプリに次のルーティングがあります。\n\nresources :courses, only: [:show] do\n  resources :lessons, only: [:index]\nend\n\n@course.id が7のとき、ビューに次のコードがあります。\n\ncourse_lessons_path(course_id: @course.id, level: \"beginner\")\n\n生成されるパスを、クエリパラメータまで含めて1行で書いてください。",
+      "correct_answer": "/courses/7/lessons?level=beginner",
+      "explanations": {
+        "route": "ネストしたcourse_idは/courses/7の部分に使われる。",
+        "query": "ルートのパス変数として使われないlevelはクエリパラメータになる。",
+        "pitfall": "/courses/7/lessons?course_id=7&level=beginner のようにcourse_idを重複させない。"
+      },
+      "learning_objective": "パスに埋め込まれる引数とクエリパラメータになる引数を区別する。"
+    },
+    {
+      "id": "20261022-10",
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_3",
+      "type": "implementation",
+      "topics": [
+        "array",
+        "hash",
+        "find",
+        "block"
+      ],
+      "question": "商品データの配列itemsから、価格がlimitより高い「最初の商品（ハッシュそのもの）」を返すfirst_over_limit(items, limit)を実装してください。該当がなければnilを返します。\n\nitems = [{name: \"pen\", price: 90}, {name: \"notebook\", price: 350}, {name: \"bag\", price: 250}]\nfirst_over_limit(items, 200) #=> {name: \"notebook\", price: 350}\nfirst_over_limit(items, 400) #=> nil\n\nRubyのfindメソッドを使い、配列の順序を変えないでください。",
+      "correct_answer": "implementation_review",
+      "reference_solution": "def first_over_limit(items, limit)\n  items.find { |item| item[:price] > limit }\nend",
+      "grading_points": [
+        "findを使う",
+        "価格は厳密に大きい場合のみ",
+        "最初のハッシュを返す",
+        "見つからなければnil"
+      ],
+      "learning_objective": "findの戻り値とブロック条件を理解する。"
+    },
+    {
+      "id": "20261022-11",
+      "category": "web_rails",
+      "difficulty": "intermediate_1",
+      "type": "multiple_choice",
+      "topics": [
+        "active_record",
+        "association",
+        "n_plus_one"
+      ],
+      "question": "投稿一覧で各投稿のコメント本文を表示します。\n\n@posts.each do |post|\n  post.comments.each { |comment| puts comment.body }\nend\n\n投稿が100件あるとき、コメント取得のSQLが投稿ごとに発行される問題を減らすため、@postsの取得方法として最も適切なのはどれですか？",
+      "options": {
+        "A": "@posts = Post.all",
+        "B": "@posts = Post.includes(:comments)",
+        "C": "@posts = Post.pluck(:title)",
+        "D": "@posts = Post.order(:id)"
+      },
+      "correct_answer": "B",
+      "explanations": {
+        "A": "関連の事前読み込みを指定していない。",
+        "B": "commentsを事前読み込みするため、投稿ごとの追加クエリを抑えられる。",
+        "C": "Postのインスタンスではなくタイトルの配列になり、関連をたどれない。",
+        "D": "並び順は変わるが関連の事前読み込みはしない。"
+      },
+      "learning_objective": "関連の事前読み込みとN+1問題の関係を理解する。"
+    },
+    {
+      "id": "20261022-12",
+      "category": "fundamental_it_additional",
+      "exam_section": "A",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "cpu",
+        "clock",
+        "performance"
+      ],
+      "question": "1命令の実行に平均4クロック必要なCPUが、クロック周波数2GHzで10億命令を実行します。メモリ待ちなどは無視できるとき、実行時間は何秒ですか？",
+      "options": {
+        "A": "1秒",
+        "B": "2秒",
+        "C": "4秒",
+        "D": "8秒"
+      },
+      "correct_answer": "B",
+      "explanations": {
+        "A": "必要な総クロック数40億を20億クロック/秒で割ると2秒。",
+        "B": "10億命令×4クロック/命令÷20億クロック/秒=2秒。",
+        "C": "命令数とクロック周波数の換算を誤っている。",
+        "D": "クロック数を二重に掛けている。"
+      },
+      "learning_objective": "命令数、CPI、周波数から処理時間を計算する。"
+    },
+    {
+      "id": "20261022-13",
+      "category": "fundamental_it_additional",
+      "exam_section": "A",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "virtual_memory",
+        "lru",
+        "page_replacement"
+      ],
+      "question": "主記憶のページ枠が3つで、最初は空です。ページ参照が1→2→3→1→4の順に起き、置換方式はLRU（最後に使われてから最も長いページを追い出す）です。最後に4を読み込む際、追い出されるページはどれですか？",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "追い出しは不要"
+      },
+      "correct_answer": "B",
+      "explanations": {
+        "A": "1は直前に再参照されており、最も古いページではない。",
+        "B": "3枠が埋まった時点で、最後の参照が最も古いのは2。",
+        "C": "3の参照は2より新しい。",
+        "D": "1、2、3で全枠が埋まっているため置換が必要。"
+      },
+      "learning_objective": "ページ置換方式を参照履歴に適用する。"
+    },
+    {
+      "id": "20261022-14",
+      "category": "fundamental_it_additional",
+      "exam_section": "A",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "cache",
+        "hit_rate",
+        "expected_time"
+      ],
+      "question": "キャッシュへのアクセスは5ns、主記憶へのアクセスは80nsです。ヒット率90%、ミス時はキャッシュの5nsに加えて主記憶の80nsが必要です。平均アクセス時間は何nsですか？",
+      "options": {
+        "A": "8ns",
+        "B": "13ns",
+        "C": "15ns",
+        "D": "85ns"
+      },
+      "correct_answer": "B",
+      "explanations": {
+        "A": "ミス時の追加コストを過小評価している。",
+        "B": "0.9×5+0.1×(5+80)=13ns。",
+        "C": "ミス時のコストや割合の計算が一致しない。",
+        "D": "すべてのアクセスでキャッシュミスした場合の時間。"
+      },
+      "learning_objective": "ヒット率を使った平均アクセス時間を計算する。"
+    },
+    {
+      "id": "20261022-15",
+      "category": "fundamental_it_additional",
+      "exam_section": "B",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "pseudocode",
+        "nested_loop",
+        "trace"
+      ],
+      "question": "次の擬似コードを実行した後のcountはどれですか？\n\ncount ← 0\nfor i ← 1 to 3\n  for j ← 1 to i\n    if (i + j) mod 2 = 0\n      count ← count + 1\n    endif\n  endfor\nendfor\n\nforの両端は含み、modは余りを表します。",
+      "options": {
+        "A": "2",
+        "B": "3",
+        "C": "4",
+        "D": "6"
+      },
+      "correct_answer": "C",
+      "explanations": {
+        "A": "(1,1),(2,2),(3,1),(3,3)の4組が条件を満たす。",
+        "B": "i=3で成立する2組のうち1組を見落としている。",
+        "C": "成立するのは(1,1),(2,2),(3,1),(3,3)の計4組。",
+        "D": "全反復回数は6回だが、条件を満たさない組もある。"
+      },
+      "learning_objective": "可変範囲の二重ループと条件式をトレースする。"
+    },
+    {
+      "id": "20261022-16",
+      "category": "fundamental_it_additional",
+      "exam_section": "B",
+      "difficulty": "beginner_3",
+      "type": "multiple_choice",
+      "topics": [
+        "binary_search",
+        "trace",
+        "comparison_count"
+      ],
+      "question": "添字が0から始まる昇順配列a=[2,5,9,14,20,27,35]から20を二分探索します。\n\nleft ← 0; right ← 6; count ← 0\nwhile left <= right\n  mid ← floor((left + right) / 2)\n  count ← count + 1\n  if a[mid] = 20\n    break\n  else if a[mid] < 20\n    left ← mid + 1\n  else\n    right ← mid - 1\n  endif\nendwhile\n\n終了時のcountはいくつですか？",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "4"
+      },
+      "correct_answer": "C",
+      "explanations": {
+        "A": "最初のmid=3でa[3]=14なので一致しない。",
+        "B": "2回目のmid=5では27であり、まだ一致しない。",
+        "C": "比較する値は14→27→20の3回。",
+        "D": "3回目で一致してbreakするため4回目はない。"
+      },
+      "learning_objective": "二分探索の添字更新と比較回数を追う。"
+    }
+  ]
+}
