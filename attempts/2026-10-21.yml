@@ -1,0 +1,89 @@
+version: 1
+date: "2026-10-21"
+session: morning_daily_10
+status: completed
+summary:
+  total: 10
+  first_correct: 7
+  first_accuracy_percent: 70
+  correct_after_feedback: 9
+  remaining_review: ["20261021-02"]
+attempts:
+  - {question_id: "20261021-01", first_answer: B, correct_answer: B, first_correct: true}
+  - {question_id: "20261021-02", first_answer: A, correct_answer: B, first_correct: false}
+  - {question_id: "20261021-03", first_answer: C, correct_answer: C, first_correct: true}
+  - {question_id: "20261021-04", first_answer: C, correct_answer: C, first_correct: true}
+  - question_id: "20261021-05"
+    type: implementation
+    first_correct: false
+    corrected_after_feedback: true
+    first_submission: |
+      def sum_even_numbers(numbers)
+        numbers.each do |num|
+          if num % == 0
+            sum += num
+          end
+        end
+        sum
+      end
+    final_submission: |
+      def sum_even_numbers(numbers)
+        sum = 0
+        numbers.each do |num|
+          if num % 2 == 0
+            sum += num
+          end
+        end
+        sum
+      end
+    hints: ["偶数判定の除数", "sumの初期化"]
+  - {question_id: "20261021-06", first_answer: B, correct_answer: B, first_correct: true}
+  - {question_id: "20261021-07", first_answer: C, correct_answer: C, first_correct: true}
+  - {question_id: "20261021-08", first_answer: D, correct_answer: D, first_correct: true}
+  - {question_id: "20261021-09", first_answer: B, correct_answer: B, first_correct: true}
+  - question_id: "20261021-10"
+    type: implementation
+    first_correct: false
+    corrected_after_feedback: true
+    submissions:
+      - |
+        def count_words(words)
+          arr = {}
+          words.each do |word|
+            arr >> word.downcase
+          end
+          end
+          arr.tally
+        end
+      - |
+        def count_words(words)
+          arr = {}
+          words.each do |word|
+            arr << word.downcase
+          end
+          arr.tally
+        end
+      - |
+        def count_words(words)
+          arr = ()
+          words.each do |word|
+            arr << word.downcase
+          end
+          arr.tally
+        end
+      - |
+        def count_words(words)
+          arr = []
+          words.each do |word|
+            arr << word.downcase
+          end
+          arr.tally
+        end
+    hints: ["ArrayとHashの違い", "配列への追加は<<", "endの対応", "[]による配列初期化"]
+learning_plan:
+  basics_percent: 30
+  ruby_standard_methods_percent: 50
+  applications_percent: 20
+  methods: [map, select, reject, count, sum, tally, find]
+  approach: "同じ処理をeach版と標準メソッド版で比較し、メソッドの選択理由を説明できるようにする"
+  priority_review: ["LEFT JOIN", "ArrayとHashの初期化", "集計処理"]
