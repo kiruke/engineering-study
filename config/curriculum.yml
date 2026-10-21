@@ -1,52 +1,29 @@
 version: 1
-
-daily_questions: 10
-
+daily_questions: 16
 categories:
   web_rails:
     count: 2
-    topics:
-      - routing
-      - controller
-      - model
-      - association
-      - validation
-      - active_record
-      - view
-      - session
-
+    topics: [routing, controller, model, association, validation, active_record, view, session]
   database_sql:
     count: 2
-    topics:
-      - sql
-      - join
-      - index
-      - transaction
-      - normalization
-
+    topics: [sql, join, index, transaction, normalization]
   security:
     count: 2
-    topics:
-      - authentication
-      - authorization
-      - csrf
-      - xss
-      - password_hashing
-
+    topics: [authentication, authorization, csrf, xss, password_hashing]
   fundamental_it:
     count: 2
-    topics:
-      - data_structure
-      - network
-      - operating_system
-      - computer_architecture
-
+    topics: [data_structure, network, operating_system, computer_architecture]
   algorithm_ruby:
     count: 2
-    topics:
-      - array
-      - loop
-      - conditional
-      - search
-      - sorting
-      - ruby_implementation
+    topics: [array, loop, conditional, search, sorting, ruby_implementation]
+  fundamental_it_additional:
+    count: 5
+    section_a_target: 3
+    section_b_target: 2
+    exclude: [management, business_strategy]
+  rails_url_design:
+    count: 1
+    difficulty: applied
+    topics: [http_method, resource_url, nested_resources, route_helpers, rails_routes]
+    avoid_project_examples: [yomiato]
+    answer_format: implementation_reasoning
