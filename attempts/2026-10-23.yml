@@ -1,5 +1,167 @@
-date: 2026-10-23
-initial_correct: 10
-total: 16
-hint_correct: 1
-answers: [A, B, C, B, retry, A, A, B, code, A, A, C, D, B, C, A]
+{
+  "date": "2026-10-23",
+  "summary": {
+    "total": 16,
+    "first_try_correct": 10,
+    "first_try_accuracy": 0.625,
+    "hint_after_correct": 1,
+    "correct_after_hint_included": 11
+  },
+  "attempts": [
+    {
+      "number": 1,
+      "topic": "Rails build and persisted?",
+      "first_answer": "A",
+      "first_correct": false,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 2,
+      "topic": "SQL HAVING >= 3000",
+      "first_answer": "B",
+      "first_correct": false,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 3,
+      "topic": "Cookie attributes",
+      "first_answer": "C",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 4,
+      "topic": "CIDR 192.168.1.100/27",
+      "first_answer": "B",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 5,
+      "topic": "Ruby count_a_words",
+      "first_answer": "def count_a_words(words, min_length)\n  item = 0\n  words.select {|item| item.length >= min_length && item.str[0] == 'a' }\nend",
+      "first_correct": false,
+      "hint_given": "Change select to count, remove .str, remove unused item=0",
+      "retry_answer": "def count_a_words(words, min_length)\n  words.count {|item| item.length >= min_length && item[0] == 'a' }\nend",
+      "retry_correct": true
+    },
+    {
+      "number": 6,
+      "topic": "LEFT JOIN COUNT(orders.id)",
+      "first_answer": "A",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 7,
+      "topic": "Session fixation",
+      "first_answer": "A",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 8,
+      "topic": "Serial availability 95% and 90%",
+      "first_answer": "B",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 9,
+      "topic": "Ruby double_evens",
+      "first_answer": "def double_evens(numbers)\n  numbers.select { |n| n.even?}.map { |n| n * 2 }\nend",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 10,
+      "topic": "Linear search worst-case complexity",
+      "first_answer": "A",
+      "first_correct": false,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 11,
+      "topic": "TCP sequence 1000 length 500",
+      "first_answer": "A",
+      "first_correct": false,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 12,
+      "topic": "Array trace [3,6,2,5]",
+      "first_answer": "C",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 13,
+      "topic": "Bubble sort one pass [7,3,5,2]",
+      "first_answer": "D",
+      "first_correct": false,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 14,
+      "topic": "Queue FIFO operations",
+      "first_answer": "B",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 15,
+      "topic": "Transaction atomicity",
+      "first_answer": "C",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    },
+    {
+      "number": 16,
+      "topic": "Nested Rails project_tasks_path",
+      "first_answer": "A",
+      "first_correct": true,
+      "hint_given": null,
+      "retry_answer": null,
+      "retry_correct": null
+    }
+  ],
+  "review_priorities": [
+    "bubble sort repeated miss",
+    "Ruby count and string indexing after hint",
+    "worst-case time complexity",
+    "TCP ACK calculation",
+    "Active Record build vs create"
+  ],
+  "notes": [
+    "No verified 1-day/7-day self-reproduction result for this quiz.",
+    "Full question wording not preserved; summaries based on actual chat."
+  ]
+}
