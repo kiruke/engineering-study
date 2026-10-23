@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "date": "2026-10-24",
+  "daily_questions": 16,
+  "source_attempts": [
+    "attempts/2026-10-17.yml",
+    "attempts/2026-10-18.yml",
+    "attempts/2026-10-19.yml",
+    "attempts/2026-10-20.yml",
+    "attempts/2026-10-21.yml",
+    "attempts/2026-10-23.yml"
+  ],
+  "note": "出題時は1問ずつ提示。回答前に正解を表示しない。Rubyのreference_solutionは回答・再挑戦後にのみ提示する。attemptsは全16問終了後に作成する。",
+  "questions": [
+    {
+      "n": 1,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "prompt": "UserとNoteの関連付けがあり、Noteにはtitleの必須バリデーションがある。User.find(5)は存在し、他のバリデーションやコールバックはない。次のコードを実行したとき、最後に出力される配列はどれか。",
+      "code": "class User < ApplicationRecord\n  has_many :notes\nend\n\nclass Note < ApplicationRecord\n  belongs_to :user\n  validates :title, presence: true\nend\n\nuser = User.find(5)\nnote = user.notes.build(title: \"\")\nsaved = note.save\np [saved, note.user_id, note.persisted?]",
+      "options": {
+        "A": "[true, 5, true]",
+        "B": "[false, 5, false]",
+        "C": "[false, nil, false]",
+        "D": "[true, nil, false]"
+      },
+      "correct_answer": "B",
+      "explanation": "buildで関連先のuser_idは5になる。titleが空なのでsaveはfalse、保存されずpersisted?はfalse。",
+      "choice_explanations": {
+        "A": "必須titleが空のため保存成功にはならない。",
+        "B": "関連付けはあるがバリデーション失敗で未保存。",
+        "C": "buildした関連レコードにはuser_idが設定される。",
+        "D": "saveは成功せず、関連先のuser_idもnilではない。"
+      },
+      "review_of": "2026-10-23 Q1"
+    },
+    {
+      "n": 2,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "prompt": "ordersには(user_id, amount)が(1,1200),(1,800),(2,500),(3,3000),(3,1000)の5行ある。次のSQLが返すuser_idはどれか。",
+      "code": "SELECT user_id\nFROM orders\nGROUP BY user_id\nHAVING COUNT(*) >= 2 AND SUM(amount) > 2000\nORDER BY user_id;",
+      "options": {
+        "A": "1と3",
+        "B": "1のみ",
+        "C": "該当なし",
+        "D": "3のみ"
+      },
+      "correct_answer": "D",
+      "explanation": "ユーザー1は2件で合計2000なので>2000を満たさない。2は1件。3は2件で合計4000。",
+      "choice_explanations": {
+        "A": "1は合計2000で厳密な>2000を満たさない。",
+        "B": "1は不適合、3は適合。",
+        "C": "3は両条件を満たす。",
+        "D": "3だけが両条件を満たす。"
+      },
+      "review_of": "2026-10-23 Q2"
+    },
+    {
+      "n": 3,
+      "category": "security",
+      "difficulty": "beginner_2",
+      "prompt": "RailsのERBで、ユーザーが入力した名前を画面に表示する。XSS対策について最も適切な説明はどれか。",
+      "code": "<%= user.name %>\n<%= raw(user.name) %>",
+      "options": {
+        "A": "どちらも常にHTMLを無害化して表示する",
+        "B": "rawを使えば自動的に安全性が高まる",
+        "C": "通常の<%= user.name %>はHTMLエスケープされ、rawはそれを無効化するため危険になり得る",
+        "D": "XSS対策はSQLのプレースホルダーだけで十分"
+      },
+      "correct_answer": "C",
+      "explanation": "RailsのERBは通常HTMLエスケープする。rawやhtml_safeは信頼できない文字列ではXSSリスクがある。",
+      "choice_explanations": {
+        "A": "rawはエスケープを無効化する。",
+        "B": "rawは安全化処理ではない。",
+        "C": "通常の自動エスケープとrawの違いを正しく説明。",
+        "D": "SQLインジェクション対策とXSS対策は別。"
+      }
+    },
+    {
+      "n": 4,
+      "category": "fundamental_it",
+      "difficulty": "beginner_2",
+      "prompt": "TCPで送信側がシーケンス番号2400から320バイトのデータを送信した。データはすべて順序通り届き、SYN/FINは含まれない。受信側が次に期待するシーケンス番号として返すACK番号はどれか。",
+      "options": {
+        "A": "320",
+        "B": "2400",
+        "C": "2720",
+        "D": "2721"
+      },
+      "correct_answer": "C",
+      "explanation": "TCPのシーケンス番号はバイト単位。2400+320=2720。",
+      "choice_explanations": {
+        "A": "データ長のみ。",
+        "B": "受信開始位置。",
+        "C": "次に期待するバイトの番号。",
+        "D": "SYN/FINはないので余分な1を足さない。"
+      },
+      "review_of": "2026-10-23 Q11"
+    },
+    {
+      "n": 5,
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_2",
+      "type": "implementation",
+      "prompt": "Rubyで count_short_b_words(words, max_length) を実装する。wordsは文字列の配列。先頭が小文字の'b'で、文字数がmax_length以下の単語の個数を整数で返す。空配列なら0を返し、元の配列を変更しない。例: count_short_b_words(['bee','boat','apple','ball'],3) は1。ヒントなしでまず書いてください。",
+      "options": null,
+      "correct_answer": "implementation",
+      "reference_solution": "def count_short_b_words(words, max_length)\n  words.count { |word| word.start_with?(\"b\") && word.length <= max_length }\nend",
+      "explanation": "Array#countは条件を満たす要素の個数を返す。String#start_with?で先頭を判定し、lengthで文字数を確認。",
+      "review_of": "2026-10-23 Q5",
+      "independent_recall_window": "1-day"
+    },
+    {
+      "n": 6,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "prompt": "usersにはID 1,2,3があり、ordersには注文状態statusがある。注文のないユーザーや未決済注文しかないユーザーも含めて、ユーザーごとの決済済み注文数（0件も表示）を取得したい。正しいSQLはどれか。",
+      "options": {
+        "A": "SELECT users.id, COUNT(orders.id) FROM users LEFT JOIN orders ON orders.user_id=users.id WHERE orders.status='paid' GROUP BY users.id",
+        "B": "SELECT users.id, COUNT(orders.id) FROM users LEFT JOIN orders ON orders.user_id=users.id AND orders.status='paid' GROUP BY users.id",
+        "C": "SELECT users.id, COUNT(orders.id) FROM users INNER JOIN orders ON orders.user_id=users.id AND orders.status='paid' GROUP BY users.id",
+        "D": "SELECT users.id, COUNT(orders.id) FROM users LEFT JOIN orders ON orders.user_id=users.id WHERE orders.status='paid' OR orders.id IS NULL GROUP BY users.id"
+      },
+      "correct_answer": "B",
+      "explanation": "LEFT JOINのON句でpaid注文だけ結合すれば、未決済しかないユーザーや注文ゼロのユーザーも左表から残る。COUNT(orders.id)はNULLを数えない。",
+      "choice_explanations": {
+        "A": "WHEREで右表のstatusを絞ると該当注文のないユーザーが消える。",
+        "B": "ON句で結合条件を絞るので左表の全ユーザーが残る。",
+        "C": "INNER JOINでは注文のないユーザーが消える。",
+        "D": "注文ゼロは残せても未決済注文しかないユーザーは消える。"
+      },
+      "review_of": "2026-10-21 SQL JOIN"
+    },
+    {
+      "n": 7,
+      "category": "security",
+      "difficulty": "beginner_3",
+      "prompt": "ログイン必須のRailsアプリで、ユーザーは自分の投稿だけを閲覧できる仕様。PostsController#showで他人の投稿IDを指定されても閲覧できないようにする方法として最も適切なのはどれか。",
+      "code": "def show\n  @post = Post.find(params[:id])\nend",
+      "options": {
+        "A": "画面上で他人の投稿へのリンクを隠すだけにする",
+        "B": "params[:id]が整数ならすべて閲覧可能にする",
+        "C": "@post = current_user.posts.find(params[:id]) に変更する",
+        "D": "ログイン必須ならPost.findのままで問題ない"
+      },
+      "correct_answer": "C",
+      "explanation": "認証済みでも他人のリソースへのアクセスは認可が必要。current_user.posts.findなら所有者スコープ内だけを検索する。",
+      "choice_explanations": {
+        "A": "URLを直接指定できるのでリンク非表示だけでは不十分。",
+        "B": "ID形式の検証は所有権の検証ではない。",
+        "C": "所有者に紐づく投稿だけを取得できる。",
+        "D": "認証と認可は異なる。"
+      }
+    },
+    {
+      "n": 8,
+      "category": "fundamental_it",
+      "difficulty": "beginner_2",
+      "prompt": "あるキャッシュのヒット率は80%。ヒット時のアクセス時間は2ns、ミス時の総アクセス時間は50nsとする。平均アクセス時間はいくらか。",
+      "options": {
+        "A": "11.6ns",
+        "B": "10.0ns",
+        "C": "40.4ns",
+        "D": "52.0ns"
+      },
+      "correct_answer": "A",
+      "explanation": "平均=0.8×2+0.2×50=1.6+10=11.6ns。ミス時50nsは総時間として与えられている。",
+      "choice_explanations": {
+        "A": "加重平均の正しい計算。",
+        "B": "ヒット時の2nsを落としている。",
+        "C": "確率の掛け方が誤り。",
+        "D": "アクセス時間を単純加算している。"
+      }
+    },
+    {
+      "n": 9,
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_3",
+      "type": "implementation",
+      "prompt": "Rubyで sum_expensive_prices(items, min_price) を実装する。itemsは {name: 'A', price: 1200} のようなHashの配列。priceがmin_price以上の商品のpriceだけを合計し整数で返す。該当なしや空配列は0。元の配列やHashを変更しない。例: items=[{name:'A',price:1200},{name:'B',price:500},{name:'C',price:2000}], min_price=1000なら3200。ヒントなしでまず書いてください。",
+      "options": null,
+      "correct_answer": "implementation",
+      "reference_solution": "def sum_expensive_prices(items, min_price)\n  items.select { |item| item[:price] >= min_price }.sum { |item| item[:price] }\nend",
+      "explanation": "selectで条件に合うHashを抽出し、sumのブロックで価格を合計。Rubyでは合計値を返す。",
+      "review_of": "Ruby standard methods / select sum"
+    },
+    {
+      "n": 10,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_2",
+      "prompt": "次の疑似コードで、nを2倍にするとx+=1の実行回数は何倍になるか。ただしnは正の整数。",
+      "code": "for i = 1 to n\n  for j = 1 to n\n    x = x + 1\n  endfor\nendfor",
+      "options": {
+        "A": "変わらない",
+        "B": "2倍",
+        "C": "約3倍",
+        "D": "4倍"
+      },
+      "correct_answer": "D",
+      "explanation": "内側の処理はn×n=n²回。nを2nにすると(2n)²=4n²。",
+      "choice_explanations": {
+        "A": "nによって回数が変わる。",
+        "B": "ループが1重の場合に近い。",
+        "C": "n²の倍率は3ではない。",
+        "D": "二重ループのn²回は4倍。"
+      },
+      "review_of": "2026-10-23 Q10"
+    },
+    {
+      "n": 11,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_2",
+      "prompt": "IPv4アドレス10.0.0.130/26のネットワークアドレスはどれか。",
+      "options": {
+        "A": "10.0.0.128",
+        "B": "10.0.0.64",
+        "C": "10.0.0.130",
+        "D": "10.0.0.192"
+      },
+      "correct_answer": "A",
+      "explanation": "/26のブロック幅は64。130は128〜191に含まれる。",
+      "choice_explanations": {
+        "A": "128〜191の範囲のネットワーク先頭。",
+        "B": "64〜127のネットワーク。",
+        "C": "ホストアドレスでありネットワーク先頭ではない。",
+        "D": "次のネットワーク先頭。"
+      }
+    },
+    {
+      "n": 12,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "prompt": "次の疑似コードで2回の外側ループを終了した後のaはどれか。添字は0始まり。",
+      "code": "a = [5, 1, 4, 2]\nfor pass = 1 to 2\n  for i = 0 to 2\n    if a[i] > a[i + 1]\n      temp = a[i]\n      a[i] = a[i + 1]\n      a[i + 1] = temp\n    endif\n  endfor\nendfor\n出力 a",
+      "options": {
+        "A": "[1, 4, 2, 5]",
+        "B": "[1, 2, 4, 5]",
+        "C": "[1, 2, 5, 4]",
+        "D": "[5, 1, 2, 4]"
+      },
+      "correct_answer": "B",
+      "explanation": "1周目:[1,4,2,5]、2周目:[1,2,4,5]。",
+      "choice_explanations": {
+        "A": "1周目終了時の状態。",
+        "B": "2周目終了時の状態。",
+        "C": "最後の比較を誤っている。",
+        "D": "最初の比較を反映していない。"
+      },
+      "review_of": "2026-10-23 Q13",
+      "independent_recall_window": "1-day"
+    },
+    {
+      "n": 13,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "prompt": "次の疑似コードの最後に出力されるcountはいくつか。forの終点は含む。",
+      "code": "count = 0\nfor i = 1 to 3\n  for j = 1 to i\n    if (i + j) mod 2 == 0\n      count = count + 1\n    endif\n  endfor\nendfor\n出力 count",
+      "options": {
+        "A": "3",
+        "B": "5",
+        "C": "4",
+        "D": "6"
+      },
+      "correct_answer": "C",
+      "explanation": "i=1は1回、i=2は1回、i=3は2回で合計4回。",
+      "choice_explanations": {
+        "A": "i=3で成立する2回のうち一つを数え落としている。",
+        "B": "不成立の組を一つ数えている。",
+        "C": "成立する組は(1,1),(2,2),(3,1),(3,3)の4組。",
+        "D": "全ループ回数6回を条件成立回数と混同。"
+      },
+      "review_of": "nested loop tracing"
+    },
+    {
+      "n": 14,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_2",
+      "prompt": "ハッシュ表で『衝突（collision）』が起こる状況として最も適切な説明はどれか。",
+      "options": {
+        "A": "異なるキーが同じ格納位置に対応する",
+        "B": "必ず2つの値が完全に同一である",
+        "C": "ハッシュ表では衝突は発生しない",
+        "D": "衝突が起こると必ずすべてのデータが失われる"
+      },
+      "correct_answer": "A",
+      "explanation": "異なるキーが同じハッシュ値や格納位置に対応することがある。チェイン法などで解決する。",
+      "choice_explanations": {
+        "A": "衝突の定義。",
+        "B": "キーや値が同一である必要はない。",
+        "C": "有限の格納領域では衝突は起こり得る。",
+        "D": "衝突解決方式によりデータを保持できる。"
+      }
+    },
+    {
+      "n": 15,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "prompt": "Railsで次のstrong parametersを使ってArticleを作成する。リクエストにarticle[title]、article[body]、article[admin]が含まれているとき、Article.new(article_params)に渡される属性として正しいのはどれか。",
+      "code": "def article_params\n  params.require(:article).permit(:title, :body)\nend",
+      "options": {
+        "A": "title、body、adminの3つ",
+        "B": "adminだけ",
+        "C": "何も渡されない",
+        "D": "titleとbodyだけ"
+      },
+      "correct_answer": "D",
+      "explanation": "permitで許可したtitleとbodyだけが含まれ、adminは除外される。",
+      "choice_explanations": {
+        "A": "adminはpermitされていない。",
+        "B": "adminは除外される。",
+        "C": "titleとbodyは許可されている。",
+        "D": "permitに列挙された2つだけ。"
+      }
+    },
+    {
+      "n": 16,
+      "category": "rails_url_design",
+      "difficulty": "applied",
+      "prompt": "次のルートとビューがある。@course.idは4、@lesson.idは9。フォーム送信時、Railsがルーティング上解釈するHTTPメソッドと送信先パス・クエリの組合せはどれか。ブラウザのHTMLフォームによるメソッドオーバーライドの実装詳細ではなく、Railsのルーティングで扱うメソッドを答える。",
+      "code": "resources :courses do\n  resources :lessons, only: [:show, :update]\nend\n\n<%= form_with(\n      url: course_lesson_path(\n        course_id: @course.id,\n        id: @lesson.id,\n        from: \"profile\"\n      ),\n      method: :patch\n    ) do |form| %>\n  <%= form.text_field :title %>\n  <%= form.submit \"更新\" %>\n<% end %>",
+      "options": {
+        "A": "POST /courses/4/lessons/9?from=profile",
+        "B": "PATCH /courses/4/lessons?from=profile",
+        "C": "PATCH /courses/4/lessons/9?from=profile",
+        "D": "GET /courses/4/lessons/9/profile"
+      },
+      "correct_answer": "C",
+      "explanation": "course_id=4、id=9はネストしたshow/update用のパス変数、fromはクエリパラメータ。form_with method: :patchでRailsはPATCHとしてルーティングする。HTMLフォームの実送信はPOST + _method=patchとなり得る。_pathは相対パス、_urlは絶対URL。params[:course_id]は'4'、params[:id]は'9'、params[:from]は'profile'。",
+      "choice_explanations": {
+        "A": "実際のHTML送信がPOSTでもRailsルーティング上はPATCHとして解釈される。",
+        "B": "単数のlessonを更新するので/:idが必要。",
+        "C": "ネスト・クエリ・HTTPメソッドが正しい。",
+        "D": "GETではなくPATCH、fromはパスではなくクエリ。"
+      }
+    }
+  ]
+}
