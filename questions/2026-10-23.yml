@@ -1,0 +1,188 @@
+{
+  "date": "2026-10-23",
+  "source": "Actual quiz in conversation. Wording below is summarized; options translated/condensed, not verbatim.",
+  "questions": [
+    {
+      "number": 1,
+      "topic": "Rails build and persisted?",
+      "options": [
+        "true/true",
+        "true/false",
+        "false/true",
+        "false/false"
+      ],
+      "correct_answer": "B",
+      "explanation": "build links current_user but does not save; persisted? false"
+    },
+    {
+      "number": 2,
+      "topic": "SQL HAVING >= 3000",
+      "options": [
+        "10 and 20",
+        "20 and 30",
+        "10,20,30",
+        "30 only"
+      ],
+      "correct_answer": "C",
+      "explanation": "Sums are 3000,3500,4000, all >=3000"
+    },
+    {
+      "number": 3,
+      "topic": "Cookie attributes",
+      "options": [
+        "HttpOnly means HTTPS only",
+        "Secure blocks JS",
+        "SameSite=Lax limits cross-site cookies",
+        "HttpOnly+Secure fully block CSRF"
+      ],
+      "correct_answer": "C",
+      "explanation": "Lax limits some cross-site cookie sending; HttpOnly blocks JS access, Secure requires HTTPS"
+    },
+    {
+      "number": 4,
+      "topic": "CIDR 192.168.1.100/27",
+      "options": [
+        "192.168.1.64",
+        "192.168.1.96",
+        "192.168.1.100",
+        "192.168.1.128"
+      ],
+      "correct_answer": "B",
+      "explanation": "/27 has blocks of 32; 100 is in 96-127"
+    },
+    {
+      "number": 5,
+      "topic": "Ruby count_a_words",
+      "options": [],
+      "correct_answer": "code",
+      "explanation": "count checks word.length >= min_length and word[0] == 'a'"
+    },
+    {
+      "number": 6,
+      "topic": "LEFT JOIN COUNT(orders.id)",
+      "options": [
+        "Sato 2 Suzuki 1 Tanaka 0",
+        "Sato 2 Suzuki 1",
+        "Sato 2 Suzuki 1 Tanaka 1",
+        "all 3"
+      ],
+      "correct_answer": "A",
+      "explanation": "LEFT JOIN retains Tanaka; COUNT(orders.id) ignores NULL"
+    },
+    {
+      "number": 7,
+      "topic": "Session fixation",
+      "options": [
+        "Session fixation: rotate session ID",
+        "SQL injection: HttpOnly",
+        "CSRF: hash passwords",
+        "XSS: retain session ID"
+      ],
+      "correct_answer": "A",
+      "explanation": "Rotate session ID after login to mitigate session fixation"
+    },
+    {
+      "number": 8,
+      "topic": "Serial availability 95% and 90%",
+      "options": [
+        "92.5%",
+        "85.5%",
+        "95%",
+        "99.5%"
+      ],
+      "correct_answer": "B",
+      "explanation": "0.95 * 0.90 = 0.855"
+    },
+    {
+      "number": 9,
+      "topic": "Ruby double_evens",
+      "options": [],
+      "correct_answer": "code",
+      "explanation": "select(&:even?) then map { |n| n * 2 }"
+    },
+    {
+      "number": 10,
+      "topic": "Linear search worst-case complexity",
+      "options": [
+        "O(1)",
+        "O(log n)",
+        "O(n)",
+        "O(n²)"
+      ],
+      "correct_answer": "C",
+      "explanation": "Worst-case linear search visits all n elements"
+    },
+    {
+      "number": 11,
+      "topic": "TCP sequence 1000 length 500",
+      "options": [
+        "500",
+        "1000",
+        "1001",
+        "1500"
+      ],
+      "correct_answer": "D",
+      "explanation": "ACK = 1000 + 500 = 1500"
+    },
+    {
+      "number": 12,
+      "topic": "Array trace [3,6,2,5]",
+      "options": [
+        "11",
+        "12",
+        "13",
+        "16"
+      ],
+      "correct_answer": "C",
+      "explanation": "1+6+1+5 = 13"
+    },
+    {
+      "number": 13,
+      "topic": "Bubble sort one pass [7,3,5,2]",
+      "options": [
+        "[2,3,5,7]",
+        "[3,5,2,7]",
+        "[3,7,2,5]",
+        "[7,3,2,5]"
+      ],
+      "correct_answer": "B",
+      "explanation": "[7,3,5,2] -> [3,7,5,2] -> [3,5,7,2] -> [3,5,2,7]"
+    },
+    {
+      "number": 14,
+      "topic": "Queue FIFO operations",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "correct_answer": "B",
+      "explanation": "Second dequeue returns B"
+    },
+    {
+      "number": 15,
+      "topic": "Transaction atomicity",
+      "options": [
+        "first update always committed",
+        "COMMIT fixes failed update",
+        "all succeed or all rollback",
+        "atomicity means concurrency"
+      ],
+      "correct_answer": "C",
+      "explanation": "Atomicity is all-or-nothing; rollback uncommitted changes"
+    },
+    {
+      "number": 16,
+      "topic": "Nested Rails project_tasks_path",
+      "options": [
+        "POST /projects/7/tasks?priority=high&source=dashboard",
+        "GET /projects/7/tasks?priority=high&source=dashboard",
+        "POST /projects/7/tasks/high/dashboard",
+        "POST /projects/7/tasks/7?priority=high&source=dashboard"
+      ],
+      "correct_answer": "A",
+      "explanation": "project_id is path segment; priority and source are query params; form method POST"
+    }
+  ]
+}
