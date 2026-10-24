@@ -1,20 +1,61 @@
 version: 1
-as_of: "2026-10-17"
+as_of: "2026-10-24"
 source_attempts:
   - attempts/2026-10-17.yml
+  - attempts/2026-10-24.yml
 items:
-  - topic: stack_lifo_vs_queue_fifo
+  - topic: active_record_build_save_persisted
+    category: web_rails
+    priority: highest
+    reason: "2026-10-24 Q1 and Q15 both incorrect; repeat with valid and invalid models"
+    next_review_date: "2026-10-25"
+  - topic: left_join_count_null
+    category: database_sql
+    priority: high
+    reason: "Q6 COUNT(*) vs COUNT(orders.id) incorrect"
+    next_review_date: "2026-10-25"
+  - topic: ruby_count_block_syntax
+    category: algorithm_ruby
+    priority: high
+    reason: "Q5 initially syntax error; hint-assisted success"
+    next_review_date: "2026-10-25"
+  - topic: ruby_select_map_integer_conversion
+    category: algorithm_ruby
+    priority: high
+    reason: "Q9 took 4 attempts; recheck without hints"
+    next_review_date: "2026-10-25"
+  - topic: csrf_cookie_security
+    category: security
+    priority: high
+    reason: "Q3 HttpOnly vs CSRF token confused"
+    next_review_date: "2026-10-25"
+  - topic: cidr_network_broadcast_usable
     category: fundamental_it
     priority: high
-    reason: 初回誤答。スタックとキューの違いを別形式で確認
+    reason: "Q4 network address chosen instead of usable host"
+    next_review_date: "2026-10-25"
+  - topic: parallel_system_availability
+    category: fundamental_it
+    priority: medium
+    reason: "Q8 incorrectly averaged uptime"
+    next_review_date: "2026-10-25"
+  - topic: pseudocode_array_trace_boundary
+    category: fundamental_it
+    priority: medium
+    reason: "Q12 replacement incorrect; original was invalid and excluded"
+    next_review_date: "2026-10-25"
+  - topic: stack_lifo_vs_queue_fifo
+    category: fundamental_it
+    priority: medium
+    reason: "Carried forward from 2026-10-17"
     next_review_date: null
   - topic: nested_loop_tracing
     category: algorithm_ruby
-    priority: high
-    reason: 二重ループの実行回数を誤答。手動トレースを再確認
+    priority: medium
+    reason: "Carried forward from 2026-10-17"
     next_review_date: null
   - topic: ruby_accumulator_and_scope
     category: algorithm_ruby
-    priority: high
-    reason: 偶数合計を初回実装できず、ヒント後に修正
+    priority: medium
+    reason: "Carried forward from 2026-10-17"
     next_review_date: null
