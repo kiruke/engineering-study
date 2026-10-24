@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "date": "2026-10-24",
+  "question_set_note": "The questions actually presented in chat differ from pre-generated questions/2026-10-24.yml. This file records actual presented questions and user responses, not the draft question set.",
+  "total_valid_questions": 16,
+  "initial_correct": 7,
+  "initial_incorrect": 9,
+  "hint_assisted_correct": 2,
+  "invalid_original_questions": 1,
+  "invalid_original_question_detail": "Q12 original: calculated -4, no correct option; excluded, replacement Q12 graded incorrect",
+  "questions": [
+    {
+      "n": 1,
+      "category": "web_rails",
+      "user_answer": "D",
+      "correct_answer": "B",
+      "status": "incorrect",
+      "notes": "build関連user_id=5; title空でsave=false; persisted=false"
+    },
+    {
+      "n": 2,
+      "category": "database_sql",
+      "user_answer": "B",
+      "correct_answer": "B",
+      "status": "correct",
+      "notes": "WHERE amount>=2000の後にGROUP BY/HAVING"
+    },
+    {
+      "n": 3,
+      "category": "security",
+      "user_answer": "A",
+      "correct_answer": "D",
+      "status": "incorrect",
+      "notes": "HttpOnlyはCSRF対策にならずCSRF token+SameSite"
+    },
+    {
+      "n": 4,
+      "category": "fundamental_it",
+      "user_answer": "B",
+      "correct_answer": "D",
+      "status": "incorrect",
+      "notes": "192.168.10.64/27 usable .65-.94; .93"
+    },
+    {
+      "n": 5,
+      "category": "algorithm_ruby",
+      "user_answer": "code",
+      "correct_answer": "code",
+      "status": "hint_correct",
+      "notes": "count_large_evens: 初回ブロック構文誤り、2回目 count {|n| n.even? && n>=threshold} 正解"
+    },
+    {
+      "n": 6,
+      "category": "database_sql",
+      "user_answer": "A",
+      "correct_answer": "B",
+      "status": "incorrect",
+      "notes": "LEFT JOIN COUNT(*)=1 COUNT(orders.id)=0 for no orders"
+    },
+    {
+      "n": 7,
+      "category": "security",
+      "user_answer": "B",
+      "correct_answer": "B",
+      "status": "correct",
+      "notes": "IDOR current_user.orders.find(params[:id])"
+    },
+    {
+      "n": 8,
+      "category": "fundamental_it",
+      "user_answer": "B",
+      "correct_answer": "C",
+      "status": "incorrect",
+      "notes": "parallel uptime 1-(.1*.2)=.98"
+    },
+    {
+      "n": 9,
+      "category": "algorithm_ruby",
+      "user_answer": "code",
+      "correct_answer": "code",
+      "status": "hint_correct",
+      "notes": "discounted_prices: 初回 > and float; 2回目 array.to_i; 3回目 n.to_i*0.9; 4回目 (n*0.9).to_i correct"
+    },
+    {
+      "n": 10,
+      "category": "fundamental_it_additional",
+      "user_answer": "C",
+      "correct_answer": "C",
+      "status": "correct",
+      "notes": "linear search O(n)"
+    },
+    {
+      "n": 11,
+      "category": "fundamental_it_additional",
+      "user_answer": "C",
+      "correct_answer": "C",
+      "status": "correct",
+      "notes": "TCP ACK=2000+800=2800"
+    },
+    {
+      "n": 12,
+      "category": "fundamental_it_additional",
+      "user_answer": "A",
+      "correct_answer": "B",
+      "status": "incorrect",
+      "notes": "Original question invalid: actual -4 absent options. Replacement a={2,5,1,4}, >= i -> 8 (B); A incorrect"
+    },
+    {
+      "n": 13,
+      "category": "fundamental_it_additional",
+      "user_answer": "A",
+      "correct_answer": "A",
+      "status": "correct",
+      "notes": "bubble pass [6,2,5,1] -> [2,5,1,6]"
+    },
+    {
+      "n": 14,
+      "category": "fundamental_it_additional",
+      "user_answer": "A",
+      "correct_answer": "A",
+      "status": "correct",
+      "notes": "ACID Atomicity"
+    },
+    {
+      "n": 15,
+      "category": "web_rails",
+      "user_answer": "D",
+      "correct_answer": "C",
+      "status": "incorrect",
+      "notes": "user.posts.build title valid => [3,false,true,true]"
+    },
+    {
+      "n": 16,
+      "category": "rails_url_design",
+      "user_answer": "A",
+      "correct_answer": "A",
+      "status": "correct",
+      "notes": "team_member_path(@team,@member,tab:activity,page:2) => /teams/7/members/15?tab=activity&page=2"
+    }
+  ],
+  "next_day_review": [
+    "ActiveRecord build/save/persisted? (Q1,Q15)",
+    "LEFT JOIN COUNT(*) vs COUNT(orders.id) (Q6)",
+    "Ruby count block syntax and select/map integer conversion (Q5,Q9)",
+    "CSRF token vs HttpOnly (Q3)",
+    "CIDR subnet usable addresses (Q4)",
+    "parallel availability calculation (Q8)",
+    "pseudocode trace >= boundary (Q12)"
+  ],
+  "strengths": [
+    "IDOR authorization",
+    "linear search complexity",
+    "TCP ACK",
+    "bubble sort pass",
+    "ACID atomicity",
+    "nested Rails path helper"
+  ]
+}
