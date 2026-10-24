@@ -1,0 +1,337 @@
+{
+  "version": 1,
+  "date": "2026-10-25",
+  "daily_questions": 16,
+  "source_attempts": [
+    "attempts/2026-10-23.yml",
+    "attempts/2026-10-24.yml"
+  ],
+  "note": "Present exactly one question at a time. Do not reveal correct_answer, explanation, or reference_solution before user response. Do not create attempts file until session completion unless explicitly requested or interrupted. Topic headings at question time should not expose answer-bearing keywords.",
+  "questions": [
+    {
+      "n": 1,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "review_of": "2026-10-24 Q1,Q15",
+      "prompt": "User(id=8) と Post の関連があり、Post の title は必須。user.posts.build(title: '') の後、最初の save は失敗する。その後 title を '復習' に変更して再度 save する。最後の出力はどれか。DBエラーや他のバリデーションはない。",
+      "code": "user = User.find(8)\npost = user.posts.build(title: \"\")\nbefore = post.persisted?\nfirst = post.save\npost.title = \"復習\"\nsecond = post.save\np [post.user_id, before, first, second, post.persisted?]",
+      "options": {
+        "A": "[8, false, true, true, true]",
+        "B": "[nil, false, false, true, true]",
+        "C": "[8, false, false, true, true]",
+        "D": "[8, false, false, true, false]"
+      },
+      "correct_answer": "C",
+      "explanation": "buildでuser_id=8、未保存なのでpersisted? false。title空のsaveはfalse。title修正後saveはtrueでpersisted? true。",
+      "choice_explanations": {
+        "A": "空titleでは最初のsaveは成功しない。",
+        "B": "関連付けからbuildしているのでuser_id=8。",
+        "C": "各段階の保存状態が正しい。",
+        "D": "2回目のsaveが成功するのでpersisted?はtrue。"
+      }
+    },
+    {
+      "n": 2,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "review_of": "2026-10-24 Q6",
+      "prompt": "usersにはid 1,2,3がある。ordersは(user_id,status)=(1,'paid'),(1,'pending'),(2,'pending')の3件。次のSQL結果として正しいのはどれか。",
+      "code": "SELECT users.id, COUNT(orders.id) AS paid_count\nFROM users\nLEFT JOIN orders\n  ON orders.user_id = users.id AND orders.status = 'paid'\nGROUP BY users.id\nORDER BY users.id;",
+      "options": {
+        "A": "(1,1),(2,1),(3,0)",
+        "B": "(1,1),(2,0),(3,0)",
+        "C": "(1,1) のみ",
+        "D": "(1,2),(2,1),(3,0)"
+      },
+      "correct_answer": "B",
+      "explanation": "ON句のpaid条件で結合するので、pendingしかないuser2も注文のないuser3も左表から残る。COUNT(orders.id)はNULLを数えない。",
+      "choice_explanations": {
+        "A": "user2のpendingは結合されない。",
+        "B": "正しい。",
+        "C": "LEFT JOINはuser2と3を残す。",
+        "D": "paid以外の注文を数えている。"
+      }
+    },
+    {
+      "n": 3,
+      "category": "security",
+      "difficulty": "beginner_3",
+      "review_of": "2026-10-24 Q3",
+      "prompt": "ユーザーが自由入力したnicknameをRailsのERBで表示する。XSS対策として最も適切な説明はどれか。",
+      "code": "<%= params[:nickname] %>\n<%= raw(params[:nickname]) %>",
+      "options": {
+        "A": "rawを使うと危険なHTMLが自動的に削除される",
+        "B": "HttpOnlyを付ければrawを使ってもXSSは発生しない",
+        "C": "SQLのプレースホルダーがあればHTMLエスケープは不要",
+        "D": "通常のERB出力はHTMLエスケープされるが、rawはそれを回避するため危険になり得る"
+      },
+      "correct_answer": "D",
+      "explanation": "通常の<%= %>はHTMLエスケープされ、rawはエスケープを無効化する。HttpOnlyはXSSの根本的防止ではない。",
+      "choice_explanations": {
+        "A": "rawは安全化ではない。",
+        "B": "HttpOnlyはCookie読み取りを制限するがXSSを防がない。",
+        "C": "SQLインジェクションとXSSは別。",
+        "D": "正しい。"
+      }
+    },
+    {
+      "n": 4,
+      "category": "fundamental_it",
+      "difficulty": "beginner_2",
+      "review_of": "2026-10-24 Q4",
+      "prompt": "IPv4アドレス172.16.5.77/28と同じサブネットに属し、通常のホストアドレスとして割り当て可能なものはどれか。",
+      "options": {
+        "A": "172.16.5.64",
+        "B": "172.16.5.79",
+        "C": "172.16.5.80",
+        "D": "172.16.5.78"
+      },
+      "correct_answer": "D",
+      "explanation": "/28は16個単位。77のネットワークは64～79、64はネットワーク、79はブロードキャスト、ホストは65～78。",
+      "choice_explanations": {
+        "A": "ネットワークアドレス。",
+        "B": "ブロードキャスト。",
+        "C": "次のネットワーク。",
+        "D": "割当可能。"
+      }
+    },
+    {
+      "n": 5,
+      "category": "algorithm_ruby",
+      "type": "implementation",
+      "difficulty": "beginner_2",
+      "review_of": "2026-10-24 Q5",
+      "independent_recall_window": "1-day",
+      "prompt": "Rubyで count_even_at_least(numbers, minimum) を実装する。numbersは整数配列。偶数でminimum以上の要素数を整数で返す。空配列は0、元の配列は変更しない。例: count_even_at_least([2, 5, 6, 8], 6) => 2。まずヒントなしで書く。",
+      "correct_answer": "implementation",
+      "reference_solution": "def count_even_at_least(numbers, minimum)\n  numbers.count { |n| n.even? && n >= minimum }\nend",
+      "explanation": "Array#countにブロックを渡し、even?と>=を&&で組み合わせる。",
+      "note": "Reference solution must never be shown before the user completes the problem."
+    },
+    {
+      "n": 6,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "review_of": "2026-10-24 Q6",
+      "prompt": "usersはid 1と2の2行、ordersはuser_id=1の注文1行だけ。次のSQLのuser_id=2の行はどうなるか。",
+      "code": "SELECT users.id, COUNT(*) AS row_count, COUNT(orders.id) AS order_count\nFROM users\nLEFT JOIN orders ON orders.user_id = users.id\nGROUP BY users.id\nORDER BY users.id;",
+      "options": {
+        "A": "user_id=2の行は表示されない",
+        "B": "(2,0,0)",
+        "C": "(2,1,0)",
+        "D": "(2,1,1)"
+      },
+      "correct_answer": "C",
+      "explanation": "LEFT JOINでuser2にもNULL拡張行が1行生じる。COUNT(*)=1、COUNT(orders.id)=0。",
+      "choice_explanations": {
+        "A": "LEFT JOINで左表行は残る。",
+        "B": "COUNT(*)はNULL拡張行を1行と数える。",
+        "C": "正しい。",
+        "D": "NULLのorders.idは数えない。"
+      }
+    },
+    {
+      "n": 7,
+      "category": "security",
+      "difficulty": "beginner_3",
+      "prompt": "ログイン済みユーザーが自分のコメントだけを削除できるRailsアプリ。CommentsController#destroyで他人のコメントを削除できないようにする取得方法はどれか。",
+      "code": "def destroy\n  @comment = # ここに取得処理\n  @comment.destroy!\nend",
+      "options": {
+        "A": "current_user.comments.find(params[:id])",
+        "B": "Comment.find(params[:id])",
+        "C": "Comment.find_by(id: params[:id])",
+        "D": "Comment.find(params[:id].to_i)"
+      },
+      "correct_answer": "A",
+      "explanation": "認証だけでなく所有者に基づく認可が必要。current_user.commentsでスコープを限定。",
+      "choice_explanations": {
+        "A": "正しい。",
+        "B": "他人のコメントも検索できる。",
+        "C": "find_byだけでは所有者を限定しない。",
+        "D": "整数化しても認可にならない。"
+      }
+    },
+    {
+      "n": 8,
+      "category": "fundamental_it",
+      "difficulty": "beginner_2",
+      "review_of": "2026-10-24 Q8",
+      "prompt": "互いに独立して動作するサーバーAの稼働率95%、Bの稼働率90%。どちらか一方が動いていればサービス利用可能な並列構成の稼働率はどれか。",
+      "options": {
+        "A": "85.5%",
+        "B": "92.5%",
+        "C": "99.5%",
+        "D": "100%"
+      },
+      "correct_answer": "C",
+      "explanation": "両方停止する確率=0.05×0.10=0.005。1-0.005=0.995。",
+      "choice_explanations": {
+        "A": "直列構成の稼働率。",
+        "B": "単純平均ではない。",
+        "C": "正しい。",
+        "D": "両方停止する可能性は残る。"
+      }
+    },
+    {
+      "n": 9,
+      "category": "algorithm_ruby",
+      "type": "implementation",
+      "difficulty": "beginner_3",
+      "prompt": "Rubyで sum_positive_squares(numbers) を実装する。整数配列のうち0より大きい値だけを2乗し、合計を整数で返す。空配列や該当なしは0。元の配列を変更しない。例: sum_positive_squares([2,-3,0,4]) => 20。まずヒントなしで書く。",
+      "correct_answer": "implementation",
+      "reference_solution": "def sum_positive_squares(numbers)\n  numbers.select { |n| n > 0 }.sum { |n| n * n }\nend",
+      "explanation": "selectで正の値を選び、sumブロックで2乗値を加算。",
+      "note": "Reference solution must never be shown before the user completes the problem."
+    },
+    {
+      "n": 10,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_2",
+      "prompt": "WebブラウザがIf-None-Matchを付けた条件付きGETを送信した。リソースに変更がないことをサーバーが示し、本文を再送しないHTTPステータスコードはどれか。",
+      "options": {
+        "A": "200 OK",
+        "B": "304 Not Modified",
+        "C": "404 Not Found",
+        "D": "500 Internal Server Error"
+      },
+      "correct_answer": "B",
+      "explanation": "ETag条件に一致し未変更なら304。",
+      "choice_explanations": {
+        "A": "通常の成功応答で本文を返す場合がある。",
+        "B": "正しい。",
+        "C": "リソースがない。",
+        "D": "サーバー内部エラー。"
+      }
+    },
+    {
+      "n": 11,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_2",
+      "prompt": "空のキューに enqueue(4)、enqueue(9)、dequeue()、enqueue(2)、dequeue() を順に実行した。最後のdequeue()が取り出す値はどれか。",
+      "options": {
+        "A": "2",
+        "B": "4",
+        "C": "取り出せない",
+        "D": "9"
+      },
+      "correct_answer": "D",
+      "explanation": "FIFO。4,9入れて4を取り出す。2追加で[9,2]、次に9。",
+      "choice_explanations": {
+        "A": "2は最後に入った。",
+        "B": "4は最初のdequeueで取り出し済み。",
+        "C": "キューには9と2が残る。",
+        "D": "正しい。"
+      }
+    },
+    {
+      "n": 12,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "review_of": "2026-10-24 Q12",
+      "prompt": "配列の添字は1から始まり、forの終点は含む。次の疑似コードの表示値はどれか。",
+      "code": "integer array a = {4, 1, 5, 2}\ninteger result = 0\nfor i from 1 through 4:\n  if a[i] >= i:\n    result = result + a[i]\n  else:\n    result = result - i\ndisplay result",
+      "options": {
+        "A": "2",
+        "B": "3",
+        "C": "5",
+        "D": "7"
+      },
+      "correct_answer": "B",
+      "explanation": "i=1:+4→4; i=2:-2→2; i=3:+5→7; i=4:-4→3。",
+      "choice_explanations": {
+        "A": "途中のresult。",
+        "B": "正しい。",
+        "C": "条件の評価または加減算に誤り。",
+        "D": "i=3終了時のresult。"
+      }
+    },
+    {
+      "n": 13,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "review_of": "2026-10-24 Q13",
+      "prompt": "昇順バブルソートで配列[8,3,6,2]を左から右に隣接比較し、大きければ交換する。配列全体を2回走査した直後の状態はどれか。",
+      "options": {
+        "A": "[3,6,2,8]",
+        "B": "[2,3,6,8]",
+        "C": "[3,2,6,8]",
+        "D": "[8,3,2,6]"
+      },
+      "correct_answer": "C",
+      "explanation": "1周目[3,6,2,8]、2周目[3,2,6,8]。",
+      "choice_explanations": {
+        "A": "1周目終了時。",
+        "B": "3周目以降の完全整列状態。",
+        "C": "正しい。",
+        "D": "最初の比較で8が動く。"
+      }
+    },
+    {
+      "n": 14,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_2",
+      "prompt": "同じプロセスに属する複数スレッドのメモリについて、一般的に正しい説明はどれか。",
+      "options": {
+        "A": "各スレッドは別の仮想アドレス空間を持ち、共有できない",
+        "B": "スレッドはCPUを使わない",
+        "C": "異なるプロセス間は常に全メモリが自動共有される",
+        "D": "同一プロセス内のスレッドは通常ヒープなどのアドレス空間を共有するが、各自のスタックを持つ"
+      },
+      "correct_answer": "D",
+      "explanation": "同一プロセス内のスレッドはプロセスのアドレス空間を共有しつつ、個別のスタックを持つ。",
+      "choice_explanations": {
+        "A": "同一プロセスのスレッドはアドレス空間を共有。",
+        "B": "CPUで実行される。",
+        "C": "異なるプロセスは原則隔離。",
+        "D": "正しい。"
+      }
+    },
+    {
+      "n": 15,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "prompt": "DBにisbn='X123'、title='元の題名'のBookが既に1件ある。以下のRailsコードの最後の出力はどれか。isbnには一意制約があり、別の処理やコールバックはない。",
+      "code": "book = Book.find_or_create_by(isbn: \"X123\") do |b|\n  b.title = \"新しい題名\"\nend\np [book.title, book.persisted?]",
+      "options": {
+        "A": "[\"新しい題名\", true]",
+        "B": "[\"元の題名\", true]",
+        "C": "[\"新しい題名\", false]",
+        "D": "[\"元の題名\", false]"
+      },
+      "correct_answer": "B",
+      "explanation": "既存Bookが見つかるとブロックは新規作成時の初期化にのみ用いられ、既存titleは更新されない。既存レコードなのでpersisted? true。",
+      "choice_explanations": {
+        "A": "既存レコードのtitleはブロックで更新されない。",
+        "B": "正しい。",
+        "C": "既存レコードでpersisted?はtrue。",
+        "D": "既存レコードでpersisted?はtrue。"
+      }
+    },
+    {
+      "n": 16,
+      "category": "rails_url_design",
+      "difficulty": "applied",
+      "prompt": "ネストしたRailsのルーティングとフォームがある。@project.id=6、@task.id=21。Railsがルーティング上扱うHTTPメソッドと送信先の組合せはどれか。HTMLフォームの_methodによるオーバーライドの実装詳細ではなく、Railsのルーティング上のメソッドを答える。",
+      "code": "resources :projects do\n  resources :tasks, only: [:show, :update]\nend\n\n<%= form_with(\n  url: project_task_path(@project, @task, from: \"dashboard\", tab: \"history\"),\n  method: :patch\n) do |form| %>\n  <%= form.text_field :title %>\n  <%= form.submit \"更新\" %>\n<% end %>",
+      "options": {
+        "A": "GET /projects/6/tasks/21?from=dashboard&tab=history",
+        "B": "PATCH /projects/6/tasks/21?from=dashboard&tab=history",
+        "C": "PATCH /projects/6/tasks?task_id=21&from=dashboard&tab=history",
+        "D": "POST /projects/6/tasks/21/from/dashboard/tab/history"
+      },
+      "correct_answer": "B",
+      "explanation": "project_task_pathの位置引数はproject_idとidに対応。from,tabはクエリ。form_with method: :patchでRailsのルーティングはPATCH。_pathは相対パス、_urlは絶対URL。",
+      "choice_explanations": {
+        "A": "フォームはPATCH指定。",
+        "B": "正しい。",
+        "C": "単一タスクのパスには/:idが必要。",
+        "D": "fromとtabはクエリパラメータであり、Railsルーティング上はPATCH。"
+      }
+    }
+  ]
+}
