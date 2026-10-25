@@ -1,0 +1,345 @@
+{
+  "version": 1,
+  "date": "2026-10-26",
+  "record_type": "prepared_question_set",
+  "attempts_saved": false,
+  "actual_answers": "None yet; record in attempts/2026-10-26.yml only after user responds, preferably after 16 questions.",
+  "policy": "Do not reveal answer or reference solution until user answers that question. Grade every choice, use incremental hints for code.",
+  "sources": [
+    "AGENTS.md",
+    "config/curriculum.yml",
+    "config/difficulty.yml",
+    "progress/skills.yml",
+    "progress/review_queue.yml",
+    "attempts/2026-10-24.yml",
+    "attempts/2026-10-23.yml",
+    "attempts/2026-10-18.yml",
+    "attempts/2026-10-17.yml"
+  ],
+  "historical_caveat": "No attempts/2026-10-25.yml found; cannot assume Oct25 results.",
+  "distribution": {
+    "web_rails": 2,
+    "database_sql": 2,
+    "security": 1,
+    "fundamental_it": 2,
+    "algorithm_ruby": 2,
+    "ruby_hash_applied": 1,
+    "fundamental_it_additional": 5,
+    "rails_url_design": 1
+  },
+  "random_replacement": {
+    "slot": 7,
+    "replaced_category": "security",
+    "new_category": "ruby_hash_applied",
+    "method": "date-seeded pseudo-random choice from eligible 13 slots"
+  },
+  "questions": [
+    {
+      "n": 1,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "prompt": "User has_many :posts; Post belongs_to :user and validates :title, presence: true. user=User.find(8); post=user.posts.create(title: ''); before=post.persisted?; post.title='復習'; saved=post.save; p [post.user_id,before,saved,post.persisted?]. Assume user exists, no other validations, callbacks, or DB errors. What prints?",
+      "choices": {
+        "A": "[nil, false, true, true]",
+        "B": "[8, false, true, true]",
+        "C": "[8, true, true, true]",
+        "D": "[8, false, false, false]"
+      },
+      "answer": "B",
+      "explanation": "Association create sets user_id=8, but title blank fails validation so returned Post is not persisted; correcting title then save succeeds, so persisted? becomes true.",
+      "choice_explanations": {
+        "A": "関連付け経由のcreateはuser_id=8を設定するためnilではない。",
+        "B": "正しい。最初のcreateは検証失敗、修正後のsaveは成功。",
+        "C": "titleが空のため最初はpersisted?がfalse。",
+        "D": "修正後のtitleは有効でsaveが成功するためfalseにはならない。"
+      }
+    },
+    {
+      "n": 2,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "prompt": "users IDs 1,2,3. orders: (user_id=1,total=3000), (1,1000), (2,2500). SELECT users.id, COUNT(orders.id) AS cnt, COALESCE(SUM(orders.total),0) AS total FROM users LEFT JOIN orders ON users.id=orders.user_id GROUP BY users.id HAVING COUNT(orders.id)>=1 ORDER BY users.id; Which rows?",
+      "choices": {
+        "A": "(1,2,4000),(2,1,2500),(3,0,0)",
+        "B": "(1,1,3000),(2,1,2500)",
+        "C": "(1,2,4000),(2,1,2500)",
+        "D": "(1,2,4000),(2,1,2500),(3,1,0)"
+      },
+      "answer": "C",
+      "explanation": "LEFT JOIN includes user 3 but HAVING COUNT(orders.id)>=1 removes the group with zero matched orders.",
+      "choice_explanations": {
+        "A": "user 3 fails HAVING.",
+        "B": "user 1 has two orders, not one.",
+        "C": "correct counts and sums, excludes user 3.",
+        "D": "COUNT(orders.id) for unmatched user 3 is 0, not 1; HAVING excludes it."
+      }
+    },
+    {
+      "n": 3,
+      "category": "security",
+      "difficulty": "beginner_3",
+      "prompt": "A logged-in browser has a session cookie marked HttpOnly. A malicious site induces the browser to POST a form to change account settings on the target site. Which server-side approach most directly prevents unauthorized cross-site submission?",
+      "choices": {
+        "A": "Set HttpOnly on the session cookie only",
+        "B": "Hide the submit button with CSS",
+        "C": "Verify a valid CSRF token on state-changing requests and configure SameSite appropriately",
+        "D": "Change the form action from POST to GET"
+      },
+      "answer": "C",
+      "explanation": "CSRF exploits automatic inclusion of credentials; HttpOnly blocks JS access to cookies but does not prevent cookies from being sent. CSRF token verification is a primary mitigation, SameSite defense-in-depth.",
+      "choice_explanations": {
+        "A": "HttpOnly does not prevent the browser from sending the cookie.",
+        "B": "CSS hiding does not stop HTTP requests.",
+        "C": "Token validation protects against cross-site forged submissions; SameSite helps.",
+        "D": "GET for state changes is inappropriate and does not mitigate CSRF."
+      }
+    },
+    {
+      "n": 4,
+      "category": "fundamental_it",
+      "difficulty": "beginner_3",
+      "prompt": "For the subnet 192.168.20.96/28, which address can be assigned to an ordinary host? Assume normal IPv4 subnet rules.",
+      "choices": {
+        "A": "192.168.20.96",
+        "B": "192.168.20.111",
+        "C": "192.168.20.110",
+        "D": "192.168.20.112"
+      },
+      "answer": "C",
+      "explanation": "/28 has 16 addresses: network .96, broadcast .111, usable .97-.110; .112 is next subnet network.",
+      "choice_explanations": {
+        "A": "Network address.",
+        "B": "Broadcast address.",
+        "C": "Last usable host.",
+        "D": "Next subnet network address."
+      }
+    },
+    {
+      "n": 5,
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_2",
+      "answer_format": "ruby_code",
+      "spaced_repetition": "2026-10-24 Q5 hint-assisted, test independent recall",
+      "prompt": "Implement def count_even_at_least(numbers, minimum) returning the number of even integers >= minimum. No mutation; empty array => 0. Examples: count_even_at_least([2,4,7,10],4) => 2; count_even_at_least([],3) => 0. Submit code only; no hints unless needed.",
+      "reference_solution": "def count_even_at_least(numbers, minimum)\n  numbers.count { |n| n.even? && n >= minimum }\nend",
+      "explanation": "Array#count with block counts true results. n.even? checks evenness, && requires both conditions. Alternative with select(...).length; count is simpler."
+    },
+    {
+      "n": 6,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "prompt": "A users table contains user id=9 with no matching posts. Query: SELECT COUNT(*) AS rows, COUNT(posts.id) AS post_count FROM users LEFT JOIN posts ON posts.user_id=users.id WHERE users.id=9. What is (rows,post_count)?",
+      "choices": {
+        "A": "(0,0)",
+        "B": "(1,0)",
+        "C": "(1,1)",
+        "D": "(0,1)"
+      },
+      "answer": "B",
+      "explanation": "LEFT JOIN produces one null-extended row for the user; COUNT(*) counts it, COUNT(posts.id) ignores NULL.",
+      "choice_explanations": {
+        "A": "LEFT JOIN retains user 9, so COUNT(*) is 1.",
+        "B": "Correct.",
+        "C": "posts.id is NULL, so COUNT(posts.id) is 0.",
+        "D": "COUNT(*) cannot be 0 if a row remains; COUNT(posts.id) cannot be 1 without a post."
+      }
+    },
+    {
+      "n": 7,
+      "category": "ruby_hash_applied",
+      "difficulty": "beginner_3",
+      "replacement_for": "security",
+      "replacement_rule": "One daily randomly selected non-Ruby-implementation and non-Rails-URL slot; date-seeded draw selected slot 7.",
+      "prompt": "Ruby code:\norders = [\n  { user: 'A', items: { 'book' => 2, 'pen' => 1 } },\n  { user: 'B', items: { 'book' => 1 } },\n  { user: 'A', items: { 'pen' => 3 } }\n]\ntotals = orders.each_with_object(Hash.new(0)) do |order, result|\n  result[order.fetch(:user)] += order.fetch(:items).values.sum\nend\np totals\nWhat is printed?",
+      "choices": {
+        "A": "{\"A\"=>3, \"B\"=>1}",
+        "B": "{\"A\"=>6, \"B\"=>1}",
+        "C": "{:A=>6, :B=>1}",
+        "D": "{\"A\"=>6, \"B\"=>0}"
+      },
+      "answer": "B",
+      "explanation": "Each order contributes sum of nested item quantity values. User A: (2+1)+3=6, user B: 1. fetch(:user) accesses a symbol key but returns string 'A'/'B', so resulting keys are strings. Hash.new(0) supplies 0 for unseen keys; each_with_object accumulates into hash.",
+      "choice_explanations": {
+        "A": "A has two orders, not just the first.",
+        "B": "Correct.",
+        "C": "Returned user values are strings, not symbols.",
+        "D": "B's one book contributes 1."
+      }
+    },
+    {
+      "n": 8,
+      "category": "fundamental_it",
+      "difficulty": "beginner_3",
+      "prompt": "Two independent servers have uptime probabilities 95% and 80%. A service works whenever at least one server works. What is the overall uptime?",
+      "choices": {
+        "A": "76%",
+        "B": "87.5%",
+        "C": "99%",
+        "D": "100%"
+      },
+      "answer": "C",
+      "explanation": "Both must fail for service to fail: (1-.95)*(1-.80)=.01; uptime 99%. Independence assumed.",
+      "choice_explanations": {
+        "A": "95%*80% is series both-work availability.",
+        "B": "Simple average is not correct.",
+        "C": "Correct.",
+        "D": "Nonzero probability both fail."
+      }
+    },
+    {
+      "n": 9,
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_3",
+      "answer_format": "ruby_code",
+      "spaced_repetition": "new problem combining select/map/sum and per-element conversion",
+      "prompt": "Implement def discounted_total(prices, minimum). Keep integer prices >= minimum; for each kept price apply 20% discount and truncate the discounted amount to integer; return the sum of those discounted integers. Do not mutate prices. Examples: discounted_total([99,100,151],100) => 200; discounted_total([],100) => 0. Submit code without hints.",
+      "reference_solution": "def discounted_total(prices, minimum)\n  prices.select { |price| price >= minimum }\n        .sum { |price| (price * 0.8).to_i }\nend",
+      "explanation": "Filter with select then sum block per price; converting each discounted price before summing is important. Alternative select.map{...}.sum."
+    },
+    {
+      "n": 10,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_3",
+      "prompt": "A TCP segment has initial sequence number 3400 and carries 600 bytes of application data, with no SYN/FIN. Assuming all bytes are received in order, what ACK number does the receiver return?",
+      "choices": {
+        "A": "600",
+        "B": "3400",
+        "C": "4000",
+        "D": "4001"
+      },
+      "answer": "C",
+      "explanation": "ACK is next expected byte sequence number 3400+600=4000.",
+      "choice_explanations": {
+        "A": "Data length only.",
+        "B": "Starting sequence number only.",
+        "C": "Correct next byte.",
+        "D": "Off by one; no SYN/FIN consuming sequence number."
+      }
+    },
+    {
+      "n": 11,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_2",
+      "prompt": "A stack starts empty. push(A), push(B), push(C), pop(), push(D), pop(). What are the two popped values in order?",
+      "choices": {
+        "A": "A, B",
+        "B": "B, C",
+        "C": "C, B",
+        "D": "C, D"
+      },
+      "answer": "D",
+      "explanation": "Stack is LIFO; first pop C, after push D next pop D.",
+      "choice_explanations": {
+        "A": "FIFO-style misconception.",
+        "B": "Not the top elements.",
+        "C": "After C is popped D is pushed, so next is D.",
+        "D": "Correct."
+      }
+    },
+    {
+      "n": 12,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "prompt": "1-indexed array a=[4,1,6,2], total=0. For i=1..4: if a[i]>i then total=total+a[i], else total=total-i. What is total after the loop?",
+      "choices": {
+        "A": "2",
+        "B": "4",
+        "C": "6",
+        "D": "8"
+      },
+      "answer": "B",
+      "explanation": "i=1: +4 ->4; i=2: -2 ->2; i=3: +6 ->8; i=4: -4 ->4.",
+      "choice_explanations": {
+        "A": "Intermediate value after i=2.",
+        "B": "Correct final result.",
+        "C": "Not obtained by correct trace.",
+        "D": "Intermediate value after i=3."
+      }
+    },
+    {
+      "n": 13,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "prompt": "1-indexed array a=[3,1,4,2]. For i=1..3, for j=i+1..4, swap a[i] and a[j] if a[i]>a[j]. What is a after completing all comparisons with i=2 (but before i=3)?",
+      "choices": {
+        "A": "[1,3,4,2]",
+        "B": "[1,2,3,4]",
+        "C": "[2,1,4,3]",
+        "D": "[1,2,4,3]"
+      },
+      "answer": "D",
+      "explanation": "At i=1, swap 3 and 1 -> [1,3,4,2]. At i=2, compare 3 with 4 (no swap), then 3 with 2 (swap) -> [1,2,4,3].",
+      "choice_explanations": {
+        "A": "State after i=1, before i=2.",
+        "B": "Fully sorted after i=3, not after i=2.",
+        "C": "Wrong ordering after i=1.",
+        "D": "Correct."
+      }
+    },
+    {
+      "n": 14,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_3",
+      "prompt": "With page size 4 KiB (4096 bytes), what are the virtual page number and offset for virtual address 0x2ABC (zero-based page numbering)?",
+      "choices": {
+        "A": "Page 2, offset 0xABC",
+        "B": "Page 0, offset 0x2ABC",
+        "C": "Page 3, offset 0xABC",
+        "D": "Page 2, offset 0x2AB"
+      },
+      "answer": "A",
+      "explanation": "4KiB=0x1000. 0x2ABC = 2*0x1000 + 0xABC.",
+      "choice_explanations": {
+        "A": "Correct quotient and remainder.",
+        "B": "Offset must be < 0x1000.",
+        "C": "Page number is 2, not 3.",
+        "D": "Offset is 0xABC, not 0x2AB."
+      }
+    },
+    {
+      "n": 15,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "prompt": "Post belongs_to :user. The controller loads posts = Post.where(published: true); the view loops posts.each { |post| puts post.user.name }. Assuming no eager loading, which change most directly avoids an N+1 query for users?",
+      "choices": {
+        "A": "Post.where(published: true).includes(:user)",
+        "B": "Post.where(published: true).joins(:user)",
+        "C": "Post.where(published: true).order(:user_id)",
+        "D": "Post.where(published: true).pluck(:user_id)"
+      },
+      "answer": "A",
+      "explanation": "includes(:user) eager loads users; joins alone performs a SQL join for filtering but does not automatically mark each association as preloaded. pluck changes return type.",
+      "choice_explanations": {
+        "A": "Correct eager loading.",
+        "B": "joins alone is not a guaranteed eager-load of association objects.",
+        "C": "Ordering does not preload.",
+        "D": "Returns array of IDs rather than Post objects."
+      }
+    },
+    {
+      "n": 16,
+      "category": "rails_url_design",
+      "difficulty": "applied",
+      "prompt": "Rails routes: resources :projects do; resources :tasks, only: [:show,:update]; end. project id=12, task id=34. View uses <%= form_with url: project_task_path(project_id: 12, id: 34, filter: 'open'), method: :patch, local: true do |f| %> ... <% end %>. Which pair of form action URL and HTTP method as interpreted by Rails is correct? Note HTML form submits POST with hidden _method override for PATCH.",
+      "choices": {
+        "A": "/projects/12/tasks/34?filter=open ; PATCH",
+        "B": "/projects/12/tasks?task_id=34&filter=open ; PATCH",
+        "C": "/projects/12/tasks/34?filter=open ; GET",
+        "D": "/projects/34/tasks/12?filter=open ; PATCH"
+      },
+      "answer": "A",
+      "explanation": "Nested route fills :project_id and :id, filter becomes query string. form_with method: :patch produces a form POST with hidden _method=patch; Rails interprets as PATCH.",
+      "choice_explanations": {
+        "A": "Correct route and effective Rails method.",
+        "B": "Task ID is path :id, not task_id query.",
+        "C": "Specified method: :patch, not GET.",
+        "D": "IDs reversed."
+      }
+    }
+  ]
+}
