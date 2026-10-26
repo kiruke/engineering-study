@@ -1,0 +1,415 @@
+{
+  "version": 1,
+  "date": "2026-10-27",
+  "record_type": "prepared_question_set",
+  "status": "questions_prepared_awaiting_responses",
+  "answers_saved": false,
+  "source_of_truth": "attempts/ for observed answers; no attempt file created before responses",
+  "sources": [
+    "AGENTS.md",
+    "config/curriculum.yml",
+    "config/difficulty.yml",
+    "progress/skills.yml",
+    "progress/review_queue.yml",
+    "attempts/2026-10-18.yml",
+    "attempts/2026-10-19.yml",
+    "attempts/2026-10-20.yml",
+    "attempts/2026-10-21.yml",
+    "attempts/2026-10-23.yml",
+    "attempts/2026-10-24.yml",
+    "attempts/2026-10-26.yml"
+  ],
+  "history_note": "No attempts/2026-10-22.yml or 2026-10-25.yml available. progress/skills.yml is stale; prioritize actual attempts. 2026-10-26 first attempt 11/16. Previous question sets may differ from actual answered questions.",
+  "rules": {
+    "questions_total": 16,
+    "one_question_at_a_time": true,
+    "hide_answers_until_attempt": true,
+    "explain_all_choices": true,
+    "code_hints_incremental": true,
+    "attempts_save_after_16": true,
+    "advanced_authorization_only": true,
+    "hide_topic_labels_in_question": true
+  },
+  "distribution": {
+    "web_rails": 2,
+    "database_sql": 2,
+    "security": 2,
+    "fundamental_it": 2,
+    "algorithm_ruby": 2,
+    "fundamental_it_additional": 4,
+    "rails_url_design": 1,
+    "ruby_hash_applied": 1
+  },
+  "random_replacement": {
+    "method": "2026-10-27 decimal date digits sum (20) modulo eligible slots count (13), zero-index",
+    "eligible_slots": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "chosen_slot": 9,
+    "replaced_category": "fundamental_it_additional",
+    "original_section": "A"
+  },
+  "questions": [
+    {
+      "n": 1,
+      "id": "20261027-01",
+      "category": "web_rails",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "次のRailsコードを実行します。User(id: 7)にはDBに保存済みのPostが2件あり、関連付けはhas_many :postsです。バリデーション・コールバック・DBエラーは発生しないものとします。\n\nuser = User.find(7)\nuser.posts.load\npost = user.posts.build(title: \"下書き\")\na = user.posts.size\nb = user.posts.count\nc = post.persisted?\nd = user.posts.reload.size\np [a, b, c, d]\n\n何が表示されますか？",
+      "choices": {
+        "A": "[2, 2, false, 2]",
+        "B": "[3, 3, false, 2]",
+        "C": "[3, 2, false, 2]",
+        "D": "[3, 2, true, 3]"
+      },
+      "answer": "C",
+      "explanation": "loadで関連付けのターゲットを読み込み、buildで未保存Postをターゲットに追加する。sizeはロード済みのターゲットを数えて3、countはDBの保存済み2件を数える。buildしたPostのpersisted?はfalse。reloadでDBから再取得すると未保存オブジェクトは対象外となりsize=2。",
+      "choice_explanations": {
+        "A": "buildで未保存のPostが関連付けのメモリ上の配列に加わるためsizeは2でなく3。",
+        "B": "countはDBの件数を問い合わせるので未保存Postを含まず2。",
+        "C": "正しい。size=3、count=2、persisted?=false、reload後size=2。",
+        "D": "buildは保存を行わないためpersisted?はfalse。reload後に未保存Postは含まれない。"
+      }
+    },
+    {
+      "n": 2,
+      "id": "20261027-02",
+      "category": "database_sql",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "usersはid=1,2,3の3人です。ordersには以下の行があります。\n(id=10, user_id=1, status='paid')\n(id=11, user_id=1, status='cancelled')\n(id=12, user_id=2, status='cancelled')\nユーザー3には注文がありません。\n\nSELECT users.id\nFROM users\nLEFT JOIN orders\n  ON orders.user_id = users.id AND orders.status = 'paid'\nGROUP BY users.id\nHAVING COUNT(orders.id) = 0\nORDER BY users.id;\n\n結果のusers.idは？",
+      "choices": {
+        "A": "1, 2, 3",
+        "B": "2, 3",
+        "C": "3のみ",
+        "D": "1, 2"
+      },
+      "answer": "B",
+      "explanation": "ONでpaid注文だけが結合対象になる。ユーザー1はpaidが1件でHAVINGから除外、ユーザー2はcancelledしかなく結合行のorders.idがNULL、ユーザー3も同様。COUNT(orders.id)=0は2と3。",
+      "choice_explanations": {
+        "A": "1はpaid注文を持ち、COUNT(orders.id)=1のため除外。",
+        "B": "正しい。2はcancelledのみ、3は注文なし。どちらもpaid結合数は0。",
+        "C": "cancelledのみのユーザー2もpaid注文数0。",
+        "D": "1はpaid注文があり除外、3は注文なしでもLEFT JOINに残る。"
+      }
+    },
+    {
+      "n": 3,
+      "id": "20261027-03",
+      "category": "security",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "あるWebアプリではログインセッションCookieにHttpOnlyとSecureを設定し、SameSite=Noneを利用しています。設定変更APIはCookie認証のPOSTを受け付けます。悪意ある別サイトからユーザーのブラウザにフォームを自動送信させられる状況です。最も適切なサーバー側対策はどれですか？",
+      "choices": {
+        "A": "HttpOnlyがあるので、追加対策は不要",
+        "B": "CORSで他サイトのJavaScriptによるレスポンスの読み取りを禁止すれば、フォーム送信も防げる",
+        "C": "状態変更リクエストで正しいCSRFトークンを検証する（必要に応じてOriginも検証）",
+        "D": "POSTをGETに変更し、Cookieを維持する"
+      },
+      "answer": "C",
+      "explanation": "Cookieはブラウザから自動送信され得る。HttpOnlyはJavaScriptによるCookie読み取りを防ぐがCSRF対策ではない。CORSのレスポンス読み取り制御だけでは通常のフォーム送信は止まらない。CSRFトークン検証が有効。",
+      "choice_explanations": {
+        "A": "HttpOnlyはCookieの読み取りを制限するが、ブラウザによる送信を止めない。",
+        "B": "CORSは主にクロスオリジンのスクリプト読み取りを制御し、通常のHTMLフォームによるリクエスト自体を禁止しない。",
+        "C": "正しい。CSRFトークン検証と適切なOrigin検証は有効。",
+        "D": "GETで状態変更すると安全でなく、CSRF対策にもならない。"
+      }
+    },
+    {
+      "n": 4,
+      "id": "20261027-04",
+      "category": "fundamental_it",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "IPv4アドレス10.8.3.174/27が属するサブネットで、通常のホストに割り当て可能なアドレスはどれですか？（通常のネットワーク/ブロードキャストの扱いとする）",
+      "choices": {
+        "A": "10.8.3.160",
+        "B": "10.8.3.191",
+        "C": "10.8.3.178",
+        "D": "10.8.3.192"
+      },
+      "answer": "C",
+      "explanation": "/27は32アドレス刻み。174は160〜191の範囲。ネットワークアドレス160、ブロードキャスト191、利用可能161〜190。178のみ有効。",
+      "choice_explanations": {
+        "A": "160はネットワークアドレス。",
+        "B": "191はブロードキャストアドレス。",
+        "C": "正しい。178は161〜190の範囲内。",
+        "D": "192は次のサブネットのネットワークアドレス。"
+      }
+    },
+    {
+      "n": 5,
+      "id": "20261027-05",
+      "category": "algorithm_ruby",
+      "kind": "ruby_code",
+      "difficulty": "beginner_2",
+      "prompt": "Rubyメソッド sum_positive_evens(numbers) を自力で実装してください。\n整数の配列から「0より大きい偶数」だけを合計して整数で返します。配列を変更しないこと。\n\n例:\nsum_positive_evens([-4, 0, 2, 3, 8, 9]) # => 10\nsum_positive_evens([1, 3, -2])        # => 0\nsum_positive_evens([])                 # => 0\n\nヒントなしでコードを提出してください。",
+      "explanation": "0は含まれない。正の偶数だけ合計。eachと累積変数、またはsumのブロックで実装可能。",
+      "review_type": "seven_day_independent_recall",
+      "review_source": "attempts/2026-10-20.yml",
+      "reference_solution": "def sum_positive_evens(numbers)\n  total = 0\n  numbers.each do |n|\n    total += n if n > 0 && n.even?\n  end\n  total\nend",
+      "alternative_solution": "def sum_positive_evens(numbers)\n  numbers.sum { |n| n > 0 && n.even? ? n : 0 }\nend",
+      "hint_steps": [
+        "eachの前に合計値を0で初期化する。",
+        "nが正の偶数のときだけ合計値を増やす。",
+        "eachの戻り値は配列。メソッドの最後に合計値を置く。"
+      ]
+    },
+    {
+      "n": 6,
+      "id": "20261027-06",
+      "category": "web_rails",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "RailsのCommentsController#createです。保存に失敗したとき、同じリクエストでnew画面を再表示し、入力エラーを画面に出し、HTTP 422を返したいとします。\n\n@comment = Comment.new(comment_params)\nif @comment.save\n  redirect_to comments_path, notice: \"保存しました\"\nelse\n  # ここを置き換える\nend\n\n最も適切なのはどれですか？",
+      "choices": {
+        "A": "flash[:alert] = '入力を確認してください'; redirect_to new_comment_path",
+        "B": "flash.now[:alert] = '入力を確認してください'; render :new, status: :unprocessable_entity",
+        "C": "flash.now[:alert] = '入力を確認してください'; redirect_to new_comment_path",
+        "D": "flash[:alert] = '入力を確認してください'; render :new, status: :ok"
+      },
+      "answer": "B",
+      "explanation": "renderは同じリクエスト内で@commentのerrorsを保持してnewを表示。flash.nowは現在のレンダリングに適合。422はバリデーションエラーの応答に適切。",
+      "choice_explanations": {
+        "A": "redirectでは別リクエストになり、@commentのerrorsをそのまま保持できず、422でもない。",
+        "B": "正しい。render、flash.now、422の組み合わせ。",
+        "C": "flash.nowは現在のリクエスト向けであり、redirect後にメッセージが期待どおり保持されない。",
+        "D": "render自体はできるがstatus: :okは200であり、指定の422に合わない。"
+      }
+    },
+    {
+      "n": 7,
+      "id": "20261027-07",
+      "category": "database_sql",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "orders(id)とorder_items(order_id, quantity)があります。\norders: id=10, id=20\norder_items: (10, 2), (10, 3), (20, 1)\n\n次のSQLの結果はどれですか？\n\nSELECT COUNT(*) AS joined_rows,\n       COUNT(DISTINCT orders.id) AS order_count,\n       SUM(order_items.quantity) AS total_quantity\nFROM orders\nJOIN order_items ON order_items.order_id = orders.id;",
+      "choices": {
+        "A": "(2, 2, 6)",
+        "B": "(3, 2, 6)",
+        "C": "(3, 3, 6)",
+        "D": "(3, 2, 3)"
+      },
+      "answer": "B",
+      "explanation": "JOINで明細行が3行できる。COUNT(*)=3。注文IDは10と20の2種類なのでCOUNT(DISTINCT orders.id)=2。quantity合計は2+3+1=6。",
+      "choice_explanations": {
+        "A": "JOIN後の行は注文数2ではなく明細数3。",
+        "B": "正しい。結合3行、重複除去後の注文2件、数量合計6。",
+        "C": "注文10が2行に重複するためDISTINCTの件数は2。",
+        "D": "SUM(quantity)は行数3でなく2+3+1=6。"
+      }
+    },
+    {
+      "n": 8,
+      "id": "20261027-08",
+      "category": "security",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "複数組織対応のRailsアプリです。Documentはorganization_idとowner_idを持ちます。削除条件は「対象組織に所属するadminはその組織の全Documentを削除可能。memberは自分が所有する同組織のDocumentだけ削除可能。別組織のDocumentは誰も削除できない」です。current_organizationはURLから選ばれた組織、current_userはログインユーザーです。次のうち条件を満たす削除前チェックはどれですか？（所属roleはadmin/memberのみ）",
+      "choices": {
+        "A": "doc = Document.find(params[:id]); allowed = current_user.admin? || doc.owner_id == current_user.id",
+        "B": "doc = current_organization.documents.find(params[:id]); membership = current_user.memberships.find_by!(organization_id: current_organization.id); allowed = membership.role == 'admin' || (membership.role == 'member' && doc.owner_id == current_user.id)",
+        "C": "doc = current_organization.documents.find(params[:id]); allowed = current_user.memberships.where(role: 'admin').exists? || doc.owner_id == current_user.id",
+        "D": "doc = Document.find(params[:id]); membership = current_user.memberships.find_by!(organization_id: doc.organization_id); allowed = membership.role == 'admin' || doc.owner_id == current_user.id"
+      },
+      "answer": "B",
+      "explanation": "まずcurrent_organizationでDocumentを絞り、さらにその組織に対するmembershipを要求する。adminなら同組織全件、memberならownerのみ。Aは組織境界を検証しない。Cは他組織のadmin権限を流用でき、所有者の所属確認も不足。DはURL上のcurrent_organizationとの一致を検証していない。",
+      "choice_explanations": {
+        "A": "組織スコープも所属確認もない。グローバルなadmin判定やowner判定だけではテナント境界を守れない。",
+        "B": "正しい。対象組織のスコープ・所属・ロール・所有者条件をすべて満たす。",
+        "C": "他組織でadminなら許可される問題がある。またowner判定に所属チェックがない。",
+        "D": "対象docの組織への所属は見るが、URLで指定されたcurrent_organizationとの一致を検証しないため、指定組織外のdocを操作できる。"
+      }
+    },
+    {
+      "n": 9,
+      "id": "20261027-09",
+      "category": "ruby_hash_applied",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "Rubyで次のコードを実行します。\n\nrows = [\n  { user: \"A\", meta: { \"points\" => 4 } },\n  { user: \"B\", meta: { \"points\" => 2 } },\n  { user: \"A\", meta: { points: 3 } },\n  { user: \"B\", meta: {} }\n]\n\nscores = rows.each_with_object(Hash.new(0)) do |row, result|\n  result[row.fetch(:user)] += row.fetch(:meta).fetch(\"points\", 0)\nend\np scores\n\n何が表示されますか？",
+      "choices": {
+        "A": "{\"A\"=>7, \"B\"=>2}",
+        "B": "{\"A\"=>4, \"B\"=>2}",
+        "C": "{:A=>4, :B=>2}",
+        "D": "{\"A\"=>4, \"B\"=>0}"
+      },
+      "answer": "B",
+      "explanation": "fetch(:user)で取得する値は文字列A/B。meta内のキーは文字列'points'で検索するため、3行目のシンボル:pointsは一致せずデフォルト0。A=4+0、B=2+0。Hash.new(0)が未登録キーの加算を可能にし、each_with_objectで同じHashを蓄積。",
+      "choice_explanations": {
+        "A": "シンボル:pointsは文字列'points'と異なるため3を加えない。",
+        "B": "正しい。A=4、B=2。",
+        "C": "userの値は文字列なので結果のキーも文字列。",
+        "D": "Bの最初の2点は加算される。"
+      },
+      "replacement_for": "fundamental_it_additional",
+      "random_replacement_slot": 9
+    },
+    {
+      "n": 10,
+      "id": "20261027-10",
+      "category": "fundamental_it",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "独立して故障する2台のサーバーが並列構成です。1台でも稼働すればサービスを利用できます。サーバーAの稼働率は90%、Bは95%。ロードバランサーなど他の要素は常に正常とします。サービス全体の稼働率は？",
+      "choices": {
+        "A": "85.5%",
+        "B": "95.0%",
+        "C": "99.5%",
+        "D": "99.9%"
+      },
+      "answer": "C",
+      "explanation": "故障率A=0.10、B=0.05。両方故障する確率は0.10×0.05=0.005。少なくとも1台稼働する確率は1-0.005=0.995=99.5%。",
+      "choice_explanations": {
+        "A": "0.90×0.95=85.5%は両方稼働が必要な直列の条件。",
+        "B": "95%はB単体の稼働率で、並列の効果を反映していない。",
+        "C": "正しい。余事象で全台故障を引く。",
+        "D": "99.9%にはならない。故障率の積は0.5%である。"
+      }
+    },
+    {
+      "n": 11,
+      "id": "20261027-11",
+      "category": "fundamental_it_additional",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "TCPで受信側が次に期待するシーケンス番号は2000です。受信側は、シーケンス番号2000から300バイトのデータを受け取り、続いてシーケンス番号2500から100バイトのデータを受け取りました（途中の2300〜2499は未受信）。標準的な累積ACKを使う場合、2つ目のセグメントを受信した直後に通知するACK番号は？",
+      "choices": {
+        "A": "2300",
+        "B": "2400",
+        "C": "2500",
+        "D": "2600"
+      },
+      "answer": "A",
+      "explanation": "最初の300バイトで連続受信範囲は2000〜2299、次に必要なバイトは2300。2500〜2599は受信しても2300〜2499に穴があるため累積ACKは2300のまま。",
+      "choice_explanations": {
+        "A": "正しい。次に連続して受信したいシーケンス番号は2300。",
+        "B": "受信データ量を単純に足すだけでは飛び越しを反映できない。",
+        "C": "未受信の2300〜2499を飛ばしてACKは進まない。",
+        "D": "2500〜2599を受け取っても欠落部分があるため2600にはならない。"
+      },
+      "section": "A"
+    },
+    {
+      "n": 12,
+      "id": "20261027-12",
+      "category": "fundamental_it_additional",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "ページサイズが4KiB（4096バイト）の仮想記憶方式です。仮想アドレスを先頭からのバイト位置として数えるとき、仮想アドレス12345（10進数）は何番目のページ（ページ番号は0始まり）に属し、ページ内オフセットはいくつですか？",
+      "choices": {
+        "A": "ページ2、オフセット4153",
+        "B": "ページ3、オフセット57",
+        "C": "ページ3、オフセット345",
+        "D": "ページ4、オフセット57"
+      },
+      "answer": "B",
+      "explanation": "12345=4096×3+57。0始まりのページ番号は3、ページ内オフセットは57バイト。",
+      "choice_explanations": {
+        "A": "ページ2の最大アドレスは12287であり、オフセットもページサイズ未満でなければならない。",
+        "B": "正しい。4096×3=12288、残り57。",
+        "C": "余りは345でなく57。",
+        "D": "4ページ目を1始まりで数えた場合に相当し、問題は0始まり。"
+      },
+      "section": "A"
+    },
+    {
+      "n": 13,
+      "id": "20261027-13",
+      "category": "fundamental_it_additional",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "次の擬似コードのcountの最終値は？\n\na ← [3, 1, 4, 2]\ncount ← 0\nfor i を 0 から 3 まで\n    for j を 0 から i まで\n        if a[j] < a[i]\n            count ← count + 1\n        endif\n    endfor\nendfor\n\nforの上限は含むものとします。",
+      "choices": {
+        "A": "2",
+        "B": "3",
+        "C": "4",
+        "D": "6"
+      },
+      "answer": "B",
+      "explanation": "i=0は0回、i=1は0回、i=2は3<4と1<4で2回、i=3は1<2で1回。合計3。自分自身との比較は等しいため加算されない。",
+      "choice_explanations": {
+        "A": "i=2で2回に加えてi=3で1回ある。",
+        "B": "正しい。2+1=3。",
+        "C": "a[i]自身を数えたり比較を誤ると過大になる。",
+        "D": "内側ループの全実行10回のうち条件を満たすのは3回。"
+      },
+      "section": "B"
+    },
+    {
+      "n": 14,
+      "id": "20261027-14",
+      "category": "fundamental_it_additional",
+      "kind": "multiple_choice",
+      "difficulty": "beginner_3",
+      "prompt": "昇順配列a=[2,5,9,12,16,21,25]から16を二分探索します。low=0、high=6から開始し、毎回mid=(low+high)÷2の整数部分を使います。a[mid]が目標より小さければlow=mid+1、大きければhigh=mid-1です。発見までのa[mid]との比較回数は？",
+      "choices": {
+        "A": "1回",
+        "B": "2回",
+        "C": "3回",
+        "D": "4回"
+      },
+      "answer": "C",
+      "explanation": "1回目mid3値12→low4、2回目mid5値21→high4、3回目mid4値16で発見。比較は3回。",
+      "choice_explanations": {
+        "A": "最初の中央要素は12で16ではない。",
+        "B": "2回目は21でありまだ見つからない。",
+        "C": "正しい。mid=3,5,4の3回。",
+        "D": "3回目に発見するので4回目は不要。"
+      },
+      "section": "B"
+    },
+    {
+      "n": 15,
+      "id": "20261027-15",
+      "category": "rails_url_design",
+      "kind": "multiple_choice",
+      "difficulty": "intermediate_1",
+      "prompt": "Railsルーティングと変数は次のとおりです。\n\nresources :teams do\n  resources :members, only: [:show, :update]\nend\n\nparams[:team_id] = \"7\"\n@member = Member.find(18)\n\nフォームを次のように書きました。\n\nform_with url: team_member_path(team_id: params[:team_id], id: @member.id, tab: \"roles\"), method: :patch do |f|\n  # ...\nend\n\n送信時のHTTPメソッドとURLの組み合わせとして正しいものは？（フォームのmethod overrideを含む最終的なRailsの意図するHTTPメソッドを答える。ホスト名は含めない）",
+      "choices": {
+        "A": "GET /teams/7/members/18?tab=roles",
+        "B": "PATCH /teams/7/members/18?tab=roles",
+        "C": "POST /teams/7/members?tab=roles",
+        "D": "PATCH /teams/18/members/7?tab=roles"
+      },
+      "answer": "B",
+      "explanation": "team_member_pathは親:team_id=7、子:id=18を埋め、余剰tabはクエリパラメータになる。form_with method: :patchはRailsのメソッドオーバーライドを通してPATCHリクエストを意図する。",
+      "choice_explanations": {
+        "A": "method: :patchのためGETではない。",
+        "B": "正しい。親子ID、クエリ、PATCHが一致する。",
+        "C": "member単数のshow/update経路であり、複数形一覧URLではない。",
+        "D": "team_idとidを逆にしている。"
+      }
+    },
+    {
+      "n": 16,
+      "id": "20261027-16",
+      "category": "algorithm_ruby",
+      "kind": "ruby_code",
+      "difficulty": "beginner_3",
+      "prompt": "Rubyメソッド normalized_long_words(words, min_length) を実装してください。\n文字列の配列から、文字数がmin_length以上の単語だけを選び、すべて小文字にして、重複を取り除いた配列を返します。元の配列や文字列は変更せず、初めて現れた順番を保ってください。入力は英字のみです。\n\n例:\nnormalized_long_words([\"Cat\", \"Apple\", \"APPLE\", \"dog\", \"Banana\"], 5)\n# => [\"apple\", \"banana\"]\nnormalized_long_words([], 3) # => []\n\n完成コードをヒントなしで書いてください。",
+      "explanation": "条件で抽出→小文字化→重複除去。文字数はlength、select/map/uniqを組み合わせられる。",
+      "review_type": "new",
+      "reference_solution": "def normalized_long_words(words, min_length)\n  words.select { |word| word.length >= min_length }\n       .map(&:downcase)\n       .uniq\nend",
+      "alternative_solution": "def normalized_long_words(words, min_length)\n  words.each_with_object([]) do |word, result|\n    next if word.length < min_length\n    normalized = word.downcase\n    result << normalized unless result.include?(normalized)\n  end\nend",
+      "hint_steps": [
+        "文字数の条件に合う要素だけを残す処理を考える。",
+        "小文字にするメソッドはdowncase（!なし）。",
+        "重複を除き、順序を保つArrayのメソッドを考える。"
+      ]
+    }
+  ]
+}
