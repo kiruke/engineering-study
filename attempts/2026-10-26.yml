@@ -1,0 +1,94 @@
+date: '2026-10-26'
+total: 16
+correct: 11
+accuracy: 0.6875
+status: completed
+grading: first_attempt
+source: interactive_chat
+questions:
+  - number: 1
+    topic: rails_validation
+    answer: B
+    correct_answer: B
+    is_correct: true
+  - number: 2
+    topic: sql_left_join
+    answer: B
+    correct_answer: B
+    is_correct: true
+  - number: 3
+    topic: security_idor
+    answer: B
+    correct_answer: B
+    is_correct: true
+  - number: 4
+    topic: cidr_subnet
+    answer: B
+    correct_answer: A
+    is_correct: false
+  - number: 5
+    topic: ruby_nested_hash_select_map
+    answer: A
+    correct_answer: A
+    is_correct: true
+  - number: 6
+    topic: rails_association_build_create_size_count_reload
+    answer: C
+    correct_answer: B
+    is_correct: false
+  - number: 7
+    topic: sql_where_group_having
+    answer: A
+    correct_answer: A
+    is_correct: true
+  - number: 8
+    topic: parallel_availability
+    answer: C
+    correct_answer: D
+    is_correct: false
+  - number: 9
+    topic: ruby_group_by_transform_values
+    answer: B
+    correct_answer: B
+    is_correct: true
+  - number: 10
+    topic: nested_loop_mod
+    answer: A
+    correct_answer: C
+    is_correct: false
+  - number: 11
+    topic: ruby_select_map
+    answer: C
+    correct_answer: C
+    is_correct: true
+  - number: 12
+    topic: amdahl_law
+    answer: B
+    correct_answer: B
+    is_correct: true
+  - number: 13
+    topic: cache_average_access
+    answer: A
+    correct_answer: A
+    is_correct: true
+  - number: 14
+    topic: rails_nested_path_helper
+    answer: D
+    correct_answer: D
+    is_correct: true
+  - number: 15
+    topic: bubble_sort_trace
+    answer: A
+    correct_answer: B
+    is_correct: false
+  - number: 16
+    topic: savepoint_transaction
+    answer: C
+    correct_answer: C
+    is_correct: true
+review_priorities:
+  - nested_loop_and_bubble_sort_tracing
+  - active_record_association_memory_vs_database
+  - cidr_subnet_boundaries
+  - parallel_system_availability
+notes: 'Question set in questions/2026-10-26.yml was pre-generated; actual interactive questions differed in order/content. This file records actual answered questions.'
