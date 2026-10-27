@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-27",
+  "record_type": "partial_interactive_attempts",
+  "status": "in_progress",
+  "source": "observed_chat_answers_only",
+  "note": "日付変更時の途中保存。questions/2026-10-27.ymlの事前作成問題と、会話で実際に出題された問題は異なる。以下は実際に出題・採点された内容に基づく。Q6は出題済みだが未回答。未回答を不正解として集計しない。",
+  "summary": {
+    "presented": 6,
+    "answered": 5,
+    "first_correct": 3,
+    "first_incorrect": 2,
+    "accuracy_of_answered": 0.6,
+    "hint_assisted_correct": 0
+  },
+  "questions": [
+    {
+      "number": 1,
+      "topic": "rails_association_load_build_size_count_persisted_reload",
+      "answer": "C",
+      "correct_answer": "C",
+      "first_correct": true,
+      "hints": []
+    },
+    {
+      "number": 2,
+      "topic": "sql_left_join_count_star_count_column_coalesce",
+      "answer": "B",
+      "correct_answer": "B",
+      "first_correct": true,
+      "hints": []
+    },
+    {
+      "number": 3,
+      "topic": "multitenant_organization_role_authorization_idor",
+      "answer": "A",
+      "correct_answer": "C",
+      "first_correct": false,
+      "hints": []
+    },
+    {
+      "number": 4,
+      "topic": "cidr_192_168_50_190_27_network_broadcast_hosts",
+      "answer": "A",
+      "correct_answer": "A",
+      "first_correct": true,
+      "hints": []
+    },
+    {
+      "number": 5,
+      "topic": "ruby_hash_each_with_object_default_zero_sum",
+      "answer": "D",
+      "correct_answer": "B",
+      "first_correct": false,
+      "hints": [
+        "each_with_objectとHash.new(0)の軽いヒント",
+        "Hash.new(0)の仕組みと参照だけではキーを追加しない説明"
+      ],
+      "note": "ヒント後にDを選択。nil=>0キーが自動追加されると誤認。"
+    },
+    {
+      "number": 6,
+      "topic": "ruby_nested_loop_count_pairs_index_combinations",
+      "status": "presented_unanswered",
+      "prompt_summary": "numbers=[2,3,2,4,1], target=5, i<jかつa+b==targetのペア数"
+    }
+  ],
+  "review_priorities": [
+    "multitenant_role_scoping",
+    "hash_default_value_vs_stored_key",
+    "nested_loop_index_pairs_pending"
+  ]
+}
