@@ -1,0 +1,395 @@
+{
+  "version": 1,
+  "date": "2026-10-28",
+  "record_type": "prepared_question_set",
+  "status": "questions_prepared_awaiting_responses",
+  "answers_saved": false,
+  "source_of_truth": "attempts/ contains only actual answers",
+  "sources": [
+    "AGENTS.md",
+    "config/curriculum.yml",
+    "config/difficulty.yml",
+    "progress/skills.yml",
+    "progress/review_queue.yml",
+    "attempts/2026-10-18.yml",
+    "attempts/2026-10-19.yml",
+    "attempts/2026-10-20.yml",
+    "attempts/2026-10-21.yml",
+    "attempts/2026-10-23.yml",
+    "attempts/2026-10-24.yml",
+    "attempts/2026-10-26.yml",
+    "attempts/2026-10-27.yml"
+  ],
+  "history_note": "2026-10-27 quiz incomplete; Q1-Q5 answered, Q6 pending. Partial attempts saved separately. Progress snapshots stale; use actual attempts. Previous prepared sets may differ from chat questions; record actual prompts/responses in attempts.",
+  "rules": {
+    "questions_total": 16,
+    "one_question_at_a_time": true,
+    "hide_answers_until_attempt": true,
+    "explain_all_choices": true,
+    "code_hints_incremental": true,
+    "attempts_save_after_16": true,
+    "advanced_authorization_only": true,
+    "hide_topic_labels_in_question": true
+  },
+  "distribution": {
+    "web_rails": 2,
+    "database_sql": 2,
+    "security": 2,
+    "fundamental_it": 2,
+    "algorithm_ruby": 2,
+    "fundamental_it_additional": 4,
+    "rails_url_design": 1,
+    "ruby_hash_applied": 1
+  },
+  "random_replacement": {
+    "eligible": [
+      "web_rails",
+      "database_sql",
+      "security",
+      "fundamental_it",
+      "fundamental_it_additional"
+    ],
+    "replaced_category": "fundamental_it_additional",
+    "chosen_slot": 1,
+    "method": "Daily choice among non-algorithm, non-URL slots; selected additional IT slot for applied Ruby Hash review"
+  },
+  "questions": [
+    {
+      "n": 1,
+      "category": "ruby_hash_applied",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "次のRubyコードの最後に表示される値はどれですか？\n\nrows = [\n  { user: \"A\", meta: { \"points\" => 3 } },\n  { user: \"B\", meta: { points: 9 } },\n  { user: \"A\", meta: { \"points\" => 4 } },\n  { user: \"B\", meta: { \"points\" => 2 } }\n]\n\ntotals = rows.group_by { |row| row[:user] }.transform_values do |group|\n  group.sum { |row| row[:meta].fetch(\"points\", 0) }\nend\n\nresult = totals.merge(\n  \"A\" => totals.fetch(\"A\", 0) + 1,\n  \"C\" => totals.fetch(\"C\", 0)\n)\np result",
+      "choices": {
+        "A": "{\"A\"=>8, \"B\"=>11, \"C\"=>0}",
+        "B": "{\"A\"=>7, \"B\"=>2}",
+        "C": "{\"A\"=>8, \"B\"=>2, \"C\"=>0}",
+        "D": "{\"A\"=>8, \"B\"=>11, \"C\"=>0, nil=>0}"
+      },
+      "answer": "C",
+      "explanation": "group_byでA/Bに分け、transform_values内のsumで文字列キー'points'だけを合計する。Bのシンボル:pointsは無視されA=7,B=2。mergeはAを8に更新し、Cを明示的に0で追加する。",
+      "choice_explanations": {
+        "A": "シンボル:pointsの9を文字列キー'points'として数えている。",
+        "B": "mergeによるAの加算とCの明示追加が抜けている。",
+        "C": "正しい。A=3+4+1=8、B=2、C=0。",
+        "D": "Bの9は加算されず、nilキーを作る処理もない。"
+      },
+      "review_of": "2026-10-27 Q5; Hash default value vs stored keys"
+    },
+    {
+      "n": 2,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "RailsでPostには validates :title, presence: true が設定され、postはtitle: \"公開\"でDBに保存済みです。他のバリデーション・コールバック・DB制約はありません。次の実行結果は？\n\na = post.update(title: \"\")\nb = post.update_columns(title: \"\")\nc = post.reload.title\np [a, b, c]",
+      "choices": {
+        "A": "[false, true, \"\"]",
+        "B": "[false, false, \"公開\"]",
+        "C": "[true, true, \"\"]",
+        "D": "[false, true, \"公開\"]"
+      },
+      "answer": "A",
+      "explanation": "updateはバリデーションを実行し空文字のtitleを拒否してfalse。update_columnsはバリデーション・通常のコールバックを飛ばしてDB更新しtrue。reloadでDBから空文字を読む。",
+      "choice_explanations": {
+        "A": "正しい。",
+        "B": "update_columnsはバリデーションを飛ばすため成功する。",
+        "C": "updateはpresence検証で失敗する。",
+        "D": "update_columnsでDBのtitleは空文字になる。"
+      }
+    },
+    {
+      "n": 3,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "users(id)には1,2,3があり、orders(user_id,status)は(1,'paid'),(1,'cancelled'),(2,'cancelled')です。次のSQLが返すusers.idは？\n\nSELECT users.id\nFROM users\nLEFT JOIN orders ON orders.user_id = users.id\nWHERE orders.status = 'paid'\nGROUP BY users.id\nORDER BY users.id;",
+      "choices": {
+        "A": "1, 2, 3",
+        "B": "1のみ",
+        "C": "1, 3",
+        "D": "2, 3"
+      },
+      "answer": "B",
+      "explanation": "LEFT JOIN後のWHEREでorders.status='paid'を満たさない行は除外される。注文なしのユーザー3もorders.statusがNULLで除外され、paidのある1だけが残る。ONに条件を置く場合との違いが重要。",
+      "choice_explanations": {
+        "A": "WHEREがcancelledやNULLを除外する。",
+        "B": "正しい。",
+        "C": "注文なしの3もWHEREで除外される。",
+        "D": "paidのある1が残り、2,3は除外される。"
+      }
+    },
+    {
+      "n": 4,
+      "category": "security",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "Railsの検索画面で、ユーザーが入力した検索語params[:q]をHTML本文に表示します。検索語に <script>alert(1)</script> のような文字列が入る可能性があります。最も適切な実装は？",
+      "choices": {
+        "A": "<%= raw(params[:q]) %>",
+        "B": "<%= params[:q] %>",
+        "C": "<%= params[:q].html_safe %>",
+        "D": "<script>document.write(\"<%= params[:q] %>\")</script>"
+      },
+      "answer": "B",
+      "explanation": "ERBの通常の<%= %>出力はHTMLエスケープされ、入力文字列がHTML要素として実行されない。raw/html_safeは安全と確認できないユーザー入力に使わない。JavaScript文字列への直接埋め込みは文脈依存のエスケープ問題を招く。",
+      "choice_explanations": {
+        "A": "rawはHTMLエスケープを回避してXSSリスク。",
+        "B": "正しい。HTML本文への通常の出力なら自動エスケープされる。",
+        "C": "html_safeは未検証入力を安全なHTMLとして扱い危険。",
+        "D": "JS文字列へ直接埋め込む設計はHTML本文と異なるエスケープを要するため不適切。"
+      }
+    },
+    {
+      "n": 5,
+      "category": "fundamental_it",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "独立して故障するサーバーA（稼働率96%）とB（稼働率90%）を並列構成にします。どちらか1台でも稼働していればサービスは利用可能です。ほかの構成要素の故障は無視します。サービス全体の稼働率は？",
+      "choices": {
+        "A": "86.4%",
+        "B": "94.0%",
+        "C": "99.4%",
+        "D": "99.6%"
+      },
+      "answer": "D",
+      "explanation": "両方同時故障の確率は0.04×0.10=0.004。稼働率は1-0.004=0.996=99.6%。",
+      "choice_explanations": {
+        "A": "両方の稼働が必要な直列構成の計算。",
+        "B": "単純平均などでは求められない。",
+        "C": "両方故障0.4%なので99.4%ではない。",
+        "D": "正しい。"
+      },
+      "review_of": "2026-10-26 Q8"
+    },
+    {
+      "n": 6,
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_3",
+      "kind": "ruby_implementation",
+      "prompt": "Rubyメソッド unique_long_words(words, min_length) を実装してください。文字列配列から、文字数がmin_length以上の単語だけを小文字に変換し、重複を除いた配列を最初の出現順で返します。元の配列と文字列を変更してはいけません。\n\nunique_long_words([\"Ruby\", \"ruby\", \"RAILS\", \"Go\", \"rails\"], 4) # => [\"ruby\", \"rails\"]\nunique_long_words([\"A\", \"BB\"], 3) # => []\nunique_long_words([], 2) # => []\n\nまずヒントなしでメソッド全体を提出してください。",
+      "reference_solution": "def unique_long_words(words, min_length)\n  words.map(&:downcase).select { |word| word.length >= min_length }.uniq\nend",
+      "alternative_solution": "def unique_long_words(words, min_length)\n  words.each_with_object([]) do |word, result|\n    normalized = word.downcase\n    result << normalized if normalized.length >= min_length && !result.include?(normalized)\n  end\nend",
+      "explanation": "mapで元文字列を変更せず小文字化、selectで長さを絞り、uniqで出現順を維持して重複を除く。",
+      "hint_steps": [
+        "小文字化は破壊的なdowncase!ではなくdowncaseを使う。",
+        "条件に合う単語をselectで絞る。",
+        "配列の重複除去にuniqを使う。"
+      ],
+      "review_type": "new"
+    },
+    {
+      "n": 7,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "キャッシュのヒット率が80%、ヒット時のアクセス時間が2ns、ミス時のアクセス時間が22ns（キャッシュ確認を含む総時間）です。平均アクセス時間は？",
+      "choices": {
+        "A": "4ns",
+        "B": "6ns",
+        "C": "10ns",
+        "D": "20ns"
+      },
+      "answer": "B",
+      "explanation": "0.8×2+0.2×22=1.6+4.4=6ns。",
+      "choice_explanations": {
+        "A": "ミスの影響を過小評価。",
+        "B": "正しい。",
+        "C": "ヒット率の重み付けを誤っている。",
+        "D": "単純にミス時時間へ寄せ過ぎ。"
+      }
+    },
+    {
+      "n": 8,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "配列a=[5,2,4,1]に対して、i=0,1,2の順に、a[i]>a[i+1]なら隣り合う要素を交換します。1回だけ左から右へ走査した後の配列は？",
+      "choices": {
+        "A": "[1,2,4,5]",
+        "B": "[2,4,1,5]",
+        "C": "[2,5,1,4]",
+        "D": "[2,4,5,1]"
+      },
+      "answer": "B",
+      "explanation": "5と2を交換して[2,5,4,1]、5と4を交換して[2,4,5,1]、5と1を交換して[2,4,1,5]。",
+      "choice_explanations": {
+        "A": "1回の走査では完全にはソートされない。",
+        "B": "正しい。",
+        "C": "i=1の交換結果が違う。",
+        "D": "最後の5と1の交換を忘れている。"
+      },
+      "review_of": "2026-10-26 Q15"
+    },
+    {
+      "n": 9,
+      "category": "web_rails",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "Post belongs_to :userで、Postは20件すべて有効なuserを持ちます。次のコードで、典型的なN+1問題を避けるために適切な変更はどれですか？\n\nposts = Post.limit(20).to_a\nposts.each { |post| puts post.user.name }",
+      "choices": {
+        "A": "Post.limit(20).order(:id).to_a にする",
+        "B": "Post.includes(:user).limit(20).to_a にする",
+        "C": "post.user.reload.name を使う",
+        "D": "posts.eachをposts.mapに置き換えるだけ"
+      },
+      "answer": "B",
+      "explanation": "includes(:user)で関連ユーザーをまとめて先読みする。orderやmapは関連取得クエリを削減せず、reloadは追加のクエリを生みやすい。",
+      "choice_explanations": {
+        "A": "並び替えは関連の先読みではない。",
+        "B": "正しい。",
+        "C": "reloadは関連を再読込する。",
+        "D": "繰り返しメソッドの変更だけではDBクエリ数は変わらない。"
+      }
+    },
+    {
+      "n": 10,
+      "category": "database_sql",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "orders(user_id,status,amount)に次の6行があります。\n(1,'paid',100),(1,'paid',300),(1,'cancelled',900),(2,'paid',250),(3,'paid',150),(3,'paid',200)\n\nSELECT user_id\nFROM orders\nWHERE status = 'paid'\nGROUP BY user_id\nHAVING SUM(amount) >= 350\nORDER BY user_id;\n\n返されるuser_idは？",
+      "choices": {
+        "A": "1のみ",
+        "B": "1, 2",
+        "C": "2, 3",
+        "D": "1, 3"
+      },
+      "answer": "D",
+      "explanation": "WHEREでpaidだけ残す。ユーザー1は400、2は250、3は350。HAVING >=350は1と3。",
+      "choice_explanations": {
+        "A": "3も350で境界値を満たす。",
+        "B": "2は250で満たさない。",
+        "C": "1は400で満たし2は満たさない。",
+        "D": "正しい。"
+      }
+    },
+    {
+      "n": 11,
+      "category": "security",
+      "difficulty": "intermediate_1",
+      "kind": "multiple_choice",
+      "prompt": "複数チームを持つRailsアプリです。Documentはteam_idとowner_idを持ち、Team has_many :documents、User has_many :membershipsです。更新条件は「対象チームのadminなら全件更新可能、memberなら同チームの自分の文書だけ更新可能。別チームの文書にはアクセス不可」。current_teamはURLのteam_idから取得され、所属確認はまだしていません。どの実装が最も適切ですか？（すべて最後に更新する前に認可結果を強制するものとする）",
+      "choices": {
+        "A": "doc = Document.find(params[:id]); allowed = current_user.memberships.exists?(role: \"admin\") || doc.owner_id == current_user.id",
+        "B": "doc = current_team.documents.find(params[:id]); allowed = current_user.memberships.exists?(role: \"admin\") || doc.owner_id == current_user.id",
+        "C": "doc = current_team.documents.find(params[:id]); membership = current_user.memberships.find_by!(team: current_team); allowed = membership.role == \"admin\" || (membership.role == \"member\" && doc.owner_id == current_user.id)",
+        "D": "doc = Document.find(params[:id]); membership = current_user.memberships.find_by!(team: doc.team); allowed = membership.role == \"admin\" || doc.owner_id == current_user.id"
+      },
+      "answer": "C",
+      "explanation": "対象のteamスコープでDocumentを検索し、そのteamへの所属を必須にしたうえで、team内roleとownerの条件を判定する。allowedがfalseなら403などで更新を止める。",
+      "choice_explanations": {
+        "A": "チーム境界もadminのチームも無視している。",
+        "B": "ドキュメントのチームは絞るがadmin権限を別チームから流用し、member ownerの所属も確認しない。",
+        "C": "正しい。チーム・所属・ロール・所有者を結びつける。",
+        "D": "URLのcurrent_teamに対するスコープがなく、別チームの文書IDを指定しても操作可能。"
+      },
+      "review_of": "2026-10-27 Q3"
+    },
+    {
+      "n": 12,
+      "category": "fundamental_it",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "IPv4アドレス172.16.10.77/26について、ネットワークアドレス、ブロードキャストアドレス、通常の割り当て可能ホスト数の正しい組み合わせは？",
+      "choices": {
+        "A": "172.16.10.64 / 172.16.10.127 / 62台",
+        "B": "172.16.10.64 / 172.16.10.128 / 64台",
+        "C": "172.16.10.0 / 172.16.10.127 / 126台",
+        "D": "172.16.10.77 / 172.16.10.127 / 50台"
+      },
+      "answer": "A",
+      "explanation": "/26は255.255.255.192、ブロックサイズ64。77は64〜127に属する。ホスト部6ビットで2^6-2=62台。",
+      "choice_explanations": {
+        "A": "正しい。",
+        "B": "128は次のネットワーク先頭、全64個はホストに使えない。",
+        "C": "/25の範囲と混同している。",
+        "D": "指定IP自体がネットワークアドレスになるわけではない。"
+      },
+      "review_of": "2026-10-26 Q4"
+    },
+    {
+      "n": 13,
+      "category": "algorithm_ruby",
+      "difficulty": "beginner_2",
+      "kind": "ruby_implementation",
+      "prompt": "Rubyメソッド count_large_evens(numbers, threshold) を実装してください。配列内の「偶数かつthreshold以上」の整数の個数を返します。配列を変更しないこと。\n\ncount_large_evens([2, 4, 6, 7, 8], 5) # => 2\ncount_large_evens([2, 4, 6], 7)       # => 0\ncount_large_evens([], 0)              # => 0\n\n以前ヒントを使った内容の復習です。今回はヒントなしで再現してください。",
+      "reference_solution": "def count_large_evens(numbers, threshold)\n  numbers.count { |n| n.even? && n >= threshold }\nend",
+      "alternative_solution": "def count_large_evens(numbers, threshold)\n  total = 0\n  numbers.each do |n|\n    total += 1 if n.even? && n >= threshold\n  end\n  total\nend",
+      "explanation": "Array#countにブロックを渡すと真となる要素数を返す。each版は累積変数の初期化・更新・最後の戻り値が必要。",
+      "hint_steps": [
+        "条件はn.even?とn>=thresholdの両方。",
+        "個数を数えるにはcountのブロックが使える。",
+        "eachを使う場合はtotal=0で初期化し、最後にtotalを返す。"
+      ],
+      "review_type": "four_day_independent_recall",
+      "review_source": "attempts/2026-10-24.yml"
+    },
+    {
+      "n": 14,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "TCPで次に期待するシーケンス番号は1000です。1000から200バイトを受信し、続いて1400から100バイトを受信しました。1200〜1399は未受信です。通常の累積ACKで2つ目の受信直後に返すACK番号は？",
+      "choices": {
+        "A": "1000",
+        "B": "1200",
+        "C": "1400",
+        "D": "1500"
+      },
+      "answer": "B",
+      "explanation": "連続受信済みは1000〜1199。途中1200〜1399に欠落があるため、1400〜1499を受信しても累積ACKは1200。",
+      "choice_explanations": {
+        "A": "最初の200バイトは受信済み。",
+        "B": "正しい。",
+        "C": "欠落区間の先をACKできない。",
+        "D": "後続セグメントの終端をそのままACKしない。"
+      }
+    },
+    {
+      "n": 15,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "difficulty": "beginner_3",
+      "kind": "multiple_choice",
+      "prompt": "配列[8,3,6,2,5]をバブルソートの昇順で、左から右へ隣接要素を比較・必要なら交換する走査を1回だけ行いました。結果は？",
+      "choices": {
+        "A": "[2,3,5,6,8]",
+        "B": "[3,6,8,2,5]",
+        "C": "[3,6,2,5,8]",
+        "D": "[3,6,2,8,5]"
+      },
+      "answer": "C",
+      "explanation": "8が右へ移動し、[3,8,6,2,5]→[3,6,8,2,5]→[3,6,2,8,5]→[3,6,2,5,8]。",
+      "choice_explanations": {
+        "A": "1回で完全に整列するとは限らない。",
+        "B": "後半の交換が抜けている。",
+        "C": "正しい。",
+        "D": "最後の8と5の交換が抜けている。"
+      },
+      "review_of": "2026-10-26 Q15"
+    },
+    {
+      "n": 16,
+      "category": "rails_url_design",
+      "difficulty": "intermediate_1",
+      "kind": "multiple_choice",
+      "prompt": "Rails routes.rbに以下が定義されています。\n\nresources :teams do\n  resources :members, only: [:show, :update]\nend\n\n@team.id=7、@member.id=15とします。\n\n<%= form_with url: team_member_path(@team, @member, tab: \"activity\"), method: :patch do |f| %>\n  <%= f.submit \"更新\" %>\n<% end %>\n\nRailsが意図する更新リクエストのHTTPメソッドとパス・クエリの組み合わせは？（ブラウザのHTMLフォーム内部のmethod属性ではなく、Railsが処理する論理的HTTPメソッドを答える）",
+      "choices": {
+        "A": "POST /teams/7/members/15?tab=activity",
+        "B": "PATCH /teams/7/members/15?tab=activity",
+        "C": "PATCH /teams/15/members/7?tab=activity",
+        "D": "GET /teams/7/members/15/activity"
+      },
+      "answer": "B",
+      "explanation": "ネストしたteam_member_pathはteam_id=7, id=15。tabはクエリパラメータ。form_with method: :patchはRails上のPATCH更新リクエストを表す。",
+      "choice_explanations": {
+        "A": "ブラウザのHTMLフォーム送信はPOST+_methodのことがあるがRailsの論理的メソッドはPATCH。",
+        "B": "正しい。",
+        "C": "親チームと子メンバーのID順が逆。",
+        "D": "tabはパス要素でなくクエリで、methodはGETでない。"
+      }
+    }
+  ]
+}
