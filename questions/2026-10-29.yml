@@ -1,0 +1,338 @@
+{
+  "version": 1,
+  "date": "2026-10-29",
+  "status": "prepared",
+  "source": "adaptive_quiz_from_actual_attempts",
+  "rules": {
+    "total": 16,
+    "one_at_a_time": true,
+    "answers_not_shown_before_response": true,
+    "first_attempt_separate_from_hints": true,
+    "hash_replacement": "fundamental_it_additional section A",
+    "no_management_or_business": true
+  },
+  "questions": [
+    {
+      "number": 1,
+      "category": "web_rails",
+      "topic": "association_query_behavior",
+      "level": "intermediate_1",
+      "prompt": "次のRailsコードで、関連ユーザーが事前読み込みされていないことによるN+1が発生し得るのはどれですか。Post belongs_to :user、20件の投稿はそれぞれ別ユーザーのものとします。",
+      "choices": {
+        "A": "Post.limit(20).each { |p| puts p.user_id }",
+        "B": "Post.includes(:user).limit(20).each { |p| puts p.user.name }",
+        "C": "Post.joins(:user).limit(20).each { |p| puts p.user.name }",
+        "D": "Post.limit(20).each { |p| puts p.title }"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "user_idはpostsテーブルの属性なので関連ユーザーを取得しない。",
+        "B": "includesが関連ユーザーを事前読み込みするため、通常N+1にならない。",
+        "C": "joinsは絞り込み等のための結合であり、通常は関連Userオブジェクトを事前読み込みしない。post.userを繰り返すとN+1が起こり得る。",
+        "D": "titleはPost自身の属性なので追加の関連SQLは不要。"
+      },
+      "notes": "単にincludesを選ぶのでなく、実際に関連オブジェクトが必要か、既に読み込み済みかを判断する。"
+    },
+    {
+      "number": 2,
+      "category": "algorithm_ruby",
+      "topic": "ruby_adjacent_increases_recall_day1",
+      "level": "beginner_3",
+      "format": "implementation",
+      "prompt": "【昨日の復習・ヒントなし】整数の配列 numbers を受け取り、隣り合う2要素について「後ろの値が前の値より大きい」箇所の数を返す count_increases(numbers) を実装してください。例: [3, 2, 4, 6] => 2、[5] => 0、[] => 0。元の配列は変更しないこと。",
+      "answer_code": "def count_increases(numbers)\n  numbers.each_cons(2).count { |a, b| b > a }\nend",
+      "alternative_code": "def count_increases(numbers)\n  numbers.each_index.count { |i| i < numbers.length - 1 && numbers[i] < numbers[i + 1] }\nend",
+      "explanation": "each_cons(2)で隣接2要素の組を列挙し、countブロックで条件を満たす組だけ数える。空配列や1要素なら組がなく0。each_index版は末尾の範囲外参照に注意。",
+      "hint_steps": [
+        "隣り合う2つをどう取り出すか考える。",
+        "each_cons(2)または添字iとi+1を使う。",
+        "条件が真になる組の個数をcountで数える。"
+      ],
+      "grading": "初回正解・ヒント後正解・未完了を分離。"
+    },
+    {
+      "number": 3,
+      "category": "database_sql",
+      "topic": "savepoint_rollback",
+      "level": "beginner_3",
+      "prompt": "初期状態で accounts の id=1 は残高1000、id=2 は残高500です。次のトランザクションがエラーなく完了した場合、最終残高の組はどれですか。\nBEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nSAVEPOINT s1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nROLLBACK TO SAVEPOINT s1;\nCOMMIT;",
+      "choices": {
+        "A": "id=1:1000、id=2:500",
+        "B": "id=1:900、id=2:600",
+        "C": "id=1:900、id=2:500",
+        "D": "id=1:1000、id=2:600"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "ROLLBACK TO SAVEPOINTはトランザクション開始まで巻き戻すわけではない。",
+        "B": "SAVEPOINT後のid=2の更新は取り消される。",
+        "C": "SAVEPOINT前のid=1の更新は残り、SAVEPOINT後のid=2の更新は取り消される。",
+        "D": "SAVEPOINT前のid=1更新が消えるわけではない。"
+      }
+    },
+    {
+      "number": 4,
+      "category": "security",
+      "topic": "multitenant_nested_authorization",
+      "level": "intermediate_1",
+      "prompt": "複数組織に所属できるRailsアプリです。projects は organization_id と owner_id を持ち、memberships は user_id・organization_id・role を持ちます。PATCH /organizations/:organization_id/projects/:id は『対象組織に所属するユーザーで、当該組織のadminか、そのプロジェクトのownerだけ更新可能』です。最も適切な実装はどれですか。",
+      "choices": {
+        "A": "project = Project.find(params[:id]); allowed = current_user.memberships.exists?(role: 'admin') || project.owner_id == current_user.id",
+        "B": "project = Organization.find(params[:organization_id]).projects.find(params[:id]); membership = current_user.memberships.find_by(organization_id: project.organization_id); allowed = membership.present? && (membership.role == 'admin' || project.owner_id == current_user.id)",
+        "C": "project = Organization.find(params[:organization_id]).projects.find(params[:id]); allowed = current_user.memberships.exists?(role: 'admin') || project.owner_id == current_user.id",
+        "D": "project = Organization.find(params[:organization_id]).projects.find(params[:id]); allowed = project.owner_id == current_user.id"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "プロジェクトの組織スコープがなく、別組織のadmin権限も通してしまう。",
+        "B": "URLの組織内にプロジェクトを限定し、所属を確認したうえで当該組織のadminまたはownerを許可する。",
+        "C": "組織内プロジェクトを取得しているがadmin判定が他組織の所属でも成立する。",
+        "D": "当該組織adminによる更新を不当に拒否し、ownerの所属確認もない。"
+      },
+      "notes": "認可判定後の更新までの権限変更競合など、実務ではトランザクションとポリシー層も検討する。"
+    },
+    {
+      "number": 5,
+      "category": "fundamental_it",
+      "topic": "cidr_network_boundaries",
+      "level": "beginner_3",
+      "prompt": "192.168.50.190/27 のネットワークについて、正しい組み合わせはどれですか。",
+      "choices": {
+        "A": "ネットワーク .160、ブロードキャスト .191、利用可能ホスト .161〜.190",
+        "B": "ネットワーク .160、ブロードキャスト .192、利用可能ホスト .161〜.191",
+        "C": "ネットワーク .192、ブロードキャスト .223、利用可能ホスト .193〜.222",
+        "D": "ネットワーク .128、ブロードキャスト .191、利用可能ホスト .129〜.190"
+      },
+      "answer": "A",
+      "explanation": {
+        "A": "/27は32個刻み。190は160〜191に含まれる。",
+        "B": "ブロードキャストは191で、192は次のネットワークの先頭。",
+        "C": "190は192〜223の範囲に入らない。",
+        "D": "/27のブロックサイズは32であり64ではない。"
+      }
+    },
+    {
+      "number": 6,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "topic": "amdahl_law",
+      "level": "beginner_3",
+      "prompt": "ある処理の実行時間の60%を占める部分だけを4倍高速化しました。残り40%は変化しません。処理全体の高速化率に最も近いのはどれですか。",
+      "choices": {
+        "A": "1.25倍",
+        "B": "1.82倍",
+        "C": "2.40倍",
+        "D": "4.00倍"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "短縮後の時間は0.4+0.6/4=0.55。逆数を取る必要がある。",
+        "B": "全体速度比は1/0.55≈1.818。",
+        "C": "高速化対象割合0.6と倍率4の積では全体の速度比にならない。",
+        "D": "全処理が4倍になるわけではない。"
+      }
+    },
+    {
+      "number": 7,
+      "category": "ruby_hash_application",
+      "topic": "group_by_symbol_string_key",
+      "level": "beginner_3",
+      "prompt": "次のRubyコードの result.keys.size はいくつになりますか。\norders = [\n  { user: { id: 1 }, amount: 100 },\n  { user: { 'id' => 1 }, amount: 200 },\n  { user: { id: 2 }, amount: 50 }\n]\nresult = orders.group_by { |order| order[:user][:id] }\nputs result.keys.size",
+      "choices": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "NoMethodErrorになる"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "キーは1だけではない。",
+        "B": "文字列'id'とシンボル:idは異なり、2件目はnilのグループになる。",
+        "C": "グループキーは1、nil、2の3種類。",
+        "D": "Hash#[]で存在しないキーを参照すると通常nilを返し、このコードでは例外にならない。"
+      },
+      "notes": "nilキーのグループもHashのキー数に数える。"
+    },
+    {
+      "number": 8,
+      "category": "web_rails",
+      "topic": "association_loaded_size_count",
+      "level": "intermediate_1",
+      "prompt": "User has_many :posts とします。次のコードで、putsの2行だけに注目したとき、通常追加SQLが発行される組み合わせはどれですか（postsはDBに3件、関連付けは変更されない）。\nposts = user.posts\nposts.load\nputs posts.size\nputs posts.count",
+      "choices": {
+        "A": "sizeもcountもSQLなし",
+        "B": "sizeはSQLなし、countはCOUNT SQLを実行",
+        "C": "sizeはCOUNT SQL、countはSQLなし",
+        "D": "sizeもcountもCOUNT SQLを実行"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "countは通常DBにCOUNTクエリを発行する。",
+        "B": "load済みの関連コレクションではsizeは読み込み済み要素数を利用し、countはDBに問い合わせる。",
+        "C": "読み込み済みのsizeは追加SQLを要しない。",
+        "D": "sizeは読み込み済み配列の長さを利用できる。"
+      },
+      "notes": "Relationの状態、counter_cache、scopeなどにより一般論には例外がある。"
+    },
+    {
+      "number": 9,
+      "category": "security",
+      "topic": "csrf_cookie_controls",
+      "level": "beginner_3",
+      "prompt": "Cookieを使ったログインセッションのRailsアプリで、別サイトからの意図しない状態変更リクエストを防ぎたい。次の説明のうち最も適切なのはどれですか。",
+      "choices": {
+        "A": "HttpOnly属性があればCSRFトークンは不要",
+        "B": "CORSで外部オリジンを禁止すればフォーム送信のCSRFも完全に防げる",
+        "C": "CSRFトークン検証を基本とし、SameSite属性などを追加の防御として使う",
+        "D": "Secure属性があればCSRFを防げる"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "HttpOnlyはJavaScriptからのCookie読み取りを抑えるが、ブラウザのCookie自動送信によるCSRFとは別問題。",
+        "B": "CORSは主にクロスオリジンの読み取り制御であり、単純なフォーム送信を完全には防げない。",
+        "C": "状態変更時のトークン検証とSameSite等の多層防御が適切。",
+        "D": "SecureはHTTPS送信に限定する属性でCSRF防止そのものではない。"
+      }
+    },
+    {
+      "number": 10,
+      "category": "algorithm_ruby",
+      "topic": "ruby_filter_transform_names_new",
+      "level": "beginner_3",
+      "format": "implementation",
+      "prompt": "配列 records の各要素は { name: 文字列, score: 整数 } です。scoreが60以上の人のnameだけを、元の順序のまま小文字にして配列で返す passing_names(records) を実装してください。例: [{name:'ALICE',score:80},{name:'Bob',score:40},{name:'CAROL',score:60}] => ['alice','carol']。元の配列や文字列を変更しないこと。",
+      "answer_code": "def passing_names(records)\n  records.select { |record| record[:score] >= 60 }.map { |record| record[:name].downcase }\nend",
+      "alternative_code": "def passing_names(records)\n  records.filter_map { |record| record[:name].downcase if record[:score] >= 60 }\nend",
+      "explanation": "selectで条件に合う要素を残し、mapでnameを変換する。filter_mapはRuby 2.7以降で条件に合う結果だけを集められる。downcaseは非破壊的、downcase!は破壊的。",
+      "hint_steps": [
+        "まずscoreが60以上のレコードだけを残す。",
+        "selectとmapを組み合わせる。",
+        "文字列を非破壊的に小文字化するメソッドを使う。"
+      ],
+      "grading": "初回正解・ヒント後正解・未完了を分離。"
+    },
+    {
+      "number": 11,
+      "category": "database_sql",
+      "topic": "sql_group_having_sum",
+      "level": "beginner_3",
+      "prompt": "orders(user_id, amount) から『注文金額の合計が1000を超えるユーザーID』だけを重複なく取得したい。正しいSQLはどれですか。",
+      "choices": {
+        "A": "SELECT DISTINCT user_id FROM orders WHERE amount > 1000;",
+        "B": "SELECT user_id FROM orders GROUP BY user_id HAVING SUM(amount) > 1000;",
+        "C": "SELECT user_id FROM orders WHERE SUM(amount) > 1000 GROUP BY user_id;",
+        "D": "SELECT user_id FROM orders GROUP BY user_id HAVING amount > 1000;"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "個別注文のamountが1000超という条件になり、合計が1000超を満たさない場合がある。",
+        "B": "ユーザーごとに集約してSUMをHAVINGで判定する。",
+        "C": "集約関数SUMをWHERE句に直接書けない。",
+        "D": "GROUP BY後の非集約amountは通常そのままHAVINGで参照できず、求める合計判定でもない。"
+      }
+    },
+    {
+      "number": 12,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "topic": "bubble_sort_one_pass",
+      "level": "beginner_3",
+      "prompt": "左から隣接2要素を比較し、左が大きければ交換する操作を、配列 [5,1,4,2] に対して左端から右端まで1周だけ行います。終了時の配列はどれですか。",
+      "choices": {
+        "A": "[1,2,4,5]",
+        "B": "[1,4,2,5]",
+        "C": "[1,5,2,4]",
+        "D": "[5,1,2,4]"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "これは完全ソート後であり1周の結果ではない。",
+        "B": "5と1交換→[1,5,4,2]、5と4交換→[1,4,5,2]、5と2交換→[1,4,2,5]。",
+        "C": "途中の比較が反映されていない。",
+        "D": "最初の比較で5と1を交換する。"
+      }
+    },
+    {
+      "number": 13,
+      "category": "fundamental_it",
+      "topic": "lru_page_replacement",
+      "level": "beginner_3",
+      "prompt": "3ページ分の空きがあるキャッシュでLRU方式を使います。ページを 1→2→3→1→4 の順に参照したとき、4を読み込む際に追い出されるページはどれですか。",
+      "choices": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "追い出しは不要"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "1は直前に再参照されている。",
+        "B": "1,2,3が埋まった後に1を再参照したので、最後の利用が最も古いのは2。",
+        "C": "3は2より後に参照された。",
+        "D": "容量3で異なる4ページ目を入れるので置換が必要。"
+      }
+    },
+    {
+      "number": 14,
+      "category": "fundamental_it_additional",
+      "section": "A",
+      "topic": "cache_average_access_time",
+      "level": "beginner_3",
+      "prompt": "キャッシュヒット率90%、ヒット時のアクセス時間2ns、ミス時のアクセス時間（主記憶アクセス等を含めた合計）50nsです。平均アクセス時間はいくつですか。",
+      "choices": {
+        "A": "2.0ns",
+        "B": "5.0ns",
+        "C": "6.8ns",
+        "D": "47.0ns"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "ヒットのみを考えている。",
+        "B": "ミス時時間の重みを正しく反映していない。",
+        "C": "0.9×2+0.1×50=6.8ns。",
+        "D": "ヒット率とミス率の重みが逆に近い。"
+      }
+    },
+    {
+      "number": 15,
+      "category": "rails_url_design",
+      "topic": "nested_form_method_override",
+      "level": "intermediate_1",
+      "prompt": "次のroutes.rbとフォームを使います。\nresources :teams do\n  resources :members, only: [:update]\nend\n\nform_with url: team_member_path(team_id: 7, id: 15, tab: 'activity'), method: :patch do |f|\n  # ...\nend\n\n生成されるフォームの送信先URLと、ブラウザが実際に送るHTTPメソッドの組み合わせとして正しいのはどれですか。Railsの標準的なHTMLフォーム送信を想定します。",
+      "choices": {
+        "A": "PATCH /teams/7/members/15?tab=activity",
+        "B": "POST /teams/7/members/15?tab=activity",
+        "C": "POST /teams/15/members/7?tab=activity",
+        "D": "GET /teams/7/members/15?tab=activity"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "RailsのHTMLフォームではPATCHを直接送れないため、通常POSTと隠しフィールド_method=patchで表現する。",
+        "B": "actionはネストしたmemberパスとクエリで、実際の送信はPOST。Rails側でPATCHとして扱われる。",
+        "C": "team_idとidが逆。",
+        "D": "method: :patchを指定しているのでGETではない。"
+      }
+    },
+    {
+      "number": 16,
+      "category": "fundamental_it_additional",
+      "section": "B",
+      "topic": "binary_search_trace",
+      "level": "beginner_3",
+      "prompt": "昇順配列 [2,5,8,12,16,20,25,30,33] に対して二分探索を行い、25を探します。探索区間の中央添字は毎回 floor((left+right)/2) とし、最初のleft=0、right=8です。値の比較は何回で見つかりますか。",
+      "choices": {
+        "A": "1回",
+        "B": "2回",
+        "C": "3回",
+        "D": "4回"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "初回中央添字4の値は16で25ではない。",
+        "B": "中央4→16、右側の区間5..8の中央6→25で2回。",
+        "C": "中央の計算を誤っている可能性がある。",
+        "D": "順次探索ではないため先頭から7回比較しない。"
+      }
+    }
+  ]
+}
