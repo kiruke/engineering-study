@@ -1,0 +1,395 @@
+{
+  "version": 1,
+  "date": "2026-10-30",
+  "status": "prepared",
+  "source": "adaptive_quiz_from_actual_attempts",
+  "rules": {
+    "total": 16,
+    "one_at_a_time": true,
+    "answers_not_shown_before_response": true,
+    "first_attempt_separate_from_hints": true,
+    "hash_replacement": "fundamental_it_additional section A",
+    "no_management_or_business": true,
+    "advanced_auth_only": true,
+    "implementations": [
+      "review_transferred_adjacent_comparison",
+      "new_filter_and_sum"
+    ]
+  },
+  "weekly_review": {
+    "window": "2026-10-23..2026-10-29",
+    "completed_sources": [
+      "attempts/2026-10-23.yml",
+      "attempts/2026-10-24.yml",
+      "attempts/2026-10-26.yml",
+      "attempts/2026-10-28.yml"
+    ],
+    "excluded_partial": [
+      "attempts/2026-10-27.yml",
+      "2026-10-29 interactive chat (Q1-Q3 answered, Q4 pending; not saved in attempts)"
+    ],
+    "total_answered": 64,
+    "first_correct": 38,
+    "first_accuracy_percent": 59.375,
+    "verified_hint_assisted_successes": 4,
+    "after_hint_total_rate": "not reliably calculable because some records lack complete retry history",
+    "by_category": {
+      "web_rails": {
+        "correct": 4,
+        "total": 8
+      },
+      "database_sql": {
+        "correct": 6,
+        "total": 10
+      },
+      "security": {
+        "correct": 6,
+        "total": 7
+      },
+      "fundamental_it": {
+        "correct": 13,
+        "total": 25
+      },
+      "ruby": {
+        "correct": 5,
+        "total": 10
+      },
+      "rails_url_design": {
+        "correct": 4,
+        "total": 4
+      }
+    },
+    "note": "分野分類は実際に回答された問題内容を再分類したもの。出題数の変動と難易度差があるため単純な前週比較は不可。"
+  },
+  "questions": [
+    {
+      "number": 1,
+      "category": "web_rails",
+      "topic": "association_loaded_target_and_database_count",
+      "format": "multiple_choice",
+      "prompt": "Userにはhas_many :posts、Postにはbelongs_to :userがあります。次の処理で、posts.size、posts.count、posts.map(&:persisted?) の結果の組はどれですか。バリデーションは全て通り、最初にDBにある投稿は1件だけとします。\n\nuser = User.create!(name: \"Mika\")\nuser.posts.create!(title: \"A\")\nposts = user.posts\nposts.load\nposts.build(title: \"B\")\nresult = [posts.size, posts.count, posts.map(&:persisted?)]",
+      "choices": {
+        "A": "[1, 1, [true]]",
+        "B": "[2, 1, [true, false]]",
+        "C": "[2, 2, [true, true]]",
+        "D": "[1, 2, [true, false]]"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "buildした未保存の投稿が読み込み済み関連のターゲットに追加される点を見落としている。",
+        "B": "正解。読み込み済み関連のsizeはメモリ上の2件を数え、countはDBの保存済み1件を数える。persisted?は未保存のBのみfalse。",
+        "C": "buildはDBに保存しないためcountは2にならず、Bのpersisted?もfalse。",
+        "D": "sizeとcountの意味が逆。"
+      },
+      "level": "intermediate_1"
+    },
+    {
+      "number": 2,
+      "category": "database_sql",
+      "topic": "composite_btree_index",
+      "format": "multiple_choice",
+      "prompt": "PostgreSQLのpostsテーブルは数百万行です。次のクエリを頻繁に実行します。通常のB-treeインデックスを1つ追加するなら、どれが最も適切ですか。\n\nSELECT id, title FROM posts\nWHERE author_id = 42 AND created_at >= '2026-01-01'\nORDER BY created_at DESC LIMIT 20;\n\ncreated_atはtimestamp型です。",
+      "choices": {
+        "A": "CREATE INDEX ON posts (created_at, author_id);",
+        "B": "CREATE INDEX ON posts (author_id, created_at);",
+        "C": "CREATE INDEX ON posts (title, author_id);",
+        "D": "CREATE INDEX ON posts (id);"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "日時範囲が先頭になるとauthor_idで効率よく絞り込む用途に比べ不利になりやすい。",
+        "B": "正解。author_idの等価条件を先頭にし、次に日時範囲・並び替えを利用しやすい。実際の効果はEXPLAINで確認。",
+        "C": "titleは条件にも並び替えにもない。",
+        "D": "id単独では今回の検索条件を支援しにくい。"
+      },
+      "level": "intermediate_1"
+    },
+    {
+      "number": 3,
+      "category": "security",
+      "topic": "xss_erb_escape",
+      "format": "multiple_choice",
+      "prompt": "RailsのERBで、ユーザーが投稿した任意の文字列 @comment.body を、HTMLタグとして解釈させずに表示したい。適切なのはどれですか。",
+      "choices": {
+        "A": "<%= raw(@comment.body) %>",
+        "B": "<%= @comment.body.html_safe %>",
+        "C": "<%= h(@comment.body) %>",
+        "D": "<%= raw(@comment.body.gsub(\"<script>\", \"\")) %>"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "rawはHTMLエスケープを無効にし、攻撃用タグを解釈させ得る。",
+        "B": "html_safeは文字列を安全と宣言するだけで、実際の無害化はしない。",
+        "C": "正解。hはHTMLエスケープを行う。通常の<%= @comment.body %>もRailsでは自動エスケープされる。",
+        "D": "特定の文字列を除去するだけではイベント属性や大文字小文字、他のタグなどを防げない。"
+      },
+      "level": "beginner_3"
+    },
+    {
+      "number": 4,
+      "category": "fundamental_it",
+      "topic": "bandwidth_delay_product",
+      "format": "multiple_choice",
+      "prompt": "回線速度80Mbit/秒、往復遅延(RTT)50ミリ秒の通信で、送信側が確認応答を待たずに送り続けるための理論上のウィンドウサイズの目安（帯域遅延積）は何バイトですか。1M=10^6、1バイト=8ビットとします。",
+      "choices": {
+        "A": "50,000バイト",
+        "B": "500,000バイト",
+        "C": "4,000,000バイト",
+        "D": "40,000,000バイト"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "80Mbit/s × 0.05s=4Mbitなので桁が違う。",
+        "B": "正解。4,000,000bit ÷ 8=500,000byte。",
+        "C": "4Mbitをバイトへ換算していない。",
+        "D": "RTTや単位換算を誤っている。"
+      },
+      "section": "technical"
+    },
+    {
+      "number": 5,
+      "category": "algorithm_ruby",
+      "topic": "ruby_adjacent_comparison_transfer_2days",
+      "format": "implementation",
+      "prompt": "【10/28の実装問題からの転用復習・ヒントなし】整数配列 numbers を受け取り、隣接する2要素のうち「後ろが前より小さい」箇所の数を返す count_drops(numbers) を実装してください。例: [5,3,4,2] => 2、[1,1,2] => 0、[] => 0、[7] => 0。配列は変更しないでください。",
+      "answer_code": "def count_drops(numbers)\n  numbers.each_cons(2).count { |a, b| b < a }\nend",
+      "alternative_code": "def count_drops(numbers)\n  numbers.each_index.count { |i| i + 1 < numbers.length && numbers[i + 1] < numbers[i] }\nend",
+      "explanation": "each_cons(2)は隣り合う2要素の組を列挙する。countのブロックが真の組だけ数える。空配列と1要素は0。",
+      "hint_steps": [
+        "隣り合う2つの要素をどう取り出すか考える。",
+        "each_cons(2)、または添字iとi+1が使える。",
+        "条件を満たす組の個数をcountで数える。"
+      ],
+      "grading": "初回正解・ヒント後正解・翌日/7日後自力再現を区別する",
+      "review_of": "2026-10-28 Q10; 2026-10-29 Q2は未回答のため自力再現実績として数えない"
+    },
+    {
+      "number": 6,
+      "category": "rails_url_design",
+      "topic": "nested_route_form_with_method_query",
+      "format": "multiple_choice",
+      "prompt": "routes.rbは次のとおりです。\n\nresources :teams do\n  resources :members, only: [:edit, :update]\nend\n\nform_with url: team_member_path(team_id: 7, id: 12, tab: \"roles\"), method: :patch do |f|\n  # ...\nend\n\nこのフォームが送信する論理的なHTTPメソッドとURLの組はどれですか（Railsのmethod overrideを含む）。",
+      "choices": {
+        "A": "PATCH /teams/7/members/12?tab=roles",
+        "B": "POST /teams/7/members?tab=roles",
+        "C": "PATCH /teams/12/members/7?tab=roles",
+        "D": "GET /teams/7/members/12/edit?tab=roles"
+      },
+      "answer": "A",
+      "explanation": {
+        "A": "正解。team_idは親の7、idはmemberの12、tabはクエリ文字列。method: :patchによりPATCHとして扱う。",
+        "B": "memberのidが欠け、HTTPメソッドも異なる。",
+        "C": "親子のIDを取り違えている。",
+        "D": "editページへのGETと更新フォームの送信先は異なる。"
+      },
+      "level": "applied"
+    },
+    {
+      "number": 7,
+      "category": "database_sql",
+      "topic": "count_distinct_group_having",
+      "format": "multiple_choice",
+      "prompt": "次のsalesテーブルがあります。\n\nid | customer_id | product_id\n1  | 10          | 5\n2  | 10          | 5\n3  | 10          | 8\n4  | 20          | 5\n5  | 20          | 5\n6  | 30          | 9\n\nSELECT customer_id, COUNT(DISTINCT product_id) AS product_types\nFROM sales\nGROUP BY customer_id\nHAVING COUNT(DISTINCT product_id) >= 2;\n\n返る結果はどれですか。",
+      "choices": {
+        "A": "(10, 3)のみ",
+        "B": "(10, 2)のみ",
+        "C": "(10, 2)と(20, 1)",
+        "D": "(10, 2)と(20, 1)と(30, 1)"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "customer 10のproduct_id=5の重複はDISTINCTで1種類になる。",
+        "B": "正解。customer 10は商品5と8の2種類。20と30は1種類なのでHAVINGで除外。",
+        "C": "20はHAVINGの2種類以上を満たさない。",
+        "D": "20も30もHAVINGで除外。"
+      },
+      "level": "beginner_3"
+    },
+    {
+      "number": 8,
+      "category": "security",
+      "topic": "cors_vs_csrf_credentials",
+      "format": "multiple_choice",
+      "prompt": "社内SPAから別オリジンのRails APIを呼びます。APIがCookie認証を使用する場合、CORSとCSRFについて正しい説明はどれですか。",
+      "choices": {
+        "A": "Access-Control-Allow-Origin: * と Access-Control-Allow-Credentials: true を返せば、Cookie付きのクロスオリジン応答をブラウザで読める。",
+        "B": "CORSを設定すれば、悪意あるサイトからの状態変更リクエストは必ず防止できる。",
+        "C": "Cookie認証でも、CORSは不要でありCSRF対策だけ設定すればクロスオリジンのJavaScriptから応答を読める。",
+        "D": "CORSは主にブラウザのクロスオリジン応答の読み取りを制御する仕組みで、CSRF対策とは別に考える。"
+      },
+      "answer": "D",
+      "explanation": {
+        "A": "資格情報付きCORSではワイルドカードの許可オリジンは使えず、明示的なオリジン指定が必要。",
+        "B": "CORSはCSRFを一般に防止しない。",
+        "C": "別オリジンのJSからの応答読み取りには適切なCORS設定が必要。",
+        "D": "正解。CookieのSameSite属性やCSRFトークンなどは別途検討する。"
+      },
+      "level": "intermediate_1"
+    },
+    {
+      "number": 9,
+      "category": "fundamental_it",
+      "topic": "virtual_memory_page_offset",
+      "format": "multiple_choice",
+      "prompt": "仮想メモリのページサイズが4KiB（4096バイト）のとき、仮想アドレス0x2ABCのページ番号とページ内オフセットの組はどれですか。アドレスはバイト単位で、ページ番号は0から数えます。",
+      "choices": {
+        "A": "ページ2、オフセット0xABC",
+        "B": "ページ0、オフセット0x2ABC",
+        "C": "ページ2、オフセット0x2BC",
+        "D": "ページ10、オフセット0x2BC"
+      },
+      "answer": "A",
+      "explanation": {
+        "A": "正解。4KiB=0x1000なので0x2ABC=2×0x1000+0xABC。",
+        "B": "オフセットは0x1000未満でなければならない。",
+        "C": "0xABCから先頭のAが落ちている。",
+        "D": "ページ番号の計算が異なる。"
+      },
+      "section": "technical"
+    },
+    {
+      "number": 10,
+      "category": "algorithm_ruby",
+      "topic": "ruby_filter_and_sum_new",
+      "format": "implementation",
+      "prompt": "【新規実装・ヒントなし】整数配列 numbers を受け取り、正の偶数だけを対象に、それぞれを2乗した値の合計を返す sum_positive_even_squares(numbers) を実装してください。例: [-2, 2, 3, 4] => 20、[0, 1, -4] => 0、[] => 0。元の配列は変更しないこと。",
+      "answer_code": "def sum_positive_even_squares(numbers)\n  numbers.select { |n| n.positive? && n.even? }.sum { |n| n * n }\nend",
+      "alternative_code": "def sum_positive_even_squares(numbers)\n  numbers.sum { |n| n > 0 && n.even? ? n**2 : 0 }\nend",
+      "explanation": "selectで条件に合う要素だけを残し、sumブロックで各要素の2乗を加算。別解はsum内で条件分岐する。",
+      "hint_steps": [
+        "対象となる整数の条件を2つに分けて考える。",
+        "selectで絞り込んだ配列に対してsumを使える。",
+        "sum { |n| n * n } のようにブロックで変換して加算できる。"
+      ],
+      "grading": "初回正解・ヒント後正解・翌日/7日後自力再現を区別する"
+    },
+    {
+      "number": 11,
+      "category": "fundamental_it_additional",
+      "topic": "cache_average_access_time",
+      "format": "multiple_choice",
+      "prompt": "CPUキャッシュのヒット率は90%、ヒット時のアクセス時間は2ns、ミス時の合計アクセス時間は50nsです。平均アクセス時間は何nsですか。",
+      "choices": {
+        "A": "2.0ns",
+        "B": "5.0ns",
+        "C": "6.8ns",
+        "D": "47.2ns"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "ミス時の遅延を無視している。",
+        "B": "単純な差や割合の計算ではない。",
+        "C": "正解。0.9×2+0.1×50=6.8ns。",
+        "D": "重み付けが逆に近い。"
+      },
+      "section": "A"
+    },
+    {
+      "number": 12,
+      "category": "fundamental_it_additional",
+      "topic": "two_pointer_trace",
+      "format": "multiple_choice",
+      "prompt": "次の擬似コードを実行した後、totalはいくつですか。\n\na = [1, 4, 3, 6, 2, 5]\nleft = 0\nright = 5\ntotal = 0\nwhile left < right\n  if (a[left] + a[right]) % 2 == 0\n    total = total + 1\n  end\n  left = left + 1\n  right = right - 1\nend",
+      "choices": {
+        "A": "0",
+        "B": "1",
+        "C": "2",
+        "D": "3"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "1回目と2回目は偶数和になる。",
+        "B": "偶数和になる組を1組見落としている。",
+        "C": "正解。(1,5)=6、(4,2)=6、(3,6)=9なので2回。",
+        "D": "3回目は9で奇数。"
+      },
+      "section": "B"
+    },
+    {
+      "number": 13,
+      "category": "fundamental_it_additional",
+      "topic": "dns_cache_ttl",
+      "format": "multiple_choice",
+      "prompt": "DNSキャッシュに関する説明で、正しいものはどれですか。",
+      "choices": {
+        "A": "TTLが切れたレコードは、再問い合わせ時に新しい名前解決が必要になる場合がある。",
+        "B": "TTLはDNSサーバが通信に使うTCPのポート番号を指定する。",
+        "C": "キャッシュがあっても、必ず毎回ルートDNSサーバまで問い合わせる。",
+        "D": "DNSのAレコードにはWebサーバのURL全体が保存される。"
+      },
+      "answer": "A",
+      "explanation": {
+        "A": "正解。TTLはキャッシュを有効とみなす時間に関係する。",
+        "B": "TTLはTime To Liveの略でポート番号ではない。",
+        "C": "有効なキャッシュがあれば問い合わせを省略できる。",
+        "D": "AレコードはIPv4アドレスへの対応を表す。"
+      },
+      "section": "A"
+    },
+    {
+      "number": 14,
+      "category": "ruby_hash_applied",
+      "topic": "hash_group_by_transform_values_merge_mixed_keys",
+      "format": "multiple_choice",
+      "prompt": "次のRubyコードのresultはどれですか。文字列キーとシンボルキーの違いに注意してください。\n\nrows = [\n  {\"team\" => \"A\", points: 3},\n  {\"team\" => \"B\", points: 5},\n  {\"team\" => \"A\", points: 4}\n]\nbase = {\"A\" => 2, \"C\" => 9}\ntotals = rows.group_by { |r| r.fetch(\"team\") }\n             .transform_values { |group| group.sum { |r| r.fetch(:points) } }\nresult = base.merge(totals) { |_key, old, new_value| old + new_value }",
+      "choices": {
+        "A": "{\"A\"=>7, \"B\"=>5, \"C\"=>9}",
+        "B": "{\"A\"=>9, \"C\"=>9, \"B\"=>5}",
+        "C": "{\"A\"=>2, \"C\"=>9, \"B\"=>5}",
+        "D": "KeyError が発生する"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "Aの既定値2を合算していない。",
+        "B": "正解。group_by後A=7,B=5。mergeの衝突時ブロックでA=2+7=9。C=9、B=5。挿入順はA,C,B。",
+        "C": "衝突時のAへの加算を忘れている。",
+        "D": "fetch(\"team\")とfetch(:points)は実際のキー型に合致するので例外は出ない。"
+      },
+      "level": "intermediate_1",
+      "replaced_from": "fundamental_it_additional section A",
+      "tracking": "mixed_string_symbol_keys_group_by_transform_values_merge"
+    },
+    {
+      "number": 15,
+      "category": "fundamental_it_additional",
+      "topic": "binary_search_trace",
+      "format": "multiple_choice",
+      "prompt": "次の探索処理で、midに代入される値を実行順に並べたものはどれですか。\n\na = [2, 5, 8, 12, 16, 23, 38]\ntarget = 16\nleft = 0\nright = 6\nwhile left <= right\n  mid = (left + right) / 2  # 整数除算\n  if a[mid] == target\n    break\n  elsif a[mid] < target\n    left = mid + 1\n  else\n    right = mid - 1\n  end\nend",
+      "choices": {
+        "A": "3 → 4",
+        "B": "3 → 5 → 4",
+        "C": "3 → 6 → 4",
+        "D": "4 → 5 → 3"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "mid=3の12は小さいのでleft=4となり、次はmid=5。",
+        "B": "正解。mid=3(12)→mid=5(23)→mid=4(16)で発見。",
+        "C": "2回目のmidは(4+6)/2=5。",
+        "D": "最初のmidは(0+6)/2=3。"
+      },
+      "section": "B"
+    },
+    {
+      "number": 16,
+      "category": "web_rails",
+      "topic": "association_aggregate_one_query_zero_included",
+      "format": "multiple_choice",
+      "prompt": "usersに投稿が0件の人も含めて、各ユーザーの投稿数を表示したいとします。次のうち、原則として1回のSQLでユーザーごとの投稿数を取得し、投稿0件のユーザーも残せるコードはどれですか。User has_many :postsで、Postはuser_idを持ちます。",
+      "choices": {
+        "A": "User.includes(:posts).limit(10).each { |u| puts u.posts.count }",
+        "B": "User.joins(:posts).group(\"users.id\").select(\"users.id, COUNT(posts.id) AS posts_count\").each { |u| puts u.posts_count }",
+        "C": "User.left_joins(:posts).group(\"users.id\").select(\"users.id, COUNT(posts.id) AS posts_count\").limit(10).each { |u| puts u.posts_count }",
+        "D": "User.limit(10).each { |u| puts u.posts.size }"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "includesしてもcountはDB集計を行うため、ユーザーごとにSQLが発行され得る。",
+        "B": "INNER JOINなので投稿0件のユーザーは結果から除外される。",
+        "C": "正解。LEFT JOINとGROUP BY/COUNT(posts.id)により投稿0件も含めて1クエリで集計できる。",
+        "D": "事前読み込みなしのsizeは各ユーザーの投稿数を取得するSQLを個別に発行し得る。"
+      },
+      "level": "intermediate_1"
+    }
+  ]
+}
