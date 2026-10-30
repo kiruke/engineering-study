@@ -1,0 +1,368 @@
+{
+  "version": 1,
+  "date": "2026-10-31",
+  "status": "prepared",
+  "source": "adaptive_quiz_from_verified_github_attempts",
+  "rules": {
+    "total": 16,
+    "one_at_a_time": true,
+    "answers_not_shown_before_response": true,
+    "first_attempt_separate_from_hints": true,
+    "hash_replacement": "fundamental_it_additional section A",
+    "no_management_or_business": true,
+    "advanced_auth_only": true,
+    "implementations": [
+      "review_count_increases_3_day",
+      "new_filter_and_sum"
+    ],
+    "notes": "No attempts/2026-10-29.yml or attempts/2026-10-30.yml at preparation time; unanswered questions must not be treated as incorrect. User's recent 10/29 Q1-C error, Q2-A correct, Q3-C error are conversation evidence but not saved to attempts."
+  },
+  "questions": [
+    {
+      "number": 1,
+      "category": "ruby_hash_applied",
+      "topic": "hash_default_and_mixed_nested_keys",
+      "format": "multiple_choice",
+      "level": "intermediate_1",
+      "prompt": "次のRubyコードの result はどれですか。\n\nrows = [\n  { user: { id: 1 }, points: 2 },\n  { user: { \"id\" => 1 }, points: 3 },\n  { user: { id: 1 }, points: 4 }\n]\n\ntotals = rows.each_with_object(Hash.new(0)) do |row, acc|\n  key = row[:user][:id]\n  acc[key] += row[:points]\nend\n\nresult = [totals[1], totals[nil], totals.keys, totals[\"1\"]]",
+      "choices": {
+        "A": "[9, 0, [1], 0]",
+        "B": "[6, 3, [1, nil], 0]",
+        "C": "[6, 3, [1, nil, \"1\"], 0]",
+        "D": "NoMethodError が発生する"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "文字列キーの 'id' はシンボル :id と一致せず、2件目のkeyはnilになる。",
+        "B": "正解。キー1は2+4=6、nilは3。Hash.new(0)の存在しないキーを読むだけではキーは追加されず、totals['1']は0。",
+        "C": "存在しないキー'1'の参照は0を返すが、Hashには登録されない。",
+        "D": "存在しないHashキーを[]で読むと通常nilになり、Hash.new(0)なら未登録キーの値は0となる。"
+      },
+      "replaced_from": "fundamental_it_additional section A",
+      "tracking": [
+        "Hash.new(0)",
+        "each_with_object",
+        "nested symbol/string keys",
+        "nil group key"
+      ]
+    },
+    {
+      "number": 2,
+      "category": "web_rails",
+      "topic": "preloaded_association_vs_scoped_count",
+      "format": "multiple_choice",
+      "level": "intermediate_1",
+      "prompt": "User has_many :posts、Postには published:boolean があり、counter_cacheは設定していません。次の処理で、最初の includes による読み込み後に、ユーザーごとに追加の集計SQLが発行され得るのはどれですか。\n\nusers = User.includes(:posts).limit(10).to_a\n\n各選択肢はこの users に対して実行します。",
+      "choices": {
+        "A": "users.each { |u| puts u.posts.size }",
+        "B": "users.each { |u| puts u.posts.map(&:title).join(',') }",
+        "C": "users.each { |u| puts u.posts.where(published: true).count }",
+        "D": "users.each { |u| puts u.posts.to_a.count(&:published?) }"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "事前読み込み済みの関連配列の件数を利用するため通常追加SQLなし。",
+        "B": "読み込み済みの投稿をRuby側で列挙するため通常追加SQLなし。",
+        "C": "正解。whereで条件を追加した別の関連クエリに対してcountを実行するため、各ユーザーのDBでCOUNTが実行され得る。",
+        "D": "to_aで読み込み済みの関連配列を取り出し、Array#countブロックでRuby側集計する。"
+      },
+      "notes": "投稿数が非常に多い場合、メモリ内集計が適切とは限らない。必要なSQL回数と転送件数を区別する。"
+    },
+    {
+      "number": 3,
+      "category": "database_sql",
+      "topic": "savepoint_partial_rollback_with_followup",
+      "format": "multiple_choice",
+      "level": "beginner_3",
+      "prompt": "accounts(id,balance)の初期値は(1,10)、(2,5)です。次のSQLがすべて成功したとき、COMMIT後の残高はどうなりますか。\n\nBEGIN;\nUPDATE accounts SET balance = balance - 2 WHERE id = 1;\nSAVEPOINT s;\nUPDATE accounts SET balance = balance + 2 WHERE id = 2;\nROLLBACK TO SAVEPOINT s;\nUPDATE accounts SET balance = balance + 1 WHERE id = 2;\nCOMMIT;",
+      "choices": {
+        "A": "(1,10)、(2,6)",
+        "B": "(1,8)、(2,7)",
+        "C": "(1,8)、(2,6)",
+        "D": "(1,10)、(2,5)"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "SAVEPOINTより前のid=1の変更は取り消されない。",
+        "B": "SAVEPOINT後の+2は取り消されるためid=2は7にならない。",
+        "C": "正解。id=1は8、id=2は+2を巻き戻した後+1で6。",
+        "D": "ROLLBACK TOはトランザクション全体を取り消す操作ではない。"
+      },
+      "review_of": "2026-10-28 Q8; 2026-10-29 Q3 prepared but not confirmed answered"
+    },
+    {
+      "number": 4,
+      "category": "security",
+      "topic": "multitenant_roles_owner_editor_viewer",
+      "format": "multiple_choice",
+      "level": "intermediate_1",
+      "prompt": "Railsアプリでユーザーは複数の組織に所属でき、Membershipは組織ごとのrole（viewer/editor/admin）を持ちます。Projectにはorganization_idとowner_idがあります。\n\n仕様：所属していない組織は編集不可。adminはその組織内の全Projectを編集可。editorはその組織内で自分が所有するProjectのみ編集可。viewerは所有者でも編集不可。\n\nproject = Organization.find(params[:organization_id]).projects.find(params[:id])\nmembership = current_user.memberships.find_by(organization_id: project.organization_id)\n\nこの後に置く allowed = ... として最も適切なのはどれですか。",
+      "choices": {
+        "A": "membership.present? && (membership.admin? || (membership.editor? && project.owner_id == current_user.id))",
+        "B": "membership.present? && (membership.admin? || project.owner_id == current_user.id)",
+        "C": "membership.present? && (membership.admin? || membership.editor?)",
+        "D": "current_user.memberships.exists?(role: 'admin') || project.owner_id == current_user.id"
+      },
+      "answer": "A",
+      "explanation": {
+        "A": "正解。所属確認、組織固有のロール、所有者条件を組み合わせている。",
+        "B": "viewerでも所有者なら編集できてしまう。",
+        "C": "editorが他人のプロジェクトまで編集できてしまう。",
+        "D": "別組織でのadmin権限や所属していないownerを許可し得る。"
+      },
+      "notes": "更新対象の組織IDやowner_idをmass assignmentで任意変更させない。権限変更競合は別途考慮。"
+    },
+    {
+      "number": 5,
+      "category": "algorithm_ruby",
+      "topic": "ruby_count_increases_three_day_recall",
+      "format": "implementation",
+      "level": "beginner_3",
+      "prompt": "【3日後の自力再現・ヒントなし】整数配列 numbers を受け取り、隣り合う2要素のうち「後ろが前より大きい」箇所の数を返す count_increases(numbers) を実装してください。例：[3,2,4,6]→2、[1,1,2]→1、[]→0、[7]→0。元の配列は変更しないでください。",
+      "answer_code": "def count_increases(numbers)\n  numbers.each_cons(2).count { |a, b| b > a }\nend",
+      "alternative_code": "def count_increases(numbers)\n  numbers.each_index.count { |i| i + 1 < numbers.length && numbers[i] < numbers[i + 1] }\nend",
+      "explanation": "each_cons(2)は隣接する2要素を組にして列挙する。countブロックで条件が真の組を数える。空配列・1要素では0。",
+      "hint_steps": [
+        "隣り合う2つの値を取り出す方法を考える。",
+        "each_cons(2)またはiとi+1の添字で比較できる。",
+        "条件が真の回数をcountで数える。"
+      ],
+      "review_of": "2026-10-28 Q10 hint-assisted; 2026-10-29 Q2 and 2026-10-30 Q5 prepared but no confirmed self reproduction",
+      "grading": "初回自力正解・ヒント後到達・3日後再現を区別する"
+    },
+    {
+      "number": 6,
+      "category": "rails_url_design",
+      "topic": "nested_path_form_with_query_params",
+      "format": "multiple_choice",
+      "level": "intermediate_1",
+      "prompt": "routes.rb は次のとおりです。\n\nresources :libraries do\n  resources :loans, only: [:create, :update]\nend\n\nparams[:library_id] は \"8\" です。次のフォームの送信先URLとRailsが受け取るHTTPメソッドの組はどれですか。\n\nform_with url: library_loans_path(library_id: params[:library_id], source: \"app\", page: 2), method: :post do |f|\n  # ...\nend",
+      "choices": {
+        "A": "POST /libraries/8/loans?source=app&page=2",
+        "B": "PATCH /libraries/8/loans?source=app&page=2",
+        "C": "POST /libraries/8/loans/2?source=app",
+        "D": "GET /libraries/8/loans/new?source=app&page=2"
+      },
+      "answer": "A",
+      "explanation": {
+        "A": "正解。loans_pathはコレクションパス、library_idは親のパス、source/pageはクエリ、method: :postでPOST。",
+        "B": "PATCHではなくPOST。PATCHは通常member更新のためのメソッド。",
+        "C": "pageはクエリパラメータでありloanのidではない。",
+        "D": "newの画面表示とcreateの送信先を混同している。"
+      },
+      "notes": "クエリパラメータの並びは通常この順だが意味として順序に依存しない。"
+    },
+    {
+      "number": 7,
+      "category": "database_sql",
+      "topic": "composite_index_filter_and_order",
+      "format": "multiple_choice",
+      "level": "intermediate_1",
+      "prompt": "PostgreSQLのlogsテーブルに数百万行あります。次のクエリが頻繁に実行されます。追加するB-treeインデックスとして最も適切なものはどれですか。なお実際の採否はEXPLAINで確認するものとします。\n\nSELECT id, message FROM logs\nWHERE account_id = 9 AND created_at >= '2026-10-01'\nORDER BY created_at DESC\nLIMIT 30;",
+      "choices": {
+        "A": "CREATE INDEX ON logs (created_at, account_id);",
+        "B": "CREATE INDEX ON logs (message, account_id);",
+        "C": "CREATE INDEX ON logs (account_id, created_at);",
+        "D": "CREATE INDEX ON logs (id);"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "日時範囲を先頭にするとaccount_idの等価条件を先頭にする場合より不利になりやすい。",
+        "B": "messageは検索・ソート条件にない。",
+        "C": "正解。等価条件のaccount_idを先頭、範囲・並び替えのcreated_atを次に置く。",
+        "D": "主キーidのインデックスは今回の絞り込み・並び替えを直接支援しにくい。"
+      },
+      "notes": "B-treeは逆方向走査できるためcreated_at ASC定義でもDESC順に使える。"
+    },
+    {
+      "number": 8,
+      "category": "security",
+      "topic": "cors_preflight_and_csrf_separation",
+      "format": "multiple_choice",
+      "level": "intermediate_1",
+      "prompt": "Cookie認証のRails APIを、別オリジンのSPAから呼び出します。ブラウザからの資格情報付きリクエストとCSRFについて、最も適切な説明はどれですか。",
+      "choices": {
+        "A": "Access-Control-Allow-Origin: * と Access-Control-Allow-Credentials: true を組み合わせれば資格情報付き応答を読める。",
+        "B": "CORSで別オリジンの読み取りを禁止すれば、悪意あるフォームによる状態変更も必ず阻止できる。",
+        "C": "CORSで許可するオリジンを明示し、必要な資格情報設定を行う。CookieのSameSite属性とCSRF対策は別途検討する。",
+        "D": "CookieにHttpOnlyを付ければCSRFトークンやSameSiteを検討する必要はない。"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "資格情報付きCORSではワイルドカードの許可オリジンは使用できない。",
+        "B": "CORSは主に応答の読み取りを制御し、CSRFの完全な防御ではない。",
+        "C": "正解。CORSとCSRFは別の脅威モデル。資格情報付きCORSには明示オリジン、credentialsなど適切な設定が必要。",
+        "D": "HttpOnlyはJSによるCookieの読み取りを抑えるが、Cookie自動送信に伴うCSRF対策ではない。"
+      }
+    },
+    {
+      "number": 9,
+      "category": "fundamental_it",
+      "topic": "subnet_usable_host_range",
+      "format": "multiple_choice",
+      "level": "beginner_3",
+      "prompt": "IPv4アドレス 10.20.30.142/28 について、ネットワークアドレス・ブロードキャストアドレス・利用可能なホスト範囲の組として正しいものはどれですか。通常のIPv4サブネットとして扱います。",
+      "choices": {
+        "A": "10.20.30.128 / 10.20.30.143 / 10.20.30.129〜142",
+        "B": "10.20.30.128 / 10.20.30.159 / 10.20.30.129〜158",
+        "C": "10.20.30.144 / 10.20.30.159 / 10.20.30.145〜158",
+        "D": "10.20.30.142 / 10.20.30.157 / 10.20.30.143〜156"
+      },
+      "answer": "A",
+      "explanation": {
+        "A": "正解。/28は16アドレス刻み。142は128〜143のブロック。",
+        "B": "32アドレス刻みは/27に相当する。",
+        "C": "142は144〜159のブロックに含まれない。",
+        "D": "ホストIPをネットワークアドレスと取り違えている。"
+      }
+    },
+    {
+      "number": 10,
+      "category": "fundamental_it",
+      "topic": "stack_queue_trace",
+      "format": "multiple_choice",
+      "level": "beginner_3",
+      "prompt": "空のスタックSと空のキューQに対して、順に次の操作をします。\n\nS.push(4); S.push(7); S.pop(); S.push(9)\nQ.enqueue(4); Q.enqueue(7); Q.dequeue(); Q.enqueue(9)\n\nその後、S.pop()とQ.dequeue()が返す値の組はどれですか。",
+      "choices": {
+        "A": "(4, 9)",
+        "B": "(9, 7)",
+        "C": "(7, 9)",
+        "D": "(9, 4)"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "スタックは後入れ先出しなので最後の9を取り出す。",
+        "B": "正解。Sは[4,9]でpop→9。Qは[7,9]でdequeue→7。",
+        "C": "7は既にS.popで取り除かれている。",
+        "D": "4は既にQ.dequeueで取り除かれている。"
+      }
+    },
+    {
+      "number": 11,
+      "category": "algorithm_ruby",
+      "topic": "ruby_filter_and_sum_item_quantities_new",
+      "format": "implementation",
+      "level": "beginner_3",
+      "prompt": "【新規・ヒントなし】items は { price: 整数, quantity: 整数 } のHashを要素に持つ配列です。price が正の偶数である商品のみを対象に、price * quantity の合計を返す total_even_price(items) を実装してください。例：[{price:2,quantity:3},{price:5,quantity:2},{price:4,quantity:2},{price:-2,quantity:10}]→14、[]→0。元の配列やHashは変更しないでください。quantityは0以上です。",
+      "answer_code": "def total_even_price(items)\n  items.select { |item| item[:price].positive? && item[:price].even? }\n       .sum { |item| item[:price] * item[:quantity] }\nend",
+      "alternative_code": "def total_even_price(items)\n  items.sum { |item| item[:price].positive? && item[:price].even? ? item[:price] * item[:quantity] : 0 }\nend",
+      "explanation": "selectで対象の商品を抽出し、sumブロックで単価×個数を加算する。別解はsum内の条件分岐。",
+      "hint_steps": [
+        "priceの条件は『正』かつ『偶数』の2つ。",
+        "selectで絞った後にsumのブロックを使える。",
+        "sum { |item| item[:price] * item[:quantity] } で加算できる。"
+      ],
+      "grading": "初回自力正解とヒント後到達を分ける"
+    },
+    {
+      "number": 12,
+      "category": "fundamental_it_additional",
+      "topic": "two_pointer_trace_conditional_updates",
+      "format": "multiple_choice",
+      "level": "beginner_3",
+      "prompt": "次の擬似コードを実行した後の total はいくつですか。\n\na = [2, 5, 4, 3, 6, 1]\nleft = 0\nright = 5\ntotal = 0\nwhile left < right\n  if a[left] > a[right]\n    total = total + a[left]\n  else\n    total = total + a[right]\n  end\n  left = left + 1\n  right = right - 1\nend",
+      "choices": {
+        "A": "9",
+        "B": "11",
+        "C": "12",
+        "D": "15"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "3組すべての大きい値を合計していない。",
+        "B": "(2,1),(5,6),(4,3)で選ばれるのは2,6,4。",
+        "C": "正解。2+6+4=12。",
+        "D": "条件を満たす値の選択または加算を誤っている。"
+      },
+      "section": "B"
+    },
+    {
+      "number": 13,
+      "category": "fundamental_it_additional",
+      "topic": "tcp_ack_retransmission",
+      "format": "multiple_choice",
+      "level": "beginner_3",
+      "prompt": "TCPで受信側は次にシーケンス番号4000からのデータを期待しています。送信側がseq=4000、ペイロード300バイトのセグメントを送り、受信側は正常に受け取りました。その後、同じセグメントが再送されて重複到着したとき、受信側が示す累積ACK番号は通常いくつですか。他のデータは到着していません。",
+      "choices": {
+        "A": "4000",
+        "B": "4300",
+        "C": "4600",
+        "D": "300"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "正常に300バイト受信済みなので次に期待する番号は4300。",
+        "B": "正解。重複した同一データを新たな300バイトとして数えない。",
+        "C": "再送分を二重に加算している。",
+        "D": "ACK番号はバイト数そのものではなく次に期待するシーケンス番号。"
+      },
+      "section": "A"
+    },
+    {
+      "number": 14,
+      "category": "fundamental_it_additional",
+      "topic": "cache_weighted_average",
+      "format": "multiple_choice",
+      "level": "beginner_3",
+      "prompt": "キャッシュのヒット率が80%、ヒット時の合計アクセス時間が3ns、ミス時の合計アクセス時間が43nsです。平均アクセス時間として最も近いものはどれですか。",
+      "choices": {
+        "A": "8ns",
+        "B": "11ns",
+        "C": "35ns",
+        "D": "40ns"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "0.8×3+0.2×43=11。",
+        "B": "正解。ヒット時とミス時の時間をそれぞれの確率で加重平均する。",
+        "C": "ミス率20%を考慮せず重み付けが逆になっている。",
+        "D": "ヒット時の短いアクセス時間の寄与を無視している。"
+      },
+      "section": "A"
+    },
+    {
+      "number": 15,
+      "category": "fundamental_it_additional",
+      "topic": "binary_search_trace_mid_sequence",
+      "format": "multiple_choice",
+      "level": "beginner_3",
+      "prompt": "次の二分探索で、midに代入される値を実行順に並べたものはどれですか。整数除算です。\n\na = [1, 4, 6, 9, 12, 15, 18, 22, 27, 31]\ntarget = 18\nleft = 0\nright = 9\nwhile left <= right\n  mid = (left + right) / 2\n  if a[mid] == target\n    break\n  elsif a[mid] < target\n    left = mid + 1\n  else\n    right = mid - 1\n  end\nend",
+      "choices": {
+        "A": "4 → 6",
+        "B": "4 → 7 → 5 → 6",
+        "C": "5 → 7 → 6",
+        "D": "4 → 7 → 6"
+      },
+      "answer": "B",
+      "explanation": {
+        "A": "最初のmid=4の値12の後、left=5,right=9なのでmid=7。",
+        "B": "正解。mid4=12→mid7=22→mid5=15→mid6=18。",
+        "C": "最初のmidは(0+9)/2=4。",
+        "D": "mid7の後はleft=5,right=6なのでmid5を挟む。"
+      },
+      "section": "B",
+      "review_of": "2026-10-28 Q12"
+    },
+    {
+      "number": 16,
+      "category": "web_rails",
+      "topic": "update_all_skips_callbacks_validations_timestamps",
+      "format": "multiple_choice",
+      "level": "intermediate_1",
+      "prompt": "Railsで次の処理を行います。\n\nPost.where(published: false).update_all(published: true)\n\nPostにはbefore_updateコールバックと、publishedに関するバリデーションがあります。標準的なActive Recordの動作として正しい説明はどれですか。",
+      "choices": {
+        "A": "対象レコードを1件ずつインスタンス化し、バリデーションとbefore_updateを実行する。",
+        "B": "バリデーションは実行するがbefore_updateだけ省略する。",
+        "C": "バリデーションとコールバックを通さずDBを一括更新する。updated_atも通常自動更新されない。",
+        "D": "update_allは条件に合うレコードを削除して再作成する。"
+      },
+      "answer": "C",
+      "explanation": {
+        "A": "update_allは各モデルインスタンスのsave/updateを通らない。",
+        "B": "バリデーションもコールバックも通常スキップされる。",
+        "C": "正解。単一のUPDATE文を発行し、updated_atの自動更新も行わない。必要なら明示的に値を指定する。",
+        "D": "DELETE/INSERTではなくUPDATE。"
+      }
+    }
+  ]
+}
