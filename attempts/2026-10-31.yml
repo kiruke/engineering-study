@@ -1,0 +1,155 @@
+{
+  "date": "2026-10-31",
+  "record_type": "interactive_chat_answers",
+  "status": "completed",
+  "source": "observed_conversation",
+  "note": "Actual interactive questions diverged from pre-prepared questions/2026-10-31.yml after Q1. This file records questions actually delivered. Do not treat unanswered questions on other dates as wrong.",
+  "summary": {
+    "total": 16,
+    "answered": 16,
+    "first_correct": 11,
+    "first_incorrect": 5,
+    "hint_assisted_correct": 2,
+    "first_correct_percent": 68.75,
+    "grading_note": "Q13 counted first-correct logic despite fullwidth-space typo; Q2 and Q15 required hints."
+  },
+  "questions": [
+    {
+      "number": 1,
+      "prompt": "Ruby Hash.new(0) with mixed :id and 'id' keys; result of totals aggregation",
+      "correct_answer": "B",
+      "first_response": "D",
+      "first_correct": false,
+      "hint_assisted": false
+    },
+    {
+      "number": 2,
+      "prompt": "Implement count_increases(numbers) counting adjacent strictly increasing pairs",
+      "correct_answer": "implementation",
+      "first_response": "initial invalid syntax; then reversed comparison; then value-based last check; finally correct logic with length typo",
+      "first_correct": false,
+      "hint_assisted": true,
+      "notes": "Logic ultimately correct after staged hints; typo legth."
+    },
+    {
+      "number": 3,
+      "prompt": "select.with_index with even index and n > 4 on [2,4,6,8,10]",
+      "correct_answer": "A",
+      "first_response": "A",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 4,
+      "prompt": "Order.transaction create Order and Payment then raise ActiveRecord::Rollback",
+      "correct_answer": "C",
+      "first_response": "D",
+      "first_correct": false,
+      "hint_assisted": false
+    },
+    {
+      "number": 5,
+      "prompt": "each_with_object active score >= 80; Alice/Bob/Carol",
+      "correct_answer": "A",
+      "first_response": "A",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 6,
+      "prompt": "Nested resources events/participants form_with POST URL with source=email",
+      "correct_answer": "B",
+      "first_response": "B",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 7,
+      "prompt": "group_by user_id and transform_values sum amounts",
+      "correct_answer": "B",
+      "first_response": "B",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 8,
+      "prompt": "next odd numbers, double evens, break if result.sum > 20",
+      "correct_answer": "B",
+      "first_response": "B",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 9,
+      "prompt": "N+1 Product.category.name and product.reviews.size; includes associations",
+      "correct_answer": "B",
+      "first_response": "B",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 10,
+      "prompt": "SQL paid orders WHERE GROUP BY HAVING SUM >= 2000 ORDER BY",
+      "correct_answer": "B",
+      "first_response": "B",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 11,
+      "prompt": "fetch users, select score sum >= 170, map names",
+      "correct_answer": "A",
+      "first_response": "A",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 12,
+      "prompt": "Stored XSS raw profile_text HTML escape",
+      "correct_answer": "A",
+      "first_response": "A",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 13,
+      "prompt": "Implement discounted_total products with stock >=1, sum price * 0.9",
+      "correct_answer": "implementation",
+      "first_response": "correct select+sum logic; fullwidth whitespace before products",
+      "first_correct": true,
+      "hint_assisted": false,
+      "notes": "Logic correct on first submission, fullwidth indentation whitespace."
+    },
+    {
+      "number": 14,
+      "prompt": "each_with_object with next unless active, user id=>name",
+      "correct_answer": "B",
+      "first_response": "B",
+      "first_correct": true,
+      "hint_assisted": false
+    },
+    {
+      "number": 15,
+      "prompt": "Recursive calculate(4), return 0 at n==0, n+calculate(n-1)",
+      "correct_answer": "C",
+      "first_response": "C after hints",
+      "first_correct": false,
+      "hint_assisted": true,
+      "notes": "Correct after recursion/return explanation."
+    },
+    {
+      "number": 16,
+      "prompt": "Order.transaction update! then Payment.create! raises RecordInvalid; redirect_to after transaction",
+      "correct_answer": "B",
+      "first_response": "C",
+      "first_correct": false,
+      "hint_assisted": false
+    }
+  ],
+  "review_priorities": [
+    "Ruby adjacent element indexing and last-index bounds",
+    "ActiveRecord::Rollback versus RecordInvalid propagation",
+    "Recursive return stack and call-site continuation",
+    "Code input fullwidth spaces"
+  ]
+}
