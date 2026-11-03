@@ -1,0 +1,52 @@
+version: 1
+study_date: "2026-11-03"
+status: partial
+note: "Q1-Q5 original questions and answers unverified; Q6 reconstructed from conversation; Q7-Q10 recorded from conversation."
+questions:
+  - number: 6
+    type: multiple_choice
+    prompt: "For numbers=[2,3,2,4,1], count pairs of indices i<j with a+b==5 using nested each_with_index. What is printed?"
+    options: {A: "2", B: "3", C: "4", D: "5"}
+    correct_answer: B
+    explanation: "Valid index pairs (0,1), (1,2), (3,4); 3 total."
+    provenance: reconstructed
+  - number: 7
+    type: multiple_choice
+    prompt: "In Order.transaction, Order.create!(total:5000) succeeds and Payment.create!(order:order,amount:5000) fails validation. An ActiveRecord::RecordInvalid rescue redirects to new_order_path. What happens?"
+    options:
+      A: "Order persists, Payment does not, success redirect"
+      B: "Neither persists, failure redirect"
+      C: "Order persists, Payment does not, failure redirect"
+      D: "Neither persists, exception prevents redirect"
+    correct_answer: B
+    explanation: "RecordInvalid rolls back the transaction, then rescue performs failure redirect."
+  - number: 8
+    type: multiple_choice
+    prompt: "orders with (user_id,amount)=(1,1200),(2,800),(1,500),(3,1500),(2,700). Result of orders.group_by{|o|o[:user_id]}.transform_values{|items|items.sum{|item|item[:amount]}}?"
+    options:
+      A: "{1=>2, 2=>2, 3=>1}"
+      B: "{1=>1700, 2=>1500, 3=>1500}"
+      C: "{1=>[1200,500], 2=>[800,700], 3=>[1500]}"
+      D: "{1=>1200, 2=>800, 3=>1500}"
+    correct_answer: B
+    explanation: "group_by makes arrays per user; transform_values replaces each array with its amount sum."
+  - number: 9
+    type: multiple_choice
+    prompt: "With resources :events do resources :entries, only: [:index,:create] end, event_id=12 and source=email, choose form_with for POST creation with source query."
+    options:
+      A: "form_with url: event_entries_path(event_id: params[:event_id], source: params[:source]), method: :post do |f|"
+      B: "form_with url: event_entry_path(event_id: params[:event_id], source: params[:source]), method: :post do |f|"
+      C: "form_with url: event_entries_path(id: params[:event_id], source: params[:source]), method: :get do |f|"
+      D: "form_with url: entries_path(event_id: params[:event_id], source: params[:source]), method: :post do |f|"
+    correct_answer: A
+    explanation: "POST /events/12/entries?source=email. Nested collection helper and HTTP method are distinct."
+  - number: 10
+    type: ruby_implementation
+    prompt: "Implement total_available_price(products), summing price for products with stock>=1 and price>=100; return 0 for no matches."
+    sample_input: [{name: pen, price: 120, stock: 5}, {name: note, price: 300, stock: 0}, {name: bag, price: 1500, stock: 2}, {name: eraser, price: 80, stock: 10}]
+    expected_output: 1620
+    reference_solution: |
+      def total_available_price(products)
+        products.select { |item| item[:stock] >= 1 && item[:price] >= 100 }.sum { |item| item[:price] }
+      end
+    explanation: "select filters by stock and price; sum block extracts each hash price, with zero for an empty array."
