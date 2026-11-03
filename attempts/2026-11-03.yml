@@ -1,0 +1,45 @@
+version: 1
+study_date: "2026-11-03"
+status: partial
+recorded_at: "2026-11-04"
+note: "Q1-Q5 unverified and deliberately omitted. Q6-Q10 are based on the visible conversation. Study date is assigned by user; no assertion that all responses occurred on that calendar day."
+attempts:
+  - number: 6
+    initial_answer: A
+    correct_answer: B
+    first_correct: false
+    follow_ups:
+      - {question: "With i != j instead of i < j, count?", answer: 2, correct_answer: 6, correct: false}
+      - {question: "For [1,2,3,4] with i<j and sum=5, count?", answer: 3, correct_answer: 2, correct: false}
+      - {question: "For [2,2,3] with i<j and sum=5, count?", answer: 3, correct_answer: 2, correct: false}
+    status: explained_review_needed
+  - number: 7
+    initial_answer: B
+    correct_answer: B
+    first_correct: true
+    status: completed
+  - number: 8
+    initial_answer: B
+    correct_answer: B
+    first_correct: true
+    status: completed
+  - number: 9
+    initial_answer: A
+    correct_answer: A
+    first_correct: true
+    status: completed
+  - number: 10
+    initial_code: |
+      def total_available_price(products)
+        products.select{|item| item[:stock] >= 1 &&  item[:price] >= 100 }.sum(:price)
+      end
+    first_correct: false
+    feedback: "select condition correct; sum(:price) wrongly supplies a symbol as the initial accumulator."
+    retry_code: ".sum {|item| item[:price]}"
+    retry_correct: true
+    status: completed_after_retry
+summary:
+  verified_questions: 5
+  initial_correct: 3
+  initial_correct_rate_percent_among_verified: 60
+  unverified_questions: [1, 2, 3, 4, 5]
