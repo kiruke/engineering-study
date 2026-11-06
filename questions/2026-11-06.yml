@@ -1,0 +1,79 @@
+version: 1
+study_date: "2026-11-06"
+status: completed
+total_questions: 10
+questions:
+  - number: 1
+    type: multiple_choice
+    prompt: "ReviewsController#show: unless @review.published? || @review.user == current_user; raise ActiveRecord::RecordNotFound; end. Who can view public/private reviews?"
+    choices: {A: "Guests cannot view public reviews", B: "Authors cannot view private reviews", C: "Anyone can view public; only author can view private", D: "Others always receive 403"}
+    correct_answer: C
+    explanation: "OR allows published or owned reviews; RecordNotFound normally maps to 404."
+  - number: 2
+    type: multiple_choice
+    prompt: "orders (user_id, amount): (1,1000),(1,2000),(2,1500),(2,500),(3,3000). SELECT user_id,SUM(amount) AS total FROM orders GROUP BY user_id HAVING SUM(amount)>=2500 ORDER BY total DESC; result?"
+    choices: {A: "1:3000,2:2000,3:3000", B: "1:3000,3:3000", C: "3:3000 only", D: "1:3000,3:3000,2:2000"}
+    correct_answer: B
+    explanation: "HAVING filters aggregated groups; ties on total have no guaranteed order."
+  - number: 3
+    type: multiple_choice
+    prompt: "Authenticated ReviewsController#update calls current_user.reviews.find(params[:id]) before update; what happens for another user's review?"
+    choices: {A: "Updates other's review", B: "Strong parameters remove ID and return 403", C: "RecordNotFound, normally 404", D: "update returns false and renders 422"}
+    correct_answer: C
+    explanation: "Association-scoped find raises before update executes."
+  - number: 4
+    type: multiple_choice
+    prompt: "x=0; for i=1..4: for j=1..i: x=x+1; print x"
+    choices: {A: "4", B: "8", C: "10", D: "16"}
+    correct_answer: C
+    explanation: "1+2+3+4=10; generalized runtime O(n^2)."
+  - number: 5
+    type: multiple_choice
+    prompt: "a=3;b=5; while a<20: a=a+b; b=b-1; print(a,b)"
+    choices: {A: "17,1", B: "18,0", C: "20,0", D: "Never terminates"}
+    correct_answer: D
+    explanation: "a reaches 18 as b reaches 0, then decreases as b becomes negative."
+  - number: 6
+    type: multiple_choice
+    prompt: "Nested resources :books only show do resources :reviews only index/show end; generate /books/5/reviews/12 with @book and @review."
+    choices: {A: "review_path(@review)", B: "book_reviews_path(@book,@review)", C: "book_review_path(@book,@review)", D: "books_review_path(@book,@review)"}
+    correct_answer: C
+    explanation: "Singular book_review_path is member show route; plural book_reviews_path is collection index route."
+  - number: 7
+    type: multiple_choice
+    prompt: "render partial: 'review', collection: @reviews where three reviews; _review.html.erb contains review.title. Behavior?"
+    choices: {A: "Undefined review error", B: "Only first review", C: "Three partial renders with titles", D: "Must use @review"}
+    correct_answer: C
+    explanation: "Collection render automatically assigns each item to partial-local variable review."
+  - number: 8
+    type: multiple_choice
+    prompt: "scores=[70,85,60,90,75]; scores.select{|s|s>=75}.map{|s|s+5}.sum"
+    choices: {A: "250", B: "265", C: "280", D: "405"}
+    correct_answer: B
+    explanation: "85,90,75 become 90,95,80, summing to 265."
+  - number: 9
+    type: multiple_choice
+    prompt: "Book.all with 100 books; view reads book.user.username for each. Problem and fix?"
+    choices: {A: "Use limit(100)", B: "N+1; use Book.includes(:user)", C: "Change belongs_to to has_many", D: "Never reference association in view"}
+    correct_answer: B
+    explanation: "Preloading associated users avoids per-book user queries."
+  - number: 10
+    type: ruby_implementation
+    prompt: "Implement total_paid_by_user(orders), returning Hash of user_id => sum(amount) for orders with status paid; ignore pending."
+    example_input: |
+      orders = [
+        { user_id: 1, amount: 1000, status: "paid" },
+        { user_id: 2, amount: 2000, status: "pending" },
+        { user_id: 1, amount: 1500, status: "paid" },
+        { user_id: 3, amount: 3000, status: "paid" },
+        { user_id: 2, amount: 500, status: "paid" }
+      ]
+    expected_output: {1: 2500, 3: 3000, 2: 500}
+    reference_solution: |
+      def total_paid_by_user(orders)
+        orders.select { |order| order[:status] == "paid" }
+          .each_with_object(Hash.new(0)) do |order, result|
+            result[order[:user_id]] += order[:amount]
+          end
+      end
+    alternative_methods: ["each with Hash.new(0)", "group_by and transform_values"]
