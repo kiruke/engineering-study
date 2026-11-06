@@ -1,0 +1,46 @@
+version: 1
+study_date: "2026-11-06"
+status: completed
+recorded_at: "2026-11-07"
+note: "All 10 questions answered and explained in conversation; question 10 completed through final one-line correction after three incorrect code submissions."
+attempts:
+  - {number: 1, initial_answer: C, correct_answer: C, first_correct: true, status: completed}
+  - {number: 2, initial_answer: B, correct_answer: B, first_correct: true, status: completed}
+  - {number: 3, initial_answer: D, correct_answer: C, first_correct: false, status: explained_review_needed}
+  - {number: 4, initial_answer: C, correct_answer: C, first_correct: true, status: completed}
+  - {number: 5, initial_answer: C, correct_answer: D, first_correct: false, status: explained_review_needed}
+  - {number: 6, initial_answer: B, correct_answer: C, first_correct: false, status: explained_review_needed}
+  - {number: 7, initial_answer: C, correct_answer: C, first_correct: true, status: completed}
+  - {number: 8, initial_answer: B, correct_answer: B, first_correct: true, status: completed}
+  - {number: 9, initial_answer: B, correct_answer: B, first_correct: true, status: completed}
+  - number: 10
+    first_correct: false
+    initial_code: |
+      def total_paid_by_user(orders)
+        orders.select{|i| i[:status] == "paid"}.sum{|i| i[:amount]}
+      end
+    initial_feedback: "Returns total 6000 rather than Hash grouped by user."
+    retry_2_code: |
+      def total_paid_by_user(orders)
+           orders.select { |i| i[:status] == "paid" }each_with_object{|i| i[:amount]}
+      end
+    retry_2_feedback: "Missing dot and initial object; no per-user accumulation."
+    retry_3_code: |
+      def total_paid_by_user(orders)
+        orders
+          .select { |order| order[:status] == "paid" }
+          .each_with_object(Hash.new(0)) do |order, result|
+            order[:user_id] +=order[:amount]
+          end
+      end
+    retry_3_feedback: "Mutates order[:user_id] instead of result hash."
+    final_answer: "result[order[:user_id]] += order[:amount]"
+    final_correct: true
+    status: completed_after_retry
+    learning_notes: ["each_with_object(Hash.new(0))", "Hash.new(0) vs {}", "Hash#fetch", "group_by/transform_values"]
+summary:
+  total_questions: 10
+  initial_correct: 6
+  initial_correct_rate_percent: 60
+  completed: 10
+  review_priority: [3, 5, 6, 10]
