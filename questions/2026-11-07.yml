@@ -1,0 +1,82 @@
+version: 1
+study_date: "2026-11-07"
+status: completed
+total_questions: 10
+questions:
+  - number: 1
+    type: multiple_choice
+    prompt: "Review.where(published: true).order(created_at: :desc).limit(5) returns what?"
+    correct_answer: B
+    explanation: "Five most recent published reviews; ActiveRecord relations are lazy until evaluated."
+  - number: 2
+    type: multiple_choice
+    prompt: "Choose an appropriate normalized schema for users, orders, products and order_items."
+    correct_answer: B
+    explanation: "Orders and products form a many-to-many relation through order_items."
+  - number: 3
+    type: multiple_choice
+    prompt: "Investigate a reported XSS when review.body is html_escape'd, gsub inserts controlled br/strong tags, then html_safe is called."
+    correct_answer: B
+    explanation: "Investigate the actual input and rendering; the shown escaping order alone does not prove XSS."
+  - number: 4
+    type: multiple_choice
+    prompt: "Order listing of 100 rows accesses both order.user and order.products; choose an N+1 remedy."
+    correct_answer: A
+    explanation: "Preload both associations with includes(:user, :products)."
+  - number: 5
+    type: ruby_implementation
+    prompt: "Implement total_paid_by_user(orders): sum paid order amounts by user_id into a Hash; do not mutate input; empty input yields {}."
+    example_input: |
+      orders = [
+        { user_id: 1, status: "paid", amount: 1200 },
+        { user_id: 2, status: "pending", amount: 800 },
+        { user_id: 1, status: "paid", amount: 1500 },
+        { user_id: 3, status: "paid", amount: 2000 },
+        { user_id: 2, status: "paid", amount: 500 }
+      ]
+    expected_output: {1: 2700, 3: 2000, 2: 500}
+    reference_solution: |
+      def total_paid_by_user(orders)
+        orders.select { |item| item[:status] == "paid" }
+              .each_with_object(Hash.new(0)) do |item, hash|
+          hash[item[:user_id]] += item[:amount]
+        end
+      end
+  - number: 6
+    type: multiple_choice
+    prompt: "Nested products/:product_id/reviews route; form submits hidden review.product_id; controller builds current_user.reviews.build(review_params) permitting product_id, then redirects to @review.product. Diagnose wrong product redirect."
+    correct_answer: C
+    explanation: "Hidden fields can be tampered with; load product from URL, build @product.reviews and permit body only; authorize URL target."
+  - number: 7
+    type: multiple_choice
+    prompt: "Prevent concurrent duplicate active reservations for the same staff_id and starts_at while permitting canceled slots to be reused."
+    correct_answer: B
+    explanation: "Use a partial unique DB index on (staff_id, starts_at) WHERE canceled_at IS NULL, alongside Rails validation."
+  - number: 8
+    type: multiple_choice
+    prompt: "Within Order.transaction: update! confirmed, Payment.create(amount: 0), decrement! stock. Prevent committing without a payment."
+    correct_answer: B
+    explanation: "Use Payment.create! to raise on validation failure and roll back DB changes."
+  - number: 9
+    type: ruby_implementation
+    prompt: "Implement format_orders(orders), mapping nested order/user/items Hashes into {order_id:, user_name:, total_amount:} with price*quantity summed and empty items = 0."
+    example_input: |
+      orders = [
+        { id: 1, user: { id: 10, name: "田中" }, items: [{ name: "マウス", price: 2000, quantity: 2 }, { name: "キーボード", price: 5000, quantity: 1 }] },
+        { id: 2, user: { id: 20, name: "佐藤" }, items: [{ name: "モニター", price: 15000, quantity: 1 }] }
+      ]
+    expected_output: |
+      [{ order_id: 1, user_name: "田中", total_amount: 9000 }, { order_id: 2, user_name: "佐藤", total_amount: 15000 }]
+    reference_solution: |
+      def format_orders(orders)
+        orders.map do |order|
+          { order_id: order[:id],
+            user_name: order[:user][:name],
+            total_amount: order[:items].sum { |item| item[:price] * item[:quantity] } }
+        end
+      end
+  - number: 10
+    type: multiple_choice
+    prompt: "Kaminari pagination in GET search: keyword/type allegedly disappear on page 2. Best diagnosis and remedy?"
+    correct_answer: C
+    explanation: "Inspect generated links and params; Kaminari normally preserves query parameters, explicit paginate params only if necessary."
