@@ -24,7 +24,14 @@ attempts:
         end
       end
     feedback: "Correct select, each_with_object and Hash.new(0); no valid accumulation into hash; second submission has incomplete syntax."
-    final_correct: false
+    final_correct: true
+    status_note: "Originally closed incorrect by user request; subsequently reopened and solved through additional retries."
+    additional_retry_code: |
+      hash[:item[:user_id]] += item[:amount]
+    additional_retry_feedback: "Invalid key expression: leading colon before item; accumulation structure otherwise correct."
+    final_retry_code: |
+      hash[item[:user_id]] += item[:amount]
+    final_retry_correct: true
     review_priority: high
   - {number: 6, initial_answer: C, correct_answer: C, first_correct: true, status: completed}
   - {number: 7, initial_answer: A, correct_answer: B, first_correct: false, status: explained_review_needed}
@@ -39,5 +46,7 @@ summary:
   total_questions: 10
   initial_correct: 7
   initial_correct_rate_percent: 70
+  question_5_later_solved: true
+  final_correct_after_retries: 8
   completed: 10
   review_priority: [5, 7, 9]
