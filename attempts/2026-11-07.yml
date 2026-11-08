@@ -1,0 +1,43 @@
+version: 1
+study_date: "2026-11-07"
+status: completed
+note: "All 10 questions dispositioned; Q5 retry stopped by user's explicit request, Q9 unsubmitted and explicitly marked incorrect by user's request. Neither counted as correct."
+attempts:
+  - {number: 1, initial_answer: B, correct_answer: B, first_correct: true, status: completed}
+  - {number: 2, initial_answer: B, correct_answer: B, first_correct: true, status: completed}
+  - {number: 3, initial_answer: B, correct_answer: B, first_correct: true, status: completed}
+  - {number: 4, initial_answer: A, correct_answer: A, first_correct: true, status: completed}
+  - number: 5
+    first_correct: false
+    status: closed_incorrect_by_user_request
+    retry_count: 2
+    initial_code: |
+      def total_paid_by_user(orders)
+        orders.select{|item| item[:status] == "paid"}.each_with_object(Hash.new(0)).{item,hash}
+           sum.item[:amount]
+      end
+    retry_2_code: |
+      def total_paid_by_user(orders)
+        orders.select { |item| item[:status] == "paid" }
+              .each_with_object(Hash.new(0)) do |item, hash|
+          　item[:user_id][
+        end
+      end
+    feedback: "Correct select, each_with_object and Hash.new(0); no valid accumulation into hash; second submission has incomplete syntax."
+    final_correct: false
+    review_priority: high
+  - {number: 6, initial_answer: C, correct_answer: C, first_correct: true, status: completed}
+  - {number: 7, initial_answer: A, correct_answer: B, first_correct: false, status: explained_review_needed}
+  - {number: 8, initial_answer: B, correct_answer: B, first_correct: true, status: completed}
+  - number: 9
+    initial_answer: null
+    first_correct: false
+    status: closed_unsubmitted_counted_incorrect_by_user_request
+    note: "User explicitly requested marking unsubmitted implementation as incorrect and moving on."
+  - {number: 10, initial_answer: C, correct_answer: C, first_correct: true, status: completed}
+summary:
+  total_questions: 10
+  initial_correct: 7
+  initial_correct_rate_percent: 70
+  completed: 10
+  review_priority: [5, 7, 9]
