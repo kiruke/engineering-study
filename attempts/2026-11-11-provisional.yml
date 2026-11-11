@@ -1,0 +1,31 @@
+# Provisional study set, recorded 2026-11-11
+# The original study date and correspondence to scheduled sets are NOT established.
+# Do not treat this as the official 2026-11-11 daily set.
+set_id: provisional-review-2026-11-11
+original_set_date: unknown
+status: all_10_correct_after_review
+initial_average: 66.5
+final_average: 100
+attempts:
+  - {number: 1, initial: C, initial_score: 100, final_score: 100}
+  - {number: 2, initial: B, initial_score: 0, review: B, review_score: 100, final_score: 100}
+  - {number: 3, initial: C, initial_score: 0, review_1: A, review_1_score: 0, review_2: C, review_2_score: 100, final_score: 100}
+  - {number: 4, initial: B, initial_score: 100, final_score: 100}
+  - {number: 5, initial: A, initial_score: 0, review: B, review_score: 100, final_score: 100}
+  - {number: 6, initial: A, initial_score: 100, final_score: 100}
+  - {number: 7, initial: C, initial_score: 100, final_score: 100}
+  - {number: 8, initial: C, initial_score: 100, final_score: 100}
+  - number: 9
+    initial_score: 65
+    final_score: 100
+    final_code: |
+      def total_paid_by_user(orders)
+        orders.select { |item| item[:status] == "paid" }
+              .each_with_object(Hash.new(0)) do |item, hash|
+          hash[item[:user_id]] += item[:amount]
+        end
+      end
+  - {number: 10, initial: C, initial_score: 100, final_score: 100}
+notes:
+  - "Provisional numbering only; scheduled daily set completion remains unverified."
+  - "Do not repeat already-correct provisional questions."
