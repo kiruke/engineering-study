@@ -1,0 +1,39 @@
+# Provisional study set, recorded 2026-11-11
+# The original study date and correspondence to scheduled sets are NOT established.
+# Do not treat this as the official 2026-11-11 daily set.
+set_id: provisional-review-2026-11-11
+status: answered_and_reviewed
+original_set_date: unknown
+questions:
+  - number: 1
+    topic: "Rails includes and N+1"
+    correct: C
+  - number: 2
+    topic: "Order.new(amount: -500), save with validation failure"
+    correct: C
+    note: "Original question included transaction, save and puts A/B; follow-up review used save/persisted?/errors.any? and correct B."
+  - number: 3
+    topic: "ActiveModel::Model, presence validation, valid? and errors"
+    correct: B
+    note: "Second review variant username blank, email present; correct C."
+  - number: 4
+    topic: "SignupForm password minimum length and save"
+    correct: B
+  - number: 5
+    topic: "select paid, group_by user_id, transform_values sum amount"
+    correct: B
+  - number: 6
+    topic: "LEFT JOIN users orders and COUNT(orders.id)"
+    correct: A
+  - number: 7
+    topic: "Nested resources project_task_path(5, 12)"
+    correct: C
+  - number: 8
+    topic: "XSS from html_safe on untrusted comment"
+    correct: C
+  - number: 9
+    topic: "Implement total_paid_by_user with select and each_with_object"
+    correct: "Ruby implementation"
+  - number: 10
+    topic: "Pseudocode numbers[i] > i; sum of 3,4,5"
+    correct: C
