@@ -1,0 +1,42 @@
+# 暫定継続学習の終了記録（2026-11-12）
+# 正式な日次セットとの対応は未確定。正式セットのquestions/attemptsを上書きしない。
+status: closed
+closed_on: "2026-11-12"
+reason: "ユーザー指定の継続学習20問上限を超過したため、これ以上出題せず終了"
+continuation_limit: 20
+answered_count: 26
+pending_question: "Railsレビュー詳細・認可問題（未回答、出題終了）"
+formal_set_mapping: unconfirmed
+grading_basis: "初回回答。再挑戦は別記"
+first_attempt_correct: 10
+first_attempt_incorrect: 16
+attempts:
+  - {number: 1, topic: "ActiveRecord scope/where/order/limit/pluck", answer: C, correct: B, score: 0}
+  - {number: 2, topic: "Ruby平均値・整数除算", answer: B, correct: B, score: 100}
+  - {number: 3, topic: "SignupForm ActiveModel::Model", answer: A, correct: B, score: 0}
+  - {number: 4, topic: "SQL LEFT JOIN/COUNT", answer: C, correct: C, score: 100}
+  - {number: 5, topic: "RailsネストURLヘルパー", answer: A, correct: A, score: 100}
+  - {number: 6, topic: "Ruby Hash/select/group_by/transform_values/sum", answer: "初回誤答", correct: "再挑戦で正解", score: 30}
+  - {number: 7, topic: "ERB XSS自動エスケープ", answer: A, correct: B, score: 0}
+  - {number: 8, topic: "基本情報 最大値アルゴリズム", answer: D, correct: C, score: 0}
+  - {number: 9, topic: "Ruby select/map/sum", answer: B, correct: B, score: 100}
+  - {number: 10, topic: "Rails N+1クエリ", answer: C, correct: D, score: 0}
+  - {number: 11, topic: "Rails includesクエリ", answer: B, correct: B, score: 100}
+  - {number: 12, topic: "Rails includesとcount", answer: B, correct: D, score: 0}
+  - {number: 13, topic: "Rails association size", answer: C, correct: C, score: 100}
+  - {number: 14, topic: "SQL複合インデックス", answer: D, correct: B, score: 0}
+  - {number: 15, topic: "PostgreSQL Seq Scan", answer: B, correct: B, score: 100}
+  - {number: 16, topic: "SocketError/DNS", answer: C, correct: B, score: 0}
+  - {number: 17, topic: "TLS証明書期限切れ", answer: C, correct: C, score: 100}
+  - {number: 18, topic: "ActiveRecord::Rollback", answer: C, correct: A, score: 0}
+  - {number: 19, topic: "transaction外側rescue", answer: C, correct: B, score: 0}
+  - {number: 20, topic: "transaction内部rescue", answer: A, correct: B, score: 0}
+  - {number: 21, topic: "transaction内メール送信失敗", answer: B, correct: B, score: 100}
+  - {number: 22, topic: "ActiveRecord where/order/limit", answer: D, correct: C, score: 0}
+  - {number: 23, topic: "ActiveRecord複数where/desc/limit", answer: B, correct: B, score: 100}
+  - {number: 24, topic: "在庫更新・競合状態", answer: A, correct: B, score: 0}
+  - {number: 25, topic: "条件付きUPDATE/READ COMMITTED", answer: A, correct: B, score: 0}
+  - {number: 26, topic: "楽観的ロック/lock_version", answer: A, correct: B, score: 0}
+retries:
+  - {number: 6, result: "再挑戦100点"}
+future_rule: "継続学習は20問に達したら正誤や未完了にかかわらず強制終了し、既回答を再出題しない"
