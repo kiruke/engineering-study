@@ -1,0 +1,81 @@
+version: 1
+date: "2026-11-13"
+status: completed
+question_count: 10
+all_first_answers_submitted: true
+initial_total_score: 735
+initial_max_score: 1000
+initial_average: 73.5
+notes:
+  - "2026-11-14に11月13日セットの回答を完了。"
+  - "Q5旧版は撤回・未採点。正しい関連図を含む再作成版を正式採点。"
+  - "Q1/Q2/Q8の再挑戦は未実施。未回答を誤答として扱わない。"
+attempts:
+  - number: 1
+    first_answer: D
+    correct_answer: B
+    first_score: 0
+    review_status: pending
+    notes: "includesで2 SELECT、11回と誤認。"
+  - number: 2
+    first_score: 70
+    review_status: pending
+    submitted_code_excerpt: "orders.select { |o| o[:status] == 'paid' }.each_with_obuject do |item,hash| hash[item[:user_id]] += item[:amount] end"
+    notes: "Hash.new(0)の初期オブジェクト欠落。スペルミスは減点対象外。"
+  - number: 3
+    first_answer: A
+    correct_answer: A
+    first_score: 100
+  - number: 4
+    first_answer: A
+    correct_answer: A
+    first_score: 100
+  - number: 5
+    first_answer: A
+    correct_answer: A
+    first_score: 100
+    notes: "再作成後の正式版。"
+  - number: 6
+    first_answer: A
+    correct_answer: A
+    first_score: 100
+  - number: 7
+    first_answer: B
+    correct_answer: B
+    first_score: 100
+  - number: 8
+    first_answer: A
+    correct_answer: B
+    first_score: 0
+    review_status: pending
+    notes: "where/Relationの遅延評価とコンソールpretty printによるロードの違いを追加質問で確認。"
+  - number: 9
+    first_score: 65
+    first_code: |
+      def total_sales_by_user(orders)
+        orders.select{|item| item[:status] == "paid"}
+        .each_with_object(Hash.new(0)) do |v,hash|
+           hash[v[:user_id]] += v.dig(items,price) * v.dig(items,quantity)
+         end
+      end
+    retry_score: 100
+    retry_code: |
+      def total_sales_by_user(orders)
+        orders.select { |order| order[:status] == "paid" }
+          .each_with_object(Hash.new(0)) do |order, hash|
+            order_total = order[:items].sum do |item|
+              item[:price] * item[:quantity]
+            end
+            hash[order[:user_id]] += order_total
+          end
+      end
+    review_status: completed
+  - number: 10
+    first_answer: C
+    correct_answer: C
+    first_score: 100
+    review_status: completed
+review_topics:
+  - rails_includes_n_plus_one
+  - active_record_lazy_evaluation
+  - ruby_each_with_object_initial_value
