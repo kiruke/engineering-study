@@ -1,0 +1,67 @@
+version: 1
+date: "2026-11-13"
+status: completed
+question_count: 10
+notes:
+  - "Q5の不正確な図を含む旧版は撤回。以下は再作成後の正式問題。"
+  - "設問文は会話履歴から要点を再構成。全文の完全な逐語記録ではない。"
+questions:
+  - number: 1
+    topic: rails_includes_n_plus_one
+    type: multiple_choice
+    prompt: "Order.includes(:user).order(...).limit(10) で10注文を取得し各注文のuser.nameを表示する。ユーザーが異なるときのSELECT回数。"
+    correct: B
+    answer_summary: "2回。orders取得とusers一括取得。"
+  - number: 2
+    topic: ruby_paid_orders_grouping
+    type: implementation
+    prompt: "paid注文だけをuser_id別にamount合算するtotal_paid_by_user(orders)を実装。"
+    answer_summary: "selectとeach_with_object(Hash.new(0))で集計。"
+  - number: 3
+    topic: nested_routes_form_with
+    type: multiple_choice
+    prompt: "shopsにネストしたproductsのcreateへform_with url: shop_products_path(shop_id: 7, category: 'books', page: 2), method: :post のリクエスト先。"
+    correct: A
+    answer_summary: "POST /shops/7/products?category=books&page=2"
+  - number: 4
+    topic: sql_left_join_group_aggregate
+    type: multiple_choice
+    prompt: "users LEFT JOIN orders ON users.id=orders.user_id AND orders.status='paid'; COUNT(orders.id) と COALESCE(SUM(orders.amount),0) の結果。"
+    correct: A
+    answer_summary: "Alice 1/1000, Bob 2/4500, Carol 0/0, Dave 0/0。"
+  - number: 5
+    topic: multi_tenant_membership_authorization
+    type: multiple_choice
+    prompt: "User has_many memberships/organizations through memberships/assigned_tasks; Organization has_many projects; Project has_many tasks; Task belongs_to project and assignee(User). Membership belongs_to user and organization, role admin/member。TasksController#updateでcurrent_user.memberships.exists?(role:'admin')または担当者一致だけをチェックする問題点。"
+    correct: A
+    answer_summary: "対象task.project.organization_idに対応するMembershipを調べ、企業別roleと担当者条件で認可する。別企業のadmin権限を流用しない。"
+    note: "正確な関連図とモデルコードを提示した最終版のみ採点。"
+  - number: 6
+    topic: ruby_map_dig_sum_integer_division
+    type: multiple_choice
+    prompt: "usersのprofile.nameとscores平均をmap。scores空配列なら0、それ以外はsum/size。"
+    correct: A
+    answer_summary: "Alice 85, Bob 70, Carol 0。整数除算。"
+  - number: 7
+    topic: rails_xss_raw_escaping
+    type: multiple_choice
+    prompt: "ユーザー投稿 '<script>alert(\"XSS\")</script>' をERBの<%= @comment.body %>と<%= raw(@comment.body) %>で出力したときのXSSリスク。"
+    correct: B
+    answer_summary: "通常ERBはHTMLエスケープ、rawは回避してXSSリスク。"
+  - number: 8
+    topic: active_record_lazy_evaluation_count_pluck
+    type: multiple_choice
+    prompt: "Article.published; where(category:'tech'); count; limit(5).pluck(:title) のSQL回数と結果。published/techは6件。"
+    correct: B
+    answer_summary: "2 SQL、count=6、titles=5件（順序不定）。"
+  - number: 9
+    topic: ruby_nested_order_items_sum
+    type: implementation
+    prompt: "paid注文だけ選択し、itemsのprice*quantityを注文ごとにsumし、user_id別に合算。空itemsのpaid注文も0で含む。"
+    answer_summary: "{1=>3300,2=>2400,3=>0}。"
+  - number: 10
+    topic: rails_uniqueness_race_condition
+    type: multiple_choice
+    prompt: "美容室予約のstaff_id/starts_atの重複を同時リクエスト下でも防止。モデルuniquenessのみでは不十分。"
+    correct: C
+    answer_summary: "DBに(staff_id,starts_at)複合ユニークインデックス、モデルバリデーション維持、RecordNotUnique等への対応。"
