@@ -1,0 +1,57 @@
+date: 2026-11-15
+set_size: 10
+status: completed
+note: "Reconstructed from visible conversation summaries; original verbatim text for questions 1-5 is not fully available. Do not treat summaries as verbatim prompts."
+questions:
+  - number: 1
+    topic: "ActiveRecord lazy evaluation"
+    prompt_summary: "SQL count/pluck evaluation and relation loaded? state"
+    correct_summary: "Two SELECT queries; relation loaded? false"
+  - number: 2
+    topic: "Ruby nested Hash aggregation"
+    prompt_summary: "Aggregate paid orders using each_with_object and a nested Hash with total/count"
+    correct_summary: "Initialize with ||= { total: 0, count: 0 }, accumulate amounts and increment count"
+  - number: 3
+    topic: "Rails nested routing and form_with"
+    prompt_summary: "Nested orders/returns route, POST path, and submitted params"
+    correct_summary: "POST /orders/42/returns; params[:order_id] is string 42; params[:return][:reason]"
+  - number: 4
+    topic: "SQL LEFT JOIN and WHERE"
+    prompt_summary: "Effect of WHERE orders.status = 'paid' after LEFT JOIN"
+    correct_summary: "Users without paid orders are excluded; users 1 and 2 remain"
+  - number: 5
+    topic: "SQL LEFT JOIN and COUNT"
+    prompt_summary: "Filter paid orders in ON clause; compare COUNT(*) with COUNT(orders.id)"
+    correct_summary: "For user with no paid orders COUNT(*)=1 and COUNT(orders.id)=0"
+  - number: 6
+    topic: "Ruby filtering and Hash summary"
+    prompt_summary: "fruit_summary(products): in-stock fruit price total and matching count"
+    expected: "{ total: 350, count: 2 }"
+  - number: 7
+    topic: "Faraday API response parsing"
+    prompt_summary: "200 JSON items, 404 JSON error, 500 non-JSON; JSON.parse before response.success?"
+    correct_choice: A
+    correct_summary: "200 parsed items, 404 [], 500 JSON::ParserError"
+    note: "Replaced unattempted XSS question at user's request"
+  - number: 8
+    topic: "API implementation and exception handling"
+    prompt_summary: "Faraday GET, check success, parse JSON, fetch items, rescue JSON::ParserError to []"
+    expected_code: |
+      def self.search(keyword)
+        response = Faraday.get("https://api.example.com/books", { q: keyword })
+        return [] unless response.success?
+        data = JSON.parse(response.body)
+        data.fetch("items", [])
+      rescue JSON::ParserError
+        []
+      end
+  - number: 9
+    topic: "ActiveRecord N+1"
+    prompt_summary: "Post.includes(:user).limit(10) with post.user.name in view"
+    correct_choice: B
+    correct_summary: "Eager loading related users avoids N+1; typically two queries"
+    note: "Replaced unattempted API design question; user requests future N+1 questions be applied difficulty"
+  - number: 10
+    topic: "Ruby paid totals per user"
+    prompt_summary: "Filter paid orders and sum amount by user_id with each or each_with_object, no group_by"
+    expected: "{ 1 => 1700, 3 => 2000, 2 => 1500 }"
